@@ -16,7 +16,7 @@
   left: 0;
   right: 0;
   width: 100%;
-  background-color: white;
+  background-color: rgb(232, 238, 250);
   z-index: 1000;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
