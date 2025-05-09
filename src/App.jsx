@@ -4,35 +4,31 @@ import Navbar from './Navbar';
 import logo from './assets/mifgash_logo.png';
 import MifgashCard from './MifgashCard.jsx';
 
+// קומפוננטת HeaderBar: לוגו, ניווט ופרופיל
 function HeaderBar() {
   return (
-    <div className="profile-section">
-  <img
-    src="https://via.placeholder.com/40"
-    alt="Profile"
-    className="profile-pic"
-  />
-  <span className="profile-name">Amian Schwartz</span>
-</div>
+    <div className="header-bar">
+      <img src={logo} alt="Logo" className="top-left-logo" />
+      <Navbar />
+      <div className="profile-section">
+        <span className="profile-name">Amian Schwartz</span>
+        <img
+          src="https://via.placeholder.com/40"
+          alt="Profile"
+          className="profile-pic"
+        />
       </div>
     </div>
   );
 }
 
+// קומפוננטת App הראשית
 function App() {
   const [count, setCount] = useState(0);
 
   return (
     <>
       <HeaderBar />
-
-      {/* כפתור ספירה לדוגמה */}
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-      </div>
-
       {/* בלוק של מיפגש דינמי */}
       <MifgashCard
         name="Danielle S."
