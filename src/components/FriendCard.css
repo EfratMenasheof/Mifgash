@@ -1,0 +1,62 @@
+.friend-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 180px;
+    height: 230px;
+    padding: 12px;
+    background-color: #FFFFFF;
+    border-radius: 16px;
+    margin: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    position: relative;
+    justify-content: center;
+  }
+  
+  .friend-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+    background-color: #ffcb8f;
+  }
+  
+  .profile-pic-container {
+    position: relative;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    overflow: visible; /* ← חשוב! היה hidden */
+    margin-bottom: 8px;
+  }
+  
+  .profile-pic {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+  }
+  
+  .fire-emoji {
+    position: absolute;
+    top: -14px;       /* יותר גבוה */
+    right: -14px;     /* יותר הצידה */
+    font-size: 1.8rem;
+    z-index: 10;
+  }
+  
+  .friend-name {
+    margin-top: 6px;
+    font-weight: bold;
+    text-align: center;
+    color: #031146    ;
+    font-size: 1.05rem;
+  }
+  
+  .streak-text {
+    font-size: 0.9rem;
+    color: #444444    ;
+    margin-top: 4px;
+    text-align: center;
+  }

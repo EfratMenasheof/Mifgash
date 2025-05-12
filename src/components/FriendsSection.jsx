@@ -1,27 +1,21 @@
 import './FriendsSection.css';
-
-const friends = [
-  { name: 'Danielle S.', streak: 5 },
-  { name: 'Zach L.', streak: 2 },
-  { name: 'Ellie S.', streak: 0 },
-  { name: 'James A.', streak: 0 },
-];
+import { useState } from 'react';
+import { mockFriends } from '../data/FriendsData';
+import FriendCard from '../components/FriendCard';
+import ProfileModal from '../components/ProfileModal';
 
 function FriendsSection() {
+  const [selectedFriend, setSelectedFriend] = useState(null);
+
   return (
     <div className="friends-section">
       <div className="friends-list">
-        {friends.map((friend, index) => (
-          <div key={index} className="friend-card">
-            <div className="profile-pic-container">
-              <div className="profile-circle"></div>
-              {friend.streak > 0 && <span className="fire-emoji">🔥</span>}
-            </div>
-            <div className="friend-name">{friend.name}</div>
-            {friend.streak > 0 && (
-              <div className="streak-text">{friend.streak} Day Streak!</div>
-            )}
-          </div>
+        {mockFriends
+          .filter(friend => friend.streak >= 3)       // רק סטרייק מ-3 ומעלה
+          .sort((a, b) => b.streak - a.streak)        // מיון יורד לפי streak
+          .slice(0, 4)                                 // רק 4 ראשונים
+          .map((friend) => (
+            <FriendCard key={friend.id} friend={friend} onClick={setSelectedFriend} />
         ))}
       </div>
 
@@ -29,6 +23,8 @@ function FriendsSection() {
         <button className="friends-button">Meet a new friend</button>
         <button className="friends-button">Show all friends</button>
       </div>
+
+      <ProfileModal friend={selectedFriend} onClose={() => setSelectedFriend(null)} />
     </div>
   );
 }

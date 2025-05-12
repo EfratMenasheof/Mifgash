@@ -5,10 +5,10 @@ function HomePage() {
   return (
     <div className="homepage">
       <MifgashCard
-        name="Danielle S."
+        name="Daniel Radcliffe"
         date="July 17th, 4pm"
         location="Zoom call"
-        topic="You’ll learn English!"
+        topic="You’ll teach Hebrew!"
       />
       <FriendsSection />
     </div>

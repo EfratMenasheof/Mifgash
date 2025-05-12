@@ -17,7 +17,7 @@ function HeaderBar() {
       <img src={logo} alt="Logo" className="top-left-logo" />
       <Navbar />
       <div className="profile-section">
-        <span className="profile-name">Amian Schwartz</span>
+        <span className="profile-name">Maya Chen</span>
         <img
           src="https://via.placeholder.com/40"
           alt="Profile"

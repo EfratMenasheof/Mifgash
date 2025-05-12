@@ -110,10 +110,9 @@
   margin-top: 120px; /* פיצוי על header קבוע */
 }
 
-/* מיפגש */
 .mifgash-box {
-  background-color: rgba(240, 240, 240, 0.85);
-  padding: 24px 30px;
+  background-color: #BACCF7;
+  padding: 24px 40px;
   border-radius: 12px;
   max-width: 440px;
   margin: 0px auto 30px auto;
