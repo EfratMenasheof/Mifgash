@@ -1,5 +1,11 @@
 import './ProfileModal.css';
-
+function countryToFlag(countryCode) {
+  return countryCode
+    .toUpperCase()
+    .replace(/./g, char =>
+      String.fromCodePoint(127397 + char.charCodeAt())
+    );
+}
 function ProfileModal({ friend, onClose }) {
   if (!friend) return null;
 
@@ -15,10 +21,9 @@ function ProfileModal({ friend, onClose }) {
           alt={friend.name}
           className="profile-pic"
         />
-        <h2>{friend.name}</h2>
+        <h2 className="Profile-title">{friend.name}</h2>
         <p><strong>Age:</strong> {friend.age}</p>
-        <p><strong>Location:</strong> {friend.location}</p>
-        <p><strong>Language:</strong> {friend.language}</p>
+        <p><strong>Location:</strong> {friend.location.city}, {friend.location.region}, {friend.location.country} {countryToFlag(friend.location.country === 'USA' ? 'US' : friend.location.country)}</p>        <p><strong>Language:</strong> {friend.language}</p>
         <p><strong>Bio:</strong> {friend.bio}</p>
         <p><strong>Interests:</strong> {friend.interests.join(', ')}</p>
 
@@ -28,7 +33,10 @@ function ProfileModal({ friend, onClose }) {
           </button>
         )}
 
-        <button onClick={onClose}>Close</button>
+      <div className="modal-buttons">
+        <button onClick={onClose} className="friends-button">Close</button>
+        <button onClick={onClose} className="friends-button">Send a Message</button>
+      </div>
       </div>
     </div>
   );
