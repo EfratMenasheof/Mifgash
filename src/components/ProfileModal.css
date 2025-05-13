@@ -28,5 +28,21 @@
     display: block;
     margin: 0 auto 1rem;
   }
+  .send-request-button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #4070f4;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.send-request-button:hover {
+  background-color: #325ac8;
+}
+
 
   

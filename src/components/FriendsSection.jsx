@@ -9,6 +9,7 @@ function FriendsSection() {
 
   return (
     <div className="friends-section">
+      <h2 className="text-2xl font-bold mb-4">Best Connections</h2>
       <div className="friends-list">
         {mockFriends
           .filter(friend => friend.streak >= 3)       // רק סטרייק מ-3 ומעלה

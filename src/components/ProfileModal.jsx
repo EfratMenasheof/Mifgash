@@ -3,6 +3,9 @@ import './ProfileModal.css';
 function ProfileModal({ friend, onClose }) {
   if (!friend) return null;
 
+  // בדיקה אם המשתמש כבר חבר קיים (IDs 1–5 נחשבים כחברים)
+  const isAlreadyFriend = friend.id <= 5;
+
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -18,6 +21,13 @@ function ProfileModal({ friend, onClose }) {
         <p><strong>Language:</strong> {friend.language}</p>
         <p><strong>Bio:</strong> {friend.bio}</p>
         <p><strong>Interests:</strong> {friend.interests.join(', ')}</p>
+
+        {!isAlreadyFriend && (
+          <button className="send-request-button">
+            Send Friend Request
+          </button>
+        )}
+
         <button onClick={onClose}>Close</button>
       </div>
     </div>

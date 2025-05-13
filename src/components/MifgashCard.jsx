@@ -1,15 +1,22 @@
-function MifgashCard({ name, date, location, topic }) {
-    return (
-      <div className="mifgash-box">
-      <div className="mifgash-title">Upcoming Mifgash</div>
+import './MifgashCard.css';
+
+function MifgashCard({ friend, date, location, topic, onClick }) {
+  return (
+    <div className="mifgash-box">
+      <h2 className="mifgash-title">Upcoming Mifgash</h2>
       <div className="mifgash-details">
-      <p>Maya, your closest Mifgash is with <a href="#">Daniel Radcliffe</a></p>
-      <p>📅 July 17th, 4pm</p>
-      <p>📍 Zoom call</p>
-      <p>🌐 You’ll teach Hebrew!</p>
+        <p>
+          Maya, your closest Mifgash is with{' '}
+          <span className="link" onClick={() => onClick(friend)} style={{ cursor: 'pointer' }}>
+            {friend.name}
+          </span>
+        </p>
+        <p>📅 {date}</p>
+        <p>📍 {location}</p>
+        <p>🌐 {topic}</p>
+      </div>
     </div>
-  </div>
-    );
-  }
-  
-  export default MifgashCard;
+  );
+}
+
+export default MifgashCard;

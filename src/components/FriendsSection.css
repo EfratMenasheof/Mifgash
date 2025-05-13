@@ -1,10 +1,10 @@
 .friends-section {
   background-color: #BACCF7;
-  padding: 24px 30px;
+  padding: 24px 40px;
   border-radius: 12px;
   margin: 50px auto;
-  max-width: 900px;
-  text-align: center;
+  box-sizing: border-box;
+  width: 100%;  text-align: center;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
 }
 
@@ -19,22 +19,32 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 140px;
-  padding: 12px;
-  background-color: #FFFFFF    ;
+  width: 180px; /* במקום 140px */
+  padding: 16px;
+  background-color: #ffffff;
   border-radius: 16px;
-  margin: 12px; /* או 16px לריווח גדול יותר */
+  margin: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   position: relative;
-  
 }
 
 .profile-pic-container {
   position: relative;
-  width: 80px;
-  height: 80px;
+  width: 90px;
+  height: 90px;
+  margin-top: -20px; /* מרים את התמונה */
 }
+
+.profile-pic {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid white;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
+}
+
 
 .profile-circle {
   width: 100%;

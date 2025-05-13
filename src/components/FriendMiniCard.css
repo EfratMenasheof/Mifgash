@@ -1,0 +1,33 @@
+.mini-card {
+  width: 160px;
+  padding: 12px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.mini-card:hover {
+  transform: scale(1.03);
+}
+
+.mini-profile-pic {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 8px;
+}
+
+.mini-info h4 {
+  font-size: 1rem;
+  margin: 4px 0;
+}
+
+.mini-info p {
+  font-size: 0.85rem;
+  color: #555;
+  margin: 2px 0;
+}
