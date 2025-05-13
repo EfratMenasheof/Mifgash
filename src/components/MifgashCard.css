@@ -1,5 +1,5 @@
 .mifgash-box {
-  background-color: #BACCF7;
+  background-color: #d1dcf8;
   padding: 24px 40px;
   border-radius: 12px;
   box-sizing: border-box;
@@ -11,10 +11,13 @@
 }
 
 .mifgash-title {
-  font-size: 1.4rem;
-  font-weight: 700;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2rem;
+  font-weight: bold 700;
   margin-bottom: 12px;
-  color: #1e1e1e;
+  color: #110976;
+  text-align: center;
+  letter-spacing: 1.5px;
 }
 
 .mifgash-details p {
@@ -22,6 +25,9 @@
   font-weight: 500;
   margin-bottom: 16px;
   color: #1e1e1e;
+  align-items: center;
+  text-align: center;
+
 }
 
 .mifgash-detail {
@@ -31,6 +37,7 @@
   margin: 8px 0;
   font-size: 1rem;
   color: #2b2b2b;
+  text-align: center;
 }
 
 .link {

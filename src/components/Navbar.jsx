@@ -15,7 +15,7 @@ function Navbar() {
             <Link to="/home" className={`nav-link ${location.pathname === '/home' ? 'active' : ''}`}>Home</Link>
           </li>
           <li>
-            <Link to="/friends" className={`nav-link ${location.pathname === '/friends' ? 'active' : ''}`}>Friends</Link>
+            <Link to="/friends" className={`nav-link ${location.pathname === '/friends' ? 'active' : ''}`}>Connections</Link>
           </li>
           <li>
             <Link to="/lessons" className={`nav-link ${location.pathname === '/lessons' ? 'active' : ''}`}>Lessons</Link>
