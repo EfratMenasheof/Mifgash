@@ -12,8 +12,7 @@ function FriendMiniCard({ friend, onClick }) {
       <div className="mini-info">
         <h4>{friend.name}</h4>
         <p>{friend.age} years old</p>
-        <p>{friend.location}</p>
-      </div>
+        <p>{friend.location.city}, {friend.location.region}, {friend.location.country}</p>      </div>
     </div>
   );
 }

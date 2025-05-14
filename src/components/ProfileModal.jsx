@@ -10,8 +10,7 @@ function ProfileModal({ friend, onClose }) {
   if (!friend) return null;
 
   // בדיקה אם המשתמש כבר חבר קיים (IDs 1–5 נחשבים כחברים)
-  const isAlreadyFriend = friend.id <= 5;
-
+  const isAlreadyFriend = friend.isFriend === true;
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>

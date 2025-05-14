@@ -88,7 +88,7 @@ export const mockFriends = [
     location: { city: 'Long Island', region: 'New York', country: 'USA' },
     streak: 0,
     language: 'English',
-    isFriend: false,
+    isFriend: true,
     bio: 'Passionate about books and activism. Recently joined a virtual Hebrew poetry group.',
     interests: ['Hebrew poetry', 'Vegan recipes', 'Environmental advocacy', 'Classical literature'],
     image: '/Profile-pics/7.jpg'
@@ -101,7 +101,7 @@ export const mockFriends = [
     location: { city: 'Los Angeles', region: 'California', country: 'USA' },
     streak: 0,
     language: 'English',
-    isFriend: false,
+    isFriend: true,
     bio: 'Film student and aspiring director. Loves connecting with Israeli cousins through culture.',
     interests: ['Directing shorts', 'Israeli indie rock', 'Basketball', 'Hummus making'],
     image: '/Profile-pics/8.jpg'
@@ -114,7 +114,7 @@ export const mockFriends = [
     location: { city: 'Manhattan', region: 'New York', country: 'USA' },
     streak: 0,
     language: 'English',
-    isFriend: false,
+    isFriend: true,
     bio: 'Jewish culture blogger and college student. Runs a Jewish-American TikTok channel.',
     interests: ['Jewish memes', 'Street fashion', 'Music festivals', 'Podcasting'],
     image: '/Profile-pics/9.jpg'
