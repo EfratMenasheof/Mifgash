@@ -3,7 +3,7 @@ import './MifgashCard.css';
 function MifgashCard({ friend, date, location, topic, onClick }) {
   return (
     <div className="mifgash-box">
-      <h2 className="mifgash-title">Upcoming Mifgash</h2>
+      <h2 className="section-title">Upcoming Mifgash</h2>
       <div className="mifgash-details">
         <p>
           Maya, your closest Mifgash is with{' '}

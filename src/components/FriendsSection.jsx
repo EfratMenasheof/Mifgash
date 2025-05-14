@@ -9,7 +9,7 @@ function FriendsSection() {
 
   return (
     <div className="friends-section">
-      <h2 className="leadconnections-title">YOUR Connections</h2>
+      <h2 className="section-title">YOUR Connections</h2>
       <div className="friends-list">
         {mockFriends
           .filter(friend => friend.streak >= 3)       // רק סטרייק מ-3 ומעלה

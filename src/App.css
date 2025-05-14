@@ -1,66 +1,33 @@
+/* כללי */
 body {
   font-family: 'Inter', sans-serif;
   background-color: #f8faff;
+  margin: 0;
+  padding-top: 80px; /* גובה ה-Navbar הוא 70px, אז זה מושלם */
 }
 
 #root {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 0 2rem 2rem;
+  padding: 0 1rem 2rem;
+}
+
+/* כותרות כלליות */
+.section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2rem;
+  font-weight: 500;
+  color: #110976;
   text-align: center;
+  letter-spacing: 1.5px;
+  margin-bottom: 12px;
 }
 
-.main-content {
-  margin-top: 90px;
-  padding: 20px;
-}
-
-.main-layout {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: flex-start;
-  gap: 80px; /* ריווח מוגדל בין הצדדים */
-  margin-top: 100px;
-  padding-left: 40px; /* מצמיד את הצד השמאלי שמאלה */
-}
-
-.left-side {
-  flex: 1.2; /* רוחב רחב יותר */
-  max-width: 640px;
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
-}
-
-.right-side {
-  flex: 1;
-  max-width: 550px;
-  padding-top: 20px; /* מרווח עליון למפה */
-}
-
-.side-box {
-  width: 600px;
-  max-width: 90vw;
-}
-
-.main-content-row {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 40px;
-  margin: 40px auto;
-  flex-wrap: wrap;
-}
-
-.left-column {
-  flex: 1;
-  min-width: 300px;
-  max-width: 600px;
-}
-
-.right-column {
-  flex: 1;
-  min-width: 300px;
-  max-width: 600px;
+/* כותרת Welcome */
+.welcome-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2rem;
+  font-weight: 500;
+  text-align: center;
+  color: #110976;
 }
