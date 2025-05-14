@@ -12,6 +12,7 @@
   background-color: rgb(232, 238, 250);
   z-index: 1000;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
 }
 
 
@@ -66,10 +67,10 @@
   text-decoration: none;
   color: #031146;
   background-color: #baccf7;
-  padding: 10px 20px;
+  padding: 5px 20px;
   border-radius: 15px;
-  font-weight: 600;
-  letter-spacing: 1px; /* אופציונלי, לריווח */
+  font-weight: 500;
+  letter-spacing: 1.5px; /* אופציונלי, לריווח */
   font-size: 1.3rem;   /* תרגישי חופשי לשחק עם זה */
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   transition: background-color 0.3s, color 0.3s, transform 0.2s;
