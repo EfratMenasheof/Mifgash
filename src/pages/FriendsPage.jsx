@@ -1,91 +1,56 @@
-import { useState } from 'react';
-import './FriendsPage.css';
-import { mockFriends } from '../data/FriendsData';
-import FriendMiniCard from '../components/FriendMiniCard';
-import ProfileModal from '../components/ProfileModal';
+import "../components/FriendMiniCard.css";
+import "./FriendsPage.css";
+import FriendCardStyled from "../components/FriendCardStyled";
+import { mockFriends } from "../data/FriendsData";
+import { useState } from "react";
+import ProfileModal from "../components/ProfileModal";
 
 function FriendsPage() {
-  const [showAgeFilter, setShowAgeFilter] = useState(false);
-  const [ageMin, setAgeMin] = useState('');
-  const [ageMax, setAgeMax] = useState('');
-  const [filteredFriends, setFilteredFriends] = useState([]);
   const [selectedFriend, setSelectedFriend] = useState(null);
-  const [error, setError] = useState('');
 
-  const handleAgeSearch = () => {
-    setShowAgeFilter(true);
-    setFilteredFriends([]); // מנקה תוצאות קודמות
-    setError('');
+  // מציג רק חברים עם isFriend === true
+  const visibleFriends = mockFriends.filter(friend => friend.isFriend === true);
+
+  const handleFriendClick = (friend) => {
+    setSelectedFriend(friend);
   };
 
-  const handleFilter = () => {
-    const min = parseInt(ageMin);
-    const max = parseInt(ageMax);
-
-    if (isNaN(min) || isNaN(max) || min < 18 || max > 99 || min > max) {
-      setError('Please enter a valid age range between 18 and 99.');
-      return;
-    }
-
-    const results = mockFriends.filter(friend =>
-      friend.age >= min &&
-      friend.age <= max &&
-      (
-        (friend.location === 'Israel' && friend.language === 'English') ||
-        (friend.location !== 'Israel' && friend.language === 'Hebrew')
-      )
-    );
-
-    if (results.length === 0) {
-      setError('No matches found. Try a different age range!');
-      return;
-    }
-
-    setFilteredFriends(results);
-    setError('');
-    setShowAgeFilter(false);
+  const handleCloseModal = () => {
+    setSelectedFriend(null);
   };
 
   return (
-    <div className="friends-page">
-      <button className="new-friend-button" onClick={handleAgeSearch}>
-        Meet a new friend
-      </button>
-
-      {showAgeFilter && (
-        <div className="age-filter-modal">
-          <p>Choose age range (between 18–99):</p>
-          <div className="age-inputs">
-            <input
-              type="number"
-              placeholder="Min"
-              value={ageMin}
-              onChange={(e) => setAgeMin(e.target.value)}
-              min={18}
-              max={99}
-            />
-            <input
-              type="number"
-              placeholder="Max"
-              value={ageMax}
-              onChange={(e) => setAgeMax(e.target.value)}
-              min={18}
-              max={99}
-            />
-            <button className="filter-button" onClick={handleFilter}>Show Matches</button>
-          </div>
-          <p className="age-range-info">You can search only between ages 18 and 99.</p>
-          {error && <p className="error-text">{error}</p>}
-        </div>
-      )}
-
-      <div className="search-results">
-        {filteredFriends.map(friend => (
-          <FriendMiniCard key={friend.id} friend={friend} onClick={setSelectedFriend} />
-        ))}
+    <div className="container mt-5">
+      <h1 className="leadconnections-title">Your Connections</h1>
+      <h5 className="text-center mb-3">
+        Connections are important – keep them strong!
+      </h5>
+      <div className="text-start mb-4 fw-bold">
+        You have {visibleFriends.length} connections
       </div>
 
-      <ProfileModal friend={selectedFriend} onClose={() => setSelectedFriend(null)} />
+      <div className="friends-section">
+        <div className="friends-grid-container">
+          <div className="friends-grid">
+            {visibleFriends.map(friend => (
+              <FriendCardStyled
+                key={friend.id}
+                friend={friend}
+                onClick={handleFriendClick}
+              />
+            ))}
+          </div>
+        </div>
+
+        <div className="friends-buttons mt-4">
+          <button className="friends-button">Send Message</button>
+          <button className="friends-button">Add New Friend</button>
+        </div>
+      </div>
+
+      {selectedFriend && (
+        <ProfileModal friend={selectedFriend} onClose={handleCloseModal} />
+      )}
     </div>
   );
 }

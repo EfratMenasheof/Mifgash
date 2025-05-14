@@ -31,3 +31,8 @@
   color: #555;
   margin: 2px 0;
 }
+.mini-info h4 {
+  font-size: 1rem;
+  margin: 4px 0;
+  font-weight: bold; /* ← הוספה חשובה */
+}
