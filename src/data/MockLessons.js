@@ -1,12 +1,12 @@
-// src/data/mockLessons.js
+// src/data/MockLessons.js
 
-export const mockLessons = {
-  alllevels: [
-    {
-      id: 'beg-001',
-      topic: 'ברכות בסיסיות',
-      description: 'איך להגיד שלום ולהציג את עצמך',
-      fullContent: `🎯 מטרות:
+export const mockLessons = [
+  {
+    id: 'lesson-101',
+    topic: 'ברכות בסיסיות',
+    description: 'איך להגיד שלום ולהציג את עצמך',
+    createdAt: '2025-05-14',
+    fullContent: `🎯 מטרות:
 - לדעת להגיד שלום ולהיפרד
 - לדעת להציג שם, ארץ ושפה
 
@@ -20,12 +20,13 @@ export const mockLessons = {
 📝 תרגול:
 1. כתבו שלושה משפטים שמציגים את עצמכם.
 2. התאימו מילים בעברית לאנגלית (אני = I, גר = live, שלום = hello)`
-    },
-    {
-      id: 'med-001',
-      topic: 'חיים בעיר מול כפר',
-      description: 'מילים ודיאלוגים על סביבות חיים שונות',
-      fullContent: `🎯 מטרות:
+  },
+  {
+    id: 'lesson-102',
+    topic: 'חיים בעיר מול כפר',
+    description: 'מילים ודיאלוגים על סביבות חיים שונות',
+    createdAt: '2025-05-14',
+    fullContent: `🎯 מטרות:
 - להבין הבדלים בין חיים עירוניים לחיים כפריים
 - ללמוד אוצר מילים בהקשר
 
@@ -39,12 +40,13 @@ export const mockLessons = {
 📝 תרגול:
 1. השוו בין עיר לכפר במשפטים.
 2. כתבו על המקום שאתם גרים בו.`
-    },
-    {
-      id: 'pro-001',
-      topic: 'שירה עברית מודרנית',
-      description: 'קריאה וניתוח של שירים מודרניים',
-      fullContent: `🎯 מטרות:
+  },
+  {
+    id: 'lesson-103',
+    topic: 'שירה עברית מודרנית',
+    description: 'קריאה וניתוח של שירים מודרניים',
+    createdAt: '2025-05-14',
+    fullContent: `🎯 מטרות:
 - לקרוא שירה בעברית ולהבין אותה
 - להעשיר את השפה באמצעות ביטויים פיוטיים
 
@@ -63,74 +65,85 @@ export const mockLessons = {
 💬 דיון:
 - אילו רגשות מעורר השיר?
 - מה מסמל הצבע הלבן בשיר?`
-    }
-  ],
-  beginners: [
-    {
-      id: 'beg-001',
-      topic: 'ברכות בסיסיות',
-      description: 'איך להגיד שלום ולהציג את עצמך',
-      fullContent: `🎯 מטרות:
-- לדעת להגיד שלום ולהיפרד
-- לדעת להציג שם, ארץ ושפה
+  },
+  {
+    id: 'lesson-104',
+    topic: 'משפחות בישראל',
+    description: 'שיחה על מבנה משפחה ושמות קרובים',
+    createdAt: '2025-05-14',
+    fullContent: `🎯 מטרות:
+- ללמוד לתאר את המשפחה שלך
+- להכיר שמות של קרובי משפחה
 
 🧠 מילים חדשות:
-- שלום, להתראות, אני, אתה, את, גר/גרה, מדבר/מדברת
+- אבא, אמא, אחות, אח, סבא, סבתא, בן דוד, בת דודה
 
 💬 דיאלוג:
-- מאיה: שלום! איך קוראים לך?
-- דניאל: אני דניאל. אני גר בברוקלין.
+- דניאל: יש לי שני אחים ואחות אחת.
+- מאיה: גם לי! וסבתא שלי גרה איתנו בבית.
 
 📝 תרגול:
-1. כתבו שלושה משפטים שמציגים את עצמכם.
-2. התאימו מילים בעברית לאנגלית (אני = I, גר = live, שלום = hello)`
-    }
-  ],
-  medium: [
-    {
-      id: 'med-001',
-      topic: 'חיים בעיר מול כפר',
-      description: 'מילים ודיאלוגים על סביבות חיים שונות',
-      fullContent: `🎯 מטרות:
-- להבין הבדלים בין חיים עירוניים לחיים כפריים
-- ללמוד אוצר מילים בהקשר
+1. כתבו עץ משפחתי של המשפחה שלכם.
+2. הכינו דיאלוג על חג עם המשפחה.`
+  },
+  {
+    id: 'lesson-105',
+    topic: 'בבית קפה',
+    description: 'איך להזמין קפה ודברים קטנים בעברית',
+    createdAt: '2025-05-14',
+    fullContent: `🎯 מטרות:
+- לנהל שיחה פשוטה בבית קפה
+- להשתמש במילות נימוס ובקשות
 
 🧠 מילים חדשות:
-- עיר, כפר, רעש, שקט, תחבורה ציבורית, שוק, טבע
+- קפה, תה, מים, בבקשה, תודה, אפשר, חשבון
 
 💬 דיאלוג:
-- דניאל: אני גר בעיר גדולה ויש הרבה רעש.
-- מאיה: אני גרה במושב, ויש פה שקט וטבע.
+- המלצר: שלום, מה תרצו להזמין?
+- דניאל: אפשר קפה שחור ולימונדה, בבקשה.
 
 📝 תרגול:
-1. השוו בין עיר לכפר במשפטים.
-2. כתבו על המקום שאתם גרים בו.`
-    }
-  ],
-  pro: [
-    {
-      id: 'pro-001',
-      topic: 'שירה עברית מודרנית',
-      description: 'קריאה וניתוח של שירים מודרניים',
-      fullContent: `🎯 מטרות:
-- לקרוא שירה בעברית ולהבין אותה
-- להעשיר את השפה באמצעות ביטויים פיוטיים
+1. תכננו תפריט קטן לעסק קפה.
+2. שחקו תפקידים של לקוח ומלצר.`
+  },
+  {
+    id: 'lesson-106',
+    topic: 'על התחביבים שלי',
+    description: 'לדבר על תחביבים וזמן פנוי',
+    createdAt: '2025-05-14',
+    fullContent: `🎯 מטרות:
+- לדעת לתאר תחביב אישי
+- ללמוד פעלים נפוצים של תחביבים
 
-📖 שיר לדוגמה:
-"בואי כלה" / יהודה עמיחי
+🧠 מילים חדשות:
+- לקרוא, לשחות, לטייל, לנגן, לצייר, לבשל
 
-🧩 מושגים בשיר:
-- כלה = bride
-- לבן = white (pure)
-- געגוע = longing
+💬 דיאלוג:
+- דניאל: אני אוהב לבשל ארוחות מיוחדות.
+- מאיה: אני אוהבת לטייל ולצלם נופים.
 
 📝 תרגול:
-1. תרגמו 3 שורות מהשיר לאנגלית.
-2. כתבו שיר קצר על זיכרון מילדות.
+1. כתבו פסקה על התחביב האהוב עליכם.
+2. תארו פעילות אחרונה שעשיתם.`
+  },
+  {
+    id: 'lesson-107',
+    topic: 'קניות בשוק',
+    description: 'איך לשאול מחירים ולנהל מיקוח',
+    createdAt: '2025-05-14',
+    fullContent: `🎯 מטרות:
+- להשתמש במספרים ובמילות כמות
+- ללמוד משפטי מיקוח ושאלות מחירים
 
-💬 דיון:
-- אילו רגשות מעורר השיר?
-- מה מסמל הצבע הלבן בשיר?`
-    }
-  ]
-};
+🧠 מילים חדשות:
+- כמה זה עולה, שקל, יקר, זול, קילו, חצי
+
+💬 דיאלוג:
+- דניאל: כמה עולה קילו עגבניות?
+- מוכר: עשרה שקלים. אבל אם תקנה שתיים - רק 18.
+
+📝 תרגול:
+1. צרו רשימת קניות לדמות דמיונית.
+2. התנסו בשיחה של קונה ומוכר.`
+  }
+];

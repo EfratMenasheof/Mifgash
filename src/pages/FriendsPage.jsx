@@ -8,7 +8,6 @@ import ProfileModal from "../components/ProfileModal";
 function FriendsPage() {
   const [selectedFriend, setSelectedFriend] = useState(null);
 
-  // מציג רק חברים עם isFriend === true
   const visibleFriends = mockFriends.filter(friend => friend.isFriend === true);
 
   const handleFriendClick = (friend) => {
@@ -21,15 +20,16 @@ function FriendsPage() {
 
   return (
     <div className="container mt-5">
-      <h1 className="leadconnections-title">Your Connections</h1>
+      <h1 className="leadconnections-title">YOUR CONNECTIONS</h1>
       <h5 className="text-center mb-3">
         Connections are important – keep them strong!
       </h5>
-      <div className="text-start mb-4 fw-bold">
-        You have {visibleFriends.length} connections
-      </div>
 
       <div className="friends-section">
+        <div className="text-start mb-4 fw-bold">
+          You have {visibleFriends.length} connections
+        </div>
+
         <div className="friends-grid-container">
           <div className="friends-grid">
             {visibleFriends.map(friend => (

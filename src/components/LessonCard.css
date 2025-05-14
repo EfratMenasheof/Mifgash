@@ -1,0 +1,41 @@
+.lesson-card {
+  background-color: white;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 280px;
+  height: 180px;
+  margin: 15px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s ease;
+  text-align: center;
+  font-family: 'Heebo', sans-serif;
+}
+
+.lesson-card:hover {
+  transform: translateY(-4px);
+  background-color: #ffcb8f;
+}
+
+.lesson-card h5 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.lesson-card p {
+  font-size: 16px;
+  margin-bottom: 10px;
+  line-height: 1.4;
+  max-height: 60px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lesson-card small {
+  font-size: 14px;
+  color: #333;
+}

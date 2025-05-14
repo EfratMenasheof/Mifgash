@@ -13,14 +13,15 @@
   max-height: 520px; /* מאפשר 2 שורות בגובה נעים */
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 12px 6px 12px 0; /* מוסיף ריווח מלמעלה ולמטה + מקום ל-scroll מימין */
+  padding: 12px 6px 12px 0;
   margin-bottom: 30px;
-  scroll-padding: 12px; /* תומך בגלילה חלקה כשמשתמשים בקפיצה לעוגן */
+  scroll-padding: 12px;
 }
+
 .friends-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 70px; /* ריווח בין קלפים */
+  gap: 70px;
   justify-items: center;
   padding: 0 24px;
 }
@@ -51,12 +52,20 @@
   color: #ffffff;
 }
 
+/* ✅ עדכון ריווח כותרת */
 .leadconnections-title {
   font-family: 'Bebas Neue', sans-serif;
   font-size: 2rem;
   font-weight: 700;
-  margin-bottom: 12px;
+  margin-bottom: 4px; /* היה 12px - צמצמנו */
   color: #110976;
   text-align: center;
   letter-spacing: 1.5px;
+}
+
+/* ✅ אפשרות לריווח משפט מתחת לכותרת */
+.leadconnections-subtitle {
+  margin-bottom: 12px;
+  font-size: 1.1rem;
+  text-align: center;
 }
