@@ -1,0 +1,303 @@
+{
+  "Sports": {
+    "emoji": "🏅",
+    "items": [
+      {
+        "name": "Basketball",
+        "emoji": "🏀"
+      },
+      {
+        "name": "Baseball",
+        "emoji": "⚾"
+      },
+      {
+        "name": "Soccer",
+        "emoji": "⚽"
+      },
+      {
+        "name": "Running",
+        "emoji": "🏃‍♀️"
+      },
+      {
+        "name": "Swimming",
+        "emoji": "🏊‍♂️"
+      },
+      {
+        "name": "Hiking",
+        "emoji": "🥾"
+      },
+      {
+        "name": "Yoga",
+        "emoji": "🧘‍♀️"
+      }
+    ]
+  },
+  "Creativity": {
+    "emoji": "🎨",
+    "items": [
+      {
+        "name": "Art",
+        "emoji": "🖼️"
+      },
+      {
+        "name": "Drawing",
+        "emoji": "✏️"
+      },
+      {
+        "name": "Crocheting",
+        "emoji": "🧶"
+      },
+      {
+        "name": "Crafts",
+        "emoji": "📎"
+      },
+      {
+        "name": "Fashion",
+        "emoji": "👗"
+      },
+      {
+        "name": "Collaging",
+        "emoji": "🖌️"
+      },
+      {
+        "name": "Graphic design",
+        "emoji": "🎨"
+      },
+      {
+        "name": "Hebrew calligraphy",
+        "emoji": "✒️"
+      },
+      {
+        "name": "Zine-making",
+        "emoji": "📰"
+      }
+    ]
+  },
+  "Going Out": {
+    "emoji": "🎉",
+    "items": [
+      {
+        "name": "Coffee shop hopping",
+        "emoji": "☕"
+      },
+      {
+        "name": "Music festivals",
+        "emoji": "🎪"
+      },
+      {
+        "name": "Comedy shows",
+        "emoji": "😂"
+      },
+      {
+        "name": "Purim parties",
+        "emoji": "🎭"
+      },
+      {
+        "name": "Protests",
+        "emoji": "✊"
+      },
+      {
+        "name": "Street theater",
+        "emoji": "🎭"
+      },
+      {
+        "name": "Volunteering",
+        "emoji": "🤝"
+      },
+      {
+        "name": "Hanging out with friends",
+        "emoji": "🧑‍🤝‍🧑"
+      }
+    ]
+  },
+  "Film & TV": {
+    "emoji": "🎬",
+    "items": [
+      {
+        "name": "Indie films",
+        "emoji": "🎬"
+      },
+      {
+        "name": "Horror movies",
+        "emoji": "👻"
+      },
+      {
+        "name": "Romantic comedies",
+        "emoji": "💘"
+      },
+      {
+        "name": "TV shows",
+        "emoji": "📺"
+      },
+      {
+        "name": "Directing shorts",
+        "emoji": "🎞️"
+      },
+      {
+        "name": "Writing sketches",
+        "emoji": "✍️"
+      },
+      {
+        "name": "Video editing",
+        "emoji": "✂️"
+      }
+    ]
+  },
+  "Food": {
+    "emoji": "🍴",
+    "items": [
+      {
+        "name": "Pizza",
+        "emoji": "🍕"
+      },
+      {
+        "name": "Hamburgers",
+        "emoji": "🍔"
+      },
+      {
+        "name": "Sushi",
+        "emoji": "🍣"
+      },
+      {
+        "name": "Pasta",
+        "emoji": "🍝"
+      },
+      {
+        "name": "Ice cream",
+        "emoji": "🍨"
+      },
+      {
+        "name": "Hummus making",
+        "emoji": "🧆"
+      },
+      {
+        "name": "Vegan recipes",
+        "emoji": "🥗"
+      },
+      {
+        "name": "Latkes",
+        "emoji": "🥔"
+      },
+      {
+        "name": "Baking challah",
+        "emoji": "🥖"
+      },
+      {
+        "name": "Coffee brewing",
+        "emoji": "☕"
+      },
+      {
+        "name": "Baking cakes",
+        "emoji": "🎂"
+      }
+    ]
+  },
+  "Traveling": {
+    "emoji": "✈️",
+    "items": [
+      {
+        "name": "Going to the beach",
+        "emoji": "🏖️"
+      },
+      {
+        "name": "Exploring cities",
+        "emoji": "🏙️"
+      },
+      {
+        "name": "Nature trips",
+        "emoji": "🏕️"
+      },
+      {
+        "name": "Cultural tourism",
+        "emoji": "🕌"
+      }
+    ]
+  },
+  "Pets": {
+    "emoji": "🐾",
+    "items": [
+      {
+        "name": "Dogs",
+        "emoji": "🐶"
+      },
+      {
+        "name": "Cats",
+        "emoji": "🐱"
+      },
+      {
+        "name": "Pet care",
+        "emoji": "🦴"
+      },
+      {
+        "name": "Animal rescue",
+        "emoji": "🐾"
+      }
+    ]
+  },
+  "Jewish Life": {
+    "emoji": "🕍",
+    "items": [
+      {
+        "name": "Shabbat dinners",
+        "emoji": "🍷"
+      },
+      {
+        "name": "Hebrew poetry",
+        "emoji": "📖"
+      },
+      {
+        "name": "Jewish memes",
+        "emoji": "😹"
+      },
+      {
+        "name": "Jewish history",
+        "emoji": "📜"
+      },
+      {
+        "name": "Hebrew slang",
+        "emoji": "🗣️"
+      },
+      {
+        "name": "Singing Israeli songs",
+        "emoji": "🎶"
+      },
+      {
+        "name": "Environmental advocacy",
+        "emoji": "🌱"
+      },
+      {
+        "name": "Teaching kids",
+        "emoji": "👩‍🏫"
+      }
+    ]
+  },
+  "Books & Learning": {
+    "emoji": "📚",
+    "items": [
+      {
+        "name": "Fantasy novels",
+        "emoji": "📚"
+      },
+      {
+        "name": "Classical literature",
+        "emoji": "📘"
+      },
+      {
+        "name": "Biology",
+        "emoji": "🧬"
+      },
+      {
+        "name": "Science podcasts",
+        "emoji": "🎧"
+      },
+      {
+        "name": "Podcasting",
+        "emoji": "🎙️"
+      },
+      {
+        "name": "Mindfulness apps",
+        "emoji": "🧠"
+      }
+    ]
+  }
+}

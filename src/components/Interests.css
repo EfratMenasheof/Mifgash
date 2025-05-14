@@ -1,0 +1,40 @@
+.interests-container {
+    margin-top: 1rem;
+  }
+  
+  .category-section {
+    margin-bottom: 1rem;
+  }
+  
+  .category-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #eeeeee;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  
+  .interest-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    padding-left: 1rem;
+  }
+  
+  .interest-item {
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: none;
+    background-color: #f0f0f0;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  
+  .interest-item.selected {
+    background-color: #fbb76a;
+    color: white;
+    font-weight: bold;
+  }

@@ -60,4 +60,22 @@
     letter-spacing: 1.5px;
   }
 
+  .interests-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 0.5rem;
+  }
   
+  .interest-tag {
+    display: inline-flex;
+    align-items: center;
+    background-color: #f0f0f0;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    white-space: nowrap;
+  }
+  .interest-emoji {
+    margin-right: 6px;
+  }
