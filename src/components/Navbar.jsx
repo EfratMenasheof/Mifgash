@@ -18,7 +18,7 @@ function Navbar({ onProfileClick }) {
             <Link to="/friends" className={`nav-link ${location.pathname === '/friends' ? 'active' : ''}`}>Connections</Link>
           </li>
           <li>
-            <Link to="/lessons" className={`nav-link ${location.pathname === '/lessons' ? 'active' : ''}`}>Lessons</Link>
+            <Link to="/lessons" className={`nav-link ${location.pathname === '/lessons' ? 'active' : ''}`}>Mifgashim</Link>
           </li>
           <li>
             <Link to="/about" className={`nav-link ${location.pathname === '/about' ? 'active' : ''}`}>About</Link>
