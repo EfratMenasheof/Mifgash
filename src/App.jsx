@@ -12,10 +12,14 @@ import LessonsPage from './pages/LessonsPage';
 import AboutPage from './pages/AboutPage';
 import { mockFriends } from './data/FriendsData';
 import ProfileModal from './components/ProfileModal';
+import FloatingMessageButton from './components/FloatingMessageButton';
+import ChatModal from './components/ChatModal'; // ← חדש
 
-// אפליקציה עם ראוטינג
 function App() {
   const [selectedFriend, setSelectedFriend] = useState(null);
+  const [hasNewMessage, setHasNewMessage] = useState(true);
+  const [isChatOpen, setIsChatOpen] = useState(false); // ← חדש
+
   const currentUser = mockFriends.find(f => f.id === 'user');
 
   const handleProfileClick = () => {
@@ -24,6 +28,11 @@ function App() {
 
   const handleCloseModal = () => {
     setSelectedFriend(null);
+  };
+
+  const handleOpenMessages = () => {
+    setIsChatOpen(true);       // פותח את הצ׳אט
+    setHasNewMessage(true);   // מסיר את הסימון האדום
   };
 
   return (
@@ -43,8 +52,17 @@ function App() {
         </Routes>
       </div>
 
+      <FloatingMessageButton
+        onClick={handleOpenMessages}
+        hasNewMessage={hasNewMessage}
+      />
+
       {selectedFriend && (
         <ProfileModal friend={selectedFriend} onClose={handleCloseModal} />
+      )}
+
+      {isChatOpen && (
+        <ChatModal onClose={() => setIsChatOpen(false)} />
       )}
     </Router>
   );

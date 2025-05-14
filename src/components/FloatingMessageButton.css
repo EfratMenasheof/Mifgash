@@ -1,0 +1,54 @@
+.floating-msg-btn {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background-color: #fbb76a;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 56px;
+    height: 56px;
+    font-size: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    cursor: pointer;
+    z-index: 2000;
+    transition: background-color 0.3s;
+  }
+  
+  .floating-msg-btn:hover {
+    background-color: #ffa239;
+  }
+
+  .floating-msg-btn {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background-color: #fbb76a;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 56px;
+    height: 56px;
+    font-size: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    cursor: pointer;
+    z-index: 2000;
+    transition: background-color 0.3s;
+  }
+  
+  .floating-msg-btn:hover {
+    background-color: #ffa239;
+  }
+  
+  /* נקודה אדומה */
+  .floating-msg-btn.has-new::after {
+    content: '';
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 12px;
+    height: 12px;
+    background-color: red;
+    border-radius: 50%;
+    border: 2px solid white;
+  }
