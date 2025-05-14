@@ -1,0 +1,70 @@
+.about-wrapper {
+  padding: 50px 80px;
+  background-color: #f4f7fe;
+  color: #031146;
+}
+
+.about-title {
+  text-align: center;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.8rem;
+  color: #110976;
+  margin-bottom: 10px;
+}
+
+.about-subtitle {
+  text-align: center;
+  font-size: 1.2rem;
+  max-width: 800px;
+  margin: 0 auto 40px;
+}
+
+.about-section {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  margin-bottom: 60px;
+}
+
+.about-section.reverse {
+  flex-direction: row-reverse;
+}
+
+.about-section img {
+  width: 45%;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.about-text h3 {
+  color: #ff9640;
+  margin-bottom: 10px;
+}
+
+.about-text p {
+  line-height: 1.6;
+}
+
+.testimonials {
+  text-align: center;
+  background-color: #d1dcf8;
+  padding: 40px 30px;
+  border-radius: 16px;
+}
+
+.testimonials h2 {
+  color: #110976;
+  margin-bottom: 30px;
+}
+
+.quote-block {
+  margin-bottom: 25px;
+  font-style: italic;
+}
+
+.quote-block span {
+  display: block;
+  margin-top: 8px;
+  font-weight: bold;
+  color: #555;
+}

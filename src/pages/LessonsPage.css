@@ -98,3 +98,21 @@
   font-size: 14px;
   color: #333;
 }
+/* ממקם את ה־X משמאל, ואת הכותרת מימין */
+.lesson-modal .modal-header {
+  flex-direction: row-reverse;
+  background-color: #110976;
+  color: white;
+  border-bottom: none;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+.lesson-modal-title {
+  margin: 0;
+  font-weight: bold;
+  font-size: 1.5rem;
+  text-align: right;
+  width: 100%;
+  font-family: 'Heebo', sans-serif;
+}

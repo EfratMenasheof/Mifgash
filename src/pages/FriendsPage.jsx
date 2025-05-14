@@ -43,7 +43,6 @@ function FriendsPage() {
         </div>
 
         <div className="friends-buttons mt-4">
-          <button className="friends-button">Send Message</button>
           <button className="friends-button">Add New Friend</button>
         </div>
       </div>

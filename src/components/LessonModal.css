@@ -1,0 +1,46 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1050;
+}
+
+.modal-content.lesson-modal {
+  background-color: #ffffff;
+  border-radius: 12px;
+  max-width: 600px;
+  width: 90%;
+  padding: 24px;
+  position: relative;
+  text-align: right;
+}
+
+.modal-close-button {
+  position: absolute;
+  top: 16px;
+  left: 16px; /* משמאל */
+  font-size: 24px;
+  font-weight: bold;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #333;
+}
+
+.lesson-title-modal {
+  margin-right: 0;
+  font-size: 1.5rem;
+  color: #110976;
+  margin-bottom: 12px;
+  text-align: right;
+  font-family: 'Heebo', sans-serif;
+  font-size: 24px;
+  font-weight: 510;
+
+}
