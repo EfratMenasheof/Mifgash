@@ -159,3 +159,13 @@
     background-color: #ffa239;
     color: white;
   }
+  .chat-search-input {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    font-size: 1rem;
+    background-color: #e9efff;
+    outline: none;
+    border-radius: 12px;
+  }

@@ -1,8 +1,7 @@
 import './App.css';
 import Navbar from './components/Navbar';
 import logo from './assets/mifgash_logo.png';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useState } from 'react';
 
 // Pages
@@ -10,17 +9,21 @@ import HomePage from './pages/HomePage';
 import FriendsPage from './pages/FriendsPage';
 import LessonsPage from './pages/LessonsPage';
 import AboutPage from './pages/AboutPage';
+
 import { mockFriends } from './data/FriendsData';
+import chatData from './data/chatData'; // ← נוספה השורה הזו
 import ProfileModal from './components/ProfileModal';
 import FloatingMessageButton from './components/FloatingMessageButton';
-import ChatModal from './components/ChatModal'; // ← חדש
+import ChatModal from './components/ChatModal';
 
 function App() {
   const [selectedFriend, setSelectedFriend] = useState(null);
   const [hasNewMessage, setHasNewMessage] = useState(true);
-  const [isChatOpen, setIsChatOpen] = useState(false); // ← חדש
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   const currentUser = mockFriends.find(f => f.id === 'user');
+
+  const [chatHistory, setChatHistory] = useState(chatData); // ← שימוש בשיחות מהקובץ
 
   const handleProfileClick = () => {
     setSelectedFriend(currentUser);
@@ -31,8 +34,8 @@ function App() {
   };
 
   const handleOpenMessages = () => {
-    setIsChatOpen(true);       // פותח את הצ׳אט
-    setHasNewMessage(true);   // מסיר את הסימון האדום
+    setIsChatOpen(true);
+    setHasNewMessage(false);
   };
 
   return (
@@ -62,7 +65,11 @@ function App() {
       )}
 
       {isChatOpen && (
-        <ChatModal onClose={() => setIsChatOpen(false)} />
+        <ChatModal
+          onClose={() => setIsChatOpen(false)}
+          chatHistory={chatHistory}
+          setChatHistory={setChatHistory}
+        />
       )}
     </Router>
   );
