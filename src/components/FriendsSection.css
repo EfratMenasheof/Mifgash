@@ -76,8 +76,8 @@
 }
 
 .friends-button {
-  color: #000000;
-  background-color: #fbb76a;
+  background-color: #ffa239;
+  color: #ffffff;
   border: none;
   padding: 10px 18px;
   border-radius: 13px;
@@ -88,8 +88,8 @@
 }
 
 .friends-button:hover {
-  background-color: #ffa239;
-  color: #ffffff;
+  color: #000000;
+  background-color: #fbb76a;
 }
 
 .leadconnections-title {

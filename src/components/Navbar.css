@@ -37,14 +37,27 @@
   display: block;
   z-index: 1;
   position: relative;
+  cursor: pointer;
+  transition: box-shadow 0.3s ease, border 0.3s ease;
 }
 
+.user-profile-pic:hover {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  border: 2px solid #4065bd;
+}
 
 .profile-name {
   font-size: 1rem;
   font-weight: bold;
   color: #333;
+  cursor: pointer;
+  transition: color 0.3s, text-decoration 0.3s;
 }
+.profile-name:hover {
+  color: #1446ac;
+  /* text-decoration: underline; */
+}
+
 
 .navbar {
   position: relative;

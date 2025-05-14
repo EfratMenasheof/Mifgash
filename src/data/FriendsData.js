@@ -1,7 +1,14 @@
 export const mockFriends = [
   {id: 'user',
-    name: 'You',
-    location: { city: 'Jerusalem', region: 'Jerusalem', country: 'ISRAEL' }  },
+    name: 'Maya Chen',
+    gender: 'Woman',
+    age: 24,
+    language: 'Hebrew',
+    bio: 'Statistics, Data Science & MATAR student, live in Jerusalem and love it! ',
+    interests: ['Going to the beach', 'Yoga', 'Vegan recipes', 'Comedy podcasts'],
+    image: '/Profile-pics/user.jpg',
+    location: { city: 'Jerusalem', region: 'Jerusalem', country: 'IL' }  },
+    
   {
     id: 1,
     name: 'Adam Sandler',

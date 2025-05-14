@@ -1,5 +1,6 @@
 import './ProfileModal.css';
 import interestsData from '../data/Interests_Categories.json';
+import { mockFriends } from '../data/FriendsData';
 
 // מיפוי של תחומי עניין -> אימוג'י מתוך הקובץ
 const interestEmojiMap = {};
@@ -20,11 +21,17 @@ function countryToFlag(countryCode) {
 function ProfileModal({ friend, onClose }) {
   if (!friend) return null;
 
+  const isCurrentUser = friend.id === 'user';
   const isAlreadyFriend = friend.isFriend === true;
+
+  const currentUser = mockFriends.find(f => f.id === 'user');
+  const currentUserInterests = currentUser?.interests || [];
 
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <button className="modal-close-button" onClick={onClose}>&times;</button>
+
         <img
           src={friend.image || '/Profile-pics/default.jpg'}
           onError={(e) => (e.target.src = '/Profile-pics/default.jpg')}
@@ -39,23 +46,33 @@ function ProfileModal({ friend, onClose }) {
 
         <p><strong>Interests:</strong></p>
         <div className="interests-wrapper">
-          {friend.interests.map((interest) => (
-            <div key={interest} className="interest-tag">
-              <span className="interest-emoji">{interestEmojiMap[interest] || '✨'}</span>
-              {interest}
-            </div>
-          ))}
+          {friend.interests.map((interest) => {
+            const isShared = currentUserInterests.includes(interest);
+            return (
+              <div key={interest} className={`interest-tag ${isShared ? 'shared-interest' : ''}`}>
+                <span className="interest-emoji">{interestEmojiMap[interest] || '✨'}</span>
+                {interest}
+              </div>
+            );
+          })}
         </div>
 
-        {!isAlreadyFriend && (
+        {!isCurrentUser && !isAlreadyFriend && (
           <button className="send-request-button">
             Send Friend Request
           </button>
         )}
 
+        {isCurrentUser && (
+          <button className="friends-button" style={{ marginTop: '16px' }}>
+            Edit Profile
+          </button>
+        )}
+
         <div className="modal-buttons">
-          <button onClick={onClose} className="friends-button">Close</button>
-          <button onClick={onClose} className="friends-button">Send a Message</button>
+          {!isCurrentUser && (
+            <button onClick={onClose} className="friends-button">Send a Message</button>
+          )}
         </div>
       </div>
     </div>

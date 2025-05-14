@@ -2,7 +2,7 @@ import './Navbar.css';
 import logo from '../assets/mifgash_logo.png';
 import { Link, useLocation } from 'react-router-dom';
 
-function Navbar() {
+function Navbar({ onProfileClick }) {
   const location = useLocation();
 
   return (
@@ -27,8 +27,13 @@ function Navbar() {
       </nav>
 
       <div className="profile-section">
-        <span className="profile-name">Maya Chen</span>
-        <img src="/Profile-pics/user.jpg" alt="Profile" className="user-profile-pic" />
+        <span className="profile-name" onClick={onProfileClick}>Maya Chen</span>
+        <img
+          src="/Profile-pics/user.jpg"
+          alt="Profile"
+          className="user-profile-pic"
+          onClick={onProfileClick}
+        />
       </div>
     </div>
   );
