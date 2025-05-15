@@ -2,48 +2,74 @@ import './AboutPage.css';
 
 function AboutPage() {
   return (
-    <div className="about-wrapper">
-      <h1 className="about-title">ABOUT MIFGASH</h1>
-      <p className="about-subtitle">
-        Founded in 2025, Mifgash was born from a simple yet powerful idea: that real language learning happens through human connection.
-        In a world filled with language apps, we chose to focus on people. Our platform connects Jews around the world for friendly, 
-        meaningful conversations that help both sides grow.
-      </p>
+    <div className="about-page">
+      {/* Opening Section */}
+      <div className="container text-center my-5">
+        <h1 className="about-title">ABOUT MIFGASH</h1>
+        <p className="lead about-lead">
+          Mifgash was born from a powerful idea: that meaningful connections between Jews around the world can spark both personal and cultural growth.
+          Through shared language learning, we help people bond across distance and difference – making Hebrew and English more than just school subjects.
+        </p>
+      </div>
 
-      <div className="about-section">
-        <img src="/public/AboutUs-pics/zoom-call.png" alt="Happy Zoom Call" />
-        <div className="about-text">
-          <h3>Online-Only, Always Together</h3>
-          <p>
-            Whether you're in Tel Aviv or New York, you can meet new people, practice your Hebrew or English, and feel part of something bigger –
-            all from the comfort of your home.
-          </p>
+      {/* Section 1 – Zoom Call (blue background) */}
+      <div className="about-section bg-blue">
+        <div className="container py-5">
+          <div className="row align-items-center">
+            <div className="col-md-6 mb-4 mb-md-0">
+              <img src="/AboutUs-pics/zoom-call.png" alt="Zoom Call" className="img-fluid rounded shadow" />
+            </div>
+            <div className="col-md-6">
+              <h2 className="section-heading text-orange">Online-Only, Always Together</h2>
+              <p className="section-text">
+                Whether you're in Tel Aviv or New York, you can meet new people, practice your Hebrew or English,
+                and feel part of something bigger – all from the comfort of your home.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="about-section reverse">
-        <div className="about-text">
-          <h3>Learn with a Friend</h3>
-          <p>
-            Language becomes easier, faster, and way more fun when you're talking to someone who cares. Our goal is to build bridges, not just vocab.
-          </p>
+      {/* Section 2 – Girl with Laptop (white background, reversed) */}
+      <div className="about-section bg-white">
+        <div className="container py-5">
+          <div className="row align-items-center flex-md-row-reverse">
+            <div className="col-md-6 mb-4 mb-md-0">
+              <img src="/AboutUs-pics/girl-computer.png" alt="Girl at laptop" className="img-fluid rounded shadow" />
+            </div>
+            <div className="col-md-6">
+              <h2 className="section-heading">Learn with a Friend</h2>
+              <p className="section-text black-text">
+                Language becomes easier, faster, and way more fun when you're talking to someone who cares.
+                Our goal is to build bridges, not just vocab.
+              </p>
+            </div>
+          </div>
         </div>
-        <img src="/public/AboutUs-pics/girl-computer.png" alt="Friendly video chat" />
       </div>
 
-      <div className="testimonials">
-        <h2>User Testimonials</h2>
-        <div className="quote-block">
-          <p>“I’ve never felt so connected to someone across the world. We laugh, we learn, and now I finally remember the word for ‘weekend’.”</p>
-          <span>– Rachel from Chicago</span>
-        </div>
-        <div className="quote-block">
-          <p>“My partner helps me improve my English, and I help her with Hebrew. It’s like a language exchange but way more personal.”</p>
-          <span>– Noa from Haifa</span>
-        </div>
-        <div className="quote-block">
-          <p>“I was tired of using language apps. Talking to an actual person? That’s how you learn.”</p>
-          <span>– Eli from Boston</span>
+      {/* Testimonials (blue background) */}
+      <div className="about-section bg-blue text-center py-5">
+        <h2 className="section-heading text-orange">Hear from our users:</h2>
+        <div className="container">
+          <p className="testimonial">
+            <em>
+              “I've never felt so connected to someone across the world. We laugh, we learn, and now I finally remember the word for ‘weekend’.”
+              <br /><span className="author">– Rachel from Chicago</span>
+            </em>
+          </p>
+          <p className="testimonial">
+            <em>
+              “My partner helps me improve my English, and I help her with Hebrew. It’s like a language exchange but way more personal.”
+              <br /><span className="author">– Noa from Haifa</span>
+            </em>
+          </p>
+          <p className="testimonial">
+            <em>
+              “I was tired of using language apps. Talking to an actual person? That's how you learn.”
+              <br /><span className="author">– David from Tel Aviv</span>
+            </em>
+          </p>
         </div>
       </div>
     </div>

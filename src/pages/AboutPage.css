@@ -1,70 +1,74 @@
-.about-wrapper {
-  padding: 50px 80px;
-  background-color: #f4f7fe;
-  color: #031146;
-}
-
 .about-title {
-  text-align: center;
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 2.8rem;
+  font-size: 3rem;
   color: #110976;
-  margin-bottom: 10px;
+  letter-spacing: 1.5px;
 }
 
-.about-subtitle {
-  text-align: center;
-  font-size: 1.2rem;
+.about-lead {
   max-width: 800px;
-  margin: 0 auto 40px;
+  margin: auto;
+  font-size: 2rem;
+  color: #1a1a1a;
+  font-family: "Kalam", cursive;
+  font-weight: 500;
 }
 
 .about-section {
-  display: flex;
-  align-items: center;
-  gap: 40px;
-  margin-bottom: 60px;
+  width: 100%;
 }
 
-.about-section.reverse {
-  flex-direction: row-reverse;
+.bg-blue {
+  background-color: #110976;
+  width: 100vw; /* זה הפתרון: מרחיב את הרקע לרוחב כל המסך */
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
 }
 
-.about-section img {
-  width: 45%;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+
+.bg-white {
+  background-color: #ffffff;
 }
 
-.about-text h3 {
-  color: #ff9640;
-  margin-bottom: 10px;
-}
-
-.about-text p {
-  line-height: 1.6;
-}
-
-.testimonials {
-  text-align: center;
-  background-color: #d1dcf8;
-  padding: 40px 30px;
-  border-radius: 16px;
-}
-
-.testimonials h2 {
-  color: #110976;
-  margin-bottom: 30px;
-}
-
-.quote-block {
-  margin-bottom: 25px;
-  font-style: italic;
-}
-
-.quote-block span {
-  display: block;
-  margin-top: 8px;
+.section-heading {
+  font-size: 1.75rem;
   font-weight: bold;
-  color: #555;
+  color: #110976;
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 1.2px;
+
+}
+
+.text-orange {
+  color: #fbb76a;
+  letter-spacing: 1.2px;
+}
+
+.section-text {
+  font-size: 1.5rem;
+  color: #ffffff;
+}
+
+.black-text {
+    color: #000000; 
+}
+
+.testimonial {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: #ffffff;
+  font-family: "Kalam", cursive;
+}
+
+.author {
+  display: block;
+  margin-top: 0.5rem;
+  font-style: normal;
+  font-weight: 500;
+  color: #ffbd66;
+  font-family: "Inter", sans-serif;
+  font-size: 1.5rem;
 }
