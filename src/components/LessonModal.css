@@ -44,3 +44,69 @@
   font-weight: 510;
 
 }
+
+.custom-modal-wrapper {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1050;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-dialog {
+  margin: auto;
+  background: white;
+  border-radius: 12px;
+  width: 500px;
+  max-width: 90%;
+  padding: 20px;
+  position: relative;
+}
+
+.close-x {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  font-size: 24px;
+  cursor: pointer;
+  color: #333;
+}
+
+.lesson-title-modal {
+  text-align: right;
+  font-family: 'Heebo', sans-serif;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.form-section {
+  margin-bottom: 20px;
+  text-align: right;
+}
+
+.lesson-card-preview {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 12px;
+  background-color: #f7f7f7;
+  margin-top: 20px;
+  text-align: right;
+}
+
+.btn-generate, .btn-save {
+  background-color: #fbb76a;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.btn-generate:hover, .btn-save:hover {
+  background-color: #ffa239;
+}

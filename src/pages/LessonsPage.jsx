@@ -10,10 +10,17 @@ function LessonsPage() {
   const [selectedLesson, setSelectedLesson] = useState(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [lessons, setLessons] = useState(mockLessons);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const handleSaveLesson = (newLesson) => {
     setLessons((prevLessons) => [...prevLessons, newLesson]);
   };
+
+  const filteredLessons = lessons
+    .filter((lesson) =>
+      lesson.topic?.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // sort by newest first
 
   return (
     <div className="container mt-5">
@@ -23,14 +30,21 @@ function LessonsPage() {
       </h5>
 
       <div className="lesson-wrapper smaller">
-        <div className="text-start mb-4 fw-bold">
-          You have {lessons.length} lessons
+        <div className="d-flex justify-content-between align-items-center mb-3">
+          <div className="fw-bold">You have {filteredLessons.length} lessons</div>
+          <input
+            type="text"
+            className="form-control search-input"
+            placeholder="Search by title..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </div>
 
         <div className="scrollable-card-grid">
-          {lessons.map((lesson) => (
+          {filteredLessons.map((lesson) => (
             <LessonCard
-              key={lesson.id}
+              key={lesson.id || lesson.topic}
               lesson={lesson}
               onClick={() => setSelectedLesson(lesson)}
             />
@@ -47,7 +61,10 @@ function LessonsPage() {
         </div>
       </div>
 
-      <LessonModal lesson={selectedLesson} onClose={() => setSelectedLesson(null)} />
+      <LessonModal
+        lesson={selectedLesson}
+        onClose={() => setSelectedLesson(null)}
+      />
       <CreateLessonModal
         show={showCreateModal}
         onClose={() => setShowCreateModal(false)}

@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 
 function CreateLessonModal({ show, onClose, friends, onSave }) {
-  const [level, setLevel] = useState('');
   const [language, setLanguage] = useState('');
   const [selectedFriendId, setSelectedFriendId] = useState('');
   const [suggestion, setSuggestion] = useState('');
@@ -12,7 +11,6 @@ function CreateLessonModal({ show, onClose, friends, onSave }) {
 
   useEffect(() => {
     if (!show) {
-      setLevel('');
       setLanguage('');
       setSelectedFriendId('');
       setSuggestion('');
@@ -22,36 +20,50 @@ function CreateLessonModal({ show, onClose, friends, onSave }) {
     }
   }, [show]);
 
-  const generateSuggestion = () => {
-    const friend = friends.find(f => f.id === Number(selectedFriendId));
-    if (!friend) {
-      setSuggestion('⚠ No friend selected.');
-      return;
-    }
+  const actualFriends = friends.filter((f) => f.isFriend);
 
-    const topic = friend.interests?.[0] || 'General conversation';
+const generateSuggestion = () => {
+  const friend = friends.find((f) => f.id === Number(selectedFriendId));
+  if (!friend || !language) {
+    setSuggestion('⚠ נא לבחור שפה וחבר לפני יצירת רעיון לשיעור.');
+    return;
+  }
 
-    const generated = `בהתאם לרמת הקושי "${level}" ולשפה "${language}", נושא השיעור המומלץ הוא:\n\n🗣 שיחה בנושא: ${topic} (בהשראת תחומי העניין של ${friend.name})`;
+  const topicEnglish = friend.interests?.[0] || 'שיחה כללית';
 
-    setSuggestion(generated);
-    setGeneratedTopic(topic);
-    setApproved(false);
-    setSaved(false);
+  // מפה פשוטה של תרגום תחומי עניין
+  const translations = {
+    'Poetry slams': 'פואטרי סלאם',
+    'Yoga': 'יוגה',
+    'Going to the beach': 'חוף ים',
+    'Comedy podcasts': 'פודקאסטים מצחיקים',
+    'Vegan recipes': 'מתכונים טבעוניים'
   };
+
+  const topicHebrew = translations[topicEnglish] || topicEnglish;
+
+  let generated = '';
+  if (language === 'Hebrew') {
+    generated = `נושא השיעור המומלץ הוא:\n\n🗣 שיחה בנושא: ${topicHebrew}`;
+  } else {
+    generated = `Recommended topic:\n\n🗣 Conversation about: ${topicEnglish}`;
+  }
+
+  setSuggestion(generated);
+  setGeneratedTopic(language === 'Hebrew' ? topicHebrew : topicEnglish);
+  setApproved(false);
+  setSaved(false);
+};
+
 
   const getFullLessonContent = () => {
     return {
       topic: generatedTopic,
-      level,
       language,
       recipients: [Number(selectedFriendId)],
-      description: suggestion,
-      fullContent: {
-        goals: `לנהל שיחה בנושא "${generatedTopic}"`,
-        words: `רשימת מילים וביטויים הקשורים ל-${generatedTopic}`,
-        dialogue: `שיחה לדוגמה בין מאיה לחבר על נושא "${generatedTopic}"`,
-        exercise: 'תרגול: השלמת משפטים, התאמה לתרגום, שימוש בביטויים חדשים'
-      },
+      description: '${generatedTopic}',
+      createdAt: new Date().toISOString().split('T')[0],
+fullContent: `🎯 מטרות:\n- לנהל שיחה בנושא "${generatedTopic}"\n\n🧠 מילים חדשות:\n- אוצר מילים רלוונטי לנושא\n\n💬 דיאלוג:\n- דיאלוג מדומה בנושא בין המשתמש לחבר\n\n📝 תרגול:\n1. השלמת משפטים\n2. התאמה בין מושגים בעברית ואנגלית`
     };
   };
 
@@ -65,94 +77,84 @@ function CreateLessonModal({ show, onClose, friends, onSave }) {
     setSaved(true);
   };
 
-  const actualFriends = friends.filter(f => f.isFriend);
-
   return (
     <Modal show={show} onHide={onClose} centered size="lg">
       <Modal.Header closeButton>
-        <Modal.Title>Create a New Lesson</Modal.Title>
+        <Modal.Title>צור שיעור חדש</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
-        <Form>
+        <Form dir="rtl">
           <Form.Group className="mb-3">
-            <Form.Label>Level</Form.Label>
+            <Form.Label>בחר שפה:</Form.Label>
             <div>
-              {['Beginners', 'Medium', 'Pro'].map(lvl => (
-                <Form.Check
-                  type="radio"
-                  inline
-                  key={lvl}
-                  name="level"
-                  label={lvl}
-                  checked={level === lvl}
-                  onChange={() => setLevel(lvl)}
-                />
-              ))}
+              <Form.Check
+                type="radio"
+                inline
+                label="עברית"
+                value="Hebrew"
+                checked={language === 'Hebrew'}
+                onChange={() => setLanguage('Hebrew')}
+              />
+              <Form.Check
+                type="radio"
+                inline
+                label="English"
+                value="English"
+                checked={language === 'English'}
+                onChange={() => setLanguage('English')}
+              />
             </div>
           </Form.Group>
 
           <Form.Group className="mb-3">
-            <Form.Label>Language to Teach</Form.Label>
-            <div>
-              {['Hebrew', 'English'].map(lang => (
-                <Form.Check
-                  type="radio"
-                  inline
-                  key={lang}
-                  name="language"
-                  label={lang}
-                  checked={language === lang}
-                  onChange={() => setLanguage(lang)}
-                />
-              ))}
-            </div>
-          </Form.Group>
-
-          <Form.Group className="mb-3">
-            <Form.Label>Choose a Friend</Form.Label>
+            <Form.Label>בחר חבר:</Form.Label>
             <Form.Select
               value={selectedFriendId}
               onChange={(e) => setSelectedFriendId(e.target.value)}
             >
-              <option value="">Select a friend...</option>
-              {actualFriends.map(friend => (
-                <option key={friend.id} value={friend.id}>
-                  {friend.name} (#{friend.id})
+              <option value="">...Select a friend</option>
+              {actualFriends.map((f) => (
+                <option key={f.id} value={f.id}>
+                  {f.name}
                 </option>
               ))}
             </Form.Select>
           </Form.Group>
 
-          <div className="d-flex gap-2">
-            <Button variant="outline-primary" onClick={generateSuggestion}>Generate</Button>
-            {suggestion && <Button variant="outline-secondary" onClick={generateSuggestion}>Regenerate</Button>}
-            {suggestion && !approved && <Button variant="success" onClick={approveLesson}>Approve</Button>}
+          <div className="d-flex gap-2 mb-3">
+            <Button variant="primary" onClick={generateSuggestion}>
+              Generate Lesson
+            </Button>
+            {suggestion && !approved && (
+              <Button variant="success" onClick={approveLesson}>
+                Approve
+              </Button>
+            )}
           </div>
 
           {suggestion && (
-            <div className="mt-3 p-3 bg-light border rounded" dir="rtl">
+            <div className="p-3 bg-light border rounded mb-3" dir="rtl">
               {suggestion}
             </div>
           )}
 
           {approved && (
-            <div className="mt-4 border p-3 bg-white shadow-sm rounded" dir="rtl">
+            <div className="p-3 border rounded bg-white" dir="rtl">
               <h5>🎓 מערך שיעור לדוגמה</h5>
               <p><strong>מטרות:</strong> לנהל שיחה בנושא "{generatedTopic}"</p>
-              <p><strong>מילים חדשות:</strong> רשימת מילים וביטויים הקשורים ל-{generatedTopic}</p>
-              <p><strong>דיאלוג:</strong> שיחה לדוגמה בין מאיה לחבר על נושא "{generatedTopic}"</p>
-              <p><strong>תרגול:</strong> השלמת משפטים, התאמה לתרגום, שימוש בביטויים חדשים</p>
+              <p><strong>מילים חדשות:</strong> אוצר מילים רלוונטי לנושא</p>
+              <p><strong>דיאלוג:</strong> דיאלוג מדומה בנושא בין המשתמש לחבר</p>
+              <p><strong>תרגול:</strong> השלמת משפטים, התאמה בין מושגים בעברית ואנגלית</p>
               {!saved ? (
                 <Button className="mt-2" variant="outline-success" onClick={saveLesson}>
                   Save this Lesson
                 </Button>
               ) : (
-                <div className="mt-2 text-success">✅ Lesson saved to your list!</div>
+                <div className="mt-2 text-success">✅ השיעור נשמר לרשימה שלך</div>
               )}
             </div>
           )}
-
         </Form>
       </Modal.Body>
 
