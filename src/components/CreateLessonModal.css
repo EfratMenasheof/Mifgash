@@ -112,10 +112,10 @@
   gap: 12px;
   max-height: 160px;
   overflow-y: auto;
-  background-color: #d8f1ff;
+  background-color: #baccf7;
   padding: 10px;
   border-radius: 6px;
-  justify-content: start;
+  justify-content: center ;
 }
 
 .friend-option {
@@ -137,8 +137,8 @@
 }
 
 .friend-avatar {
-  width: 56px;
-  height: 56px;
+  width: 65px;
+  height: 65px;
   border-radius: 50%;
   object-fit: cover;
   margin-bottom: 4px;
@@ -153,10 +153,10 @@
 
 .generate-button,
 .save-button {
-  background-color: #ffb800;
+  background-color: #fbb76a;
   border: none;
   padding: 10px 20px;
-  border-radius: 6px;
+  border-radius: 15px;
   color: black;
   font-weight: bold;
   cursor: pointer;
@@ -171,17 +171,17 @@
 }
 
 .generate-button:hover {
-  background-color: #e5a700;
+  background-color: #ffa239;
 }
 
 .save-button {
-  background-color: #d8f1ff;
+  background-color: #baccf7;
   color: #001278;
   margin-top: 12px;
 }
 
 .save-button:hover {
-  background-color: #c1e6fa;
+  background-color: #92b1f8;
 }
 
 .approve-actions.vertical {
@@ -202,7 +202,7 @@
 
 .saved-message {
   margin-top: 16px;
-  color: #28a745;
+  color: #001278;
   font-weight: bold;
   text-align: center;
 }

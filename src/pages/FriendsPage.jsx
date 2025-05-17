@@ -19,14 +19,14 @@ function FriendsPage() {
   };
 
   return (
-    <div className="container mt-5">
+    <div className="container mt-2">
       <h1 className="leadconnections-title">YOUR CONNECTIONS</h1>
       <h5 className="text-center mb-3">
         Connections are important – keep them strong!
       </h5>
 
       <div className="friends-section">
-        <div className="text-start mb-4 fw-bold">
+        <div className="text-start mb-0 fw-bold">
           You have {visibleFriends.length} connections
         </div>
 

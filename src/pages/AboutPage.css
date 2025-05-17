@@ -6,12 +6,12 @@
 }
 
 .about-lead {
-  max-width: 800px;
+  max-width: 1000px;
   margin: auto;
-  font-size: 2rem;
+  font-size: 1.8rem;
   color: #1a1a1a;
-  font-family: "Kalam", cursive;
-  font-weight: 500;
+  font-family: "Inter";
+  font-weight: 400;
 }
 
 .about-section {
@@ -19,7 +19,7 @@
 }
 
 .bg-blue {
-  background-color: #d1dcf8;
+  background-color: #e0e9ff;
   width: 100vw; /* זה הפתרון: מרחיב את הרקע לרוחב כל המסך */
   position: relative;
   left: 50%;
@@ -34,8 +34,8 @@
 }
 
 .section-heading {
-  font-size: 1.75rem;
-  font-weight: bold;
+  font-size: 2.5rem;
+  font-weight: 500;
   color: #110976;
   font-family: 'Bebas Neue', sans-serif;
   letter-spacing: 1.2px;
@@ -60,7 +60,8 @@
   font-size: 2rem;
   margin-bottom: 2rem;
   color: #110976;
-  font-family: "Kalam", cursive;
+  font-family: "Handlee", cursive;
+  font-weight: 500;
 }
 
 .author {

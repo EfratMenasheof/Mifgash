@@ -23,14 +23,14 @@ function LessonsPage() {
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // sort by newest first
 
   return (
-    <div className="container mt-5">
+    <div className="container mt-2">
       <h1 className="leadconnections-title">YOUR MIFGASHIM</h1>
       <h5 className="text-center mb-3">
         Keep exploring, teaching and learning!
       </h5>
 
       <div className="lesson-wrapper smaller">
-        <div className="d-flex justify-content-between align-items-center mb-3">
+        <div className="d-flex justify-content-between align-items-center mb-0">
           <div className="fw-bold">You have {filteredLessons.length} lessons</div>
           <input
             type="text"
@@ -56,7 +56,7 @@ function LessonsPage() {
             className="new-lesson-button"
             onClick={() => setShowCreateModal(true)}
           >
-            Create a New Lesson
+            Create a New Mifgash
           </button>
         </div>
       </div>

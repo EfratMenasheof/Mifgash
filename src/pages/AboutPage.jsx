@@ -4,7 +4,7 @@ function AboutPage() {
   return (
     <div className="about-page">
       {/* Opening Section */}
-      <div className="container text-center my-5">
+      <div className="container text-center my-2">
         <h1 className="about-title">ABOUT MIFGASH</h1>
         <p className="lead about-lead">
           Mifgash was born from a powerful idea: that meaningful connections between Jews around the world can spark both personal and cultural growth.
@@ -66,8 +66,8 @@ function AboutPage() {
           </p>
           <p className="testimonial">
             <em>
-              “I was tired of using language apps. Talking to an actual person? That's how you learn.”
-              <br /><span className="author">– David from Tel Aviv</span>
+              “I think this is a beautiful way to not only learn a language from one another, but also share our lived experiences, culture, and values.”
+              <br /><span className="author">– Daniel from Baltimore</span>
             </em>
           </p>
         </div>

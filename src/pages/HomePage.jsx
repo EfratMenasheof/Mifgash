@@ -12,7 +12,7 @@ function HomePage() {
   return (
     <div className="container">
       {/* משפט Welcome */}
-      <h1 className="welcome-title mt-4 mb-5">Welcome back, Maya!</h1>
+      <h1 className="welcome-title mt-2 mb-5">Welcome back, Maya!</h1>
 
       <div className="row align-items-stretch gx-5 gx-md-7">
         {/* שמאל – חברים */}

@@ -12,10 +12,12 @@ function CreateLessonModal({ show, onClose, friends, onSave }) {
   const sampleLessons = [
     {
       topic: 'פואטרי סלאם',
+      description: 'ניתוח פואטרי סלאם ישראלי',
       fullContent: `🎯 מטרות:\n- להיחשף לעולם הפואטרי סלאם\n- לתרגל הבעה בעל פה\n\n🧠 מילים חדשות:\n- במה, קהל, שיר, רגש, קצב\n\n💬 דיאלוג:\n- המשתמש משתף שיר קצר עם החבר, החבר מגיב ומספר מה הבין\n\n📝 תרגול:\n1. כתיבת שורת פתיחה לשיר אישי\n2. תרגום מילים בסיסיות לעברית`
     },
     {
       topic: 'ארוחות שישי',
+      description: 'שיח על מנהגי ומסורות שבת',
       fullContent: `🎯 מטרות:\n- לדבר על מסורות ערב שבת\n- ללמוד מילים שקשורות לאוכל, משפחה ומנהגים\n\n🧠 מילים חדשות:\n- חלה, נרות, קידוש, דג, סלטים\n\n💬 דיאלוג:\n- שיחה בין שני חברים על איך נראית אצלם ארוחת שבת\n\n📝 תרגול:\n1. תיאור תמונה של שולחן שבת\n2. השלמת משפטים לפי מנהגים שונים`
     }
   ];
@@ -50,26 +52,29 @@ function CreateLessonModal({ show, onClose, friends, onSave }) {
   const currentLesson = sampleLessons[lessonIndex];
 
   const saveLesson = () => {
-    const newLesson = {
-      topic: currentLesson.topic,
-      language,
-      recipients: [Number(selectedFriendId)],
-      description:
-        language === 'Hebrew'
-          ? `שיחה בנושא: ${currentLesson.topic}`
-          : `Conversation about: ${currentLesson.topic}`,
-      createdAt: new Date().toISOString().split('T')[0],
-      fullContent: currentLesson.fullContent
-    };
-    if (onSave) onSave(newLesson);
-    setSaved(true);
+  const newLesson = {
+    topic: currentLesson.topic, // תמיד בעברית
+    language,
+    recipients: [Number(selectedFriendId)],
+    description: `${currentLesson.description}`, // גם תמיד בעברית
+    createdAt: new Date().toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    }),
+    fullContent: currentLesson.fullContent // גם בעברית
   };
+
+  if (onSave) onSave(newLesson);
+  setSaved(true);
+};
+
 
   return (
     <div className="lesson-modal-overlay">
       <div className="lesson-modal-container wide centered-modal">
         <button className="modal-close-button" onClick={onClose}>✕</button>
-        <h2 className="modal-title">CREATE A NEW LESSON</h2>
+        <h2 className="modal-title">CREATE A NEW MIFGASH</h2>
 
         <div className="step-indicator">
           <div className={`step-dot ${step === 1 ? 'active' : ''}`}></div>
@@ -92,7 +97,7 @@ function CreateLessonModal({ show, onClose, friends, onSave }) {
               </div>
 
               <div className="form-group">
-                <label className="form-label">Choose a Friend:</label>
+                <label className="form-label">Choose a Connection:</label>
                 <div className="friend-scroll-box">
                   {actualFriends.map((f) => (
                     <div
@@ -121,7 +126,7 @@ function CreateLessonModal({ show, onClose, friends, onSave }) {
                 {!saved ? (
                   <div className="approve-actions vertical">
                     <button type="button" className="generate-button" onClick={generateSuggestion}>Regenerate</button>
-                    <button type="button" className="save-button" onClick={saveLesson}>Save Lesson</button>
+                    <button type="button" className="save-button" onClick={saveLesson}>Save</button>
                   </div>
                 ) : (
                   <div className="saved-message">✅ Lesson saved successfully</div>
