@@ -4,7 +4,7 @@ function AboutPage() {
   return (
     <div className="about-page">
       {/* Opening Section */}
-      <div className="container text-center my-2">
+      <div className="container text-center my-4">
         <h1 className="about-title">ABOUT MIFGASH</h1>
         <p className="lead about-lead">
           Mifgash was born from a powerful idea: that meaningful connections between Jews around the world can spark both personal and cultural growth.

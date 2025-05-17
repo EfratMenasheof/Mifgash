@@ -22,7 +22,7 @@ function FriendsPage() {
   };
 
   return (
-    <div className="container mt-2">
+    <div className="container mt-4">
       <h1 className="leadconnections-title">YOUR CONNECTIONS</h1>
       <h5 className="text-center mb-3">
         Connections are important – keep them strong!

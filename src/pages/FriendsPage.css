@@ -1,6 +1,6 @@
 .friends-section {
    background-color: #d1dcf8;
-  padding: 24px 40px 39px;
+  padding: 24px 40px 40px;
   margin-bottom: 40px;
   border-radius: 12px;
   box-sizing: border-box;
@@ -10,7 +10,7 @@
 }
 
 .friends-grid-container {
-  max-height: 370px; /* מאפשר 2 שורות בגובה נעים */
+  max-height: 600px; /* מאפשר 2 שורות בגובה נעים */
   overflow-y: auto;
   overflow-x: hidden;
   padding: 12px 6px 4px 0;

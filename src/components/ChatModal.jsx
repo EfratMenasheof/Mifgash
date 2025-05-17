@@ -3,7 +3,7 @@ import { mockFriends } from '../data/FriendsData';
 import { useState, useEffect } from 'react';
 import confetti from 'canvas-confetti';
 
-function ChatModal({ onClose, chatHistory, setChatHistory }) {
+function ChatModal({ onClose, chatHistory, setChatHistory, currentUser }) {
   const friends = mockFriends.filter(f => f.isFriend && f.id !== 'user');
   const [selectedFriend, setSelectedFriend] = useState(friends[0]);
   const [input, setInput] = useState('');
@@ -15,10 +15,6 @@ function ChatModal({ onClose, chatHistory, setChatHistory }) {
   useEffect(() => {
     setMessages(chatHistory[selectedFriend.id] || []);
   }, [selectedFriend, chatHistory]);
-
-  const handleSelectFriend = (friend) => {
-    setSelectedFriend(friend);
-  };
 
   const handleSend = () => {
     if (input.trim() === '') return;
@@ -39,16 +35,34 @@ function ChatModal({ onClose, chatHistory, setChatHistory }) {
   const handleSendMeeting = () => {
     if (!meetingDate) return;
     const now = new Date();
-    const newMeeting = {
+    const parsedMeetingDate = new Date(meetingDate);
+
+    const formattedDate = parsedMeetingDate.toLocaleDateString("en-US", {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+
+    const formattedTime = parsedMeetingDate.toLocaleTimeString([], {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    });
+
+    const userName = currentUser?.name || "You";
+
+    const meetingMessage = {
       sender: 'user',
       type: 'meeting',
-      meetingDate,
+      meetingDate: `${formattedDate} at ${formattedTime}`,
       time: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       date: now.toLocaleDateString(),
       fullDate: now.toISOString(),
-      status: null
+      status: null,
+      text: `${userName} wants to schedule a Mifgash!`
     };
-    const updated = [...(chatHistory[selectedFriend.id] || []), newMeeting];
+
+    const updated = [...(chatHistory[selectedFriend.id] || []), meetingMessage];
     setMessages(updated);
     setChatHistory(prev => ({ ...prev, [selectedFriend.id]: updated }));
     setMeetingDate('');
@@ -94,8 +108,7 @@ function ChatModal({ onClose, chatHistory, setChatHistory }) {
     <div className="chat-modal-overlay" onClick={onClose}>
       <div className="chat-modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="chat-sidebar">
-         <div className="chat-sidebar-topbar">
-            {/* <button className="modal-close-button" onClick={onClose}>✕</button> */}
+          <div className="chat-sidebar-topbar">
             <input
               type="text"
               className="chat-search-input"
@@ -104,7 +117,6 @@ function ChatModal({ onClose, chatHistory, setChatHistory }) {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-
 
           {[...friends]
             .sort((a, b) => {
@@ -145,8 +157,6 @@ function ChatModal({ onClose, chatHistory, setChatHistory }) {
             <div className="chat-username">{selectedFriend.name}</div>
           </div>
 
-
-
           <div className="chat-messages">
             {(() => {
               let lastDate = '';
@@ -154,33 +164,52 @@ function ChatModal({ onClose, chatHistory, setChatHistory }) {
                 const showDate = msg.date !== lastDate;
                 lastDate = msg.date;
 
+                const senderName = msg.sender === 'user'
+                  ? currentUser?.name || "You"
+                  : selectedFriend?.name;
+
+                const meetingText = `${senderName} wants to schedule a Mifgash!`;
+
+                let formattedMeetingDate = msg.meetingDate;
+                if (msg.type === 'meeting' && msg.meetingDate.includes('T')) {
+                  const parsed = new Date(msg.meetingDate);
+                  formattedMeetingDate = parsed.toLocaleString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true
+                  });
+                }
+
                 return (
                   <div key={idx}>
                     {showDate && <div className="chat-date-divider">{msg.date}</div>}
                     {msg.type === 'meeting' ? (
                       <div className={`meeting-card ${msg.sender === 'user' ? 'me' : 'them'}`}>
-                        <strong>הוזמנת למפגש:</strong><br />
-                        📅 {msg.meetingDate}
+                        <strong>{meetingText}</strong><br />
+                        📅 {formattedMeetingDate}
 
                         {msg.sender !== 'user' && msg.status == null && (
                           <div className="meeting-actions">
-                            <button onClick={() => handleMeetingResponse(idx, 'accepted')}>✅ אשר</button>
-                            <button onClick={() => handleMeetingResponse(idx, 'declined')}>❌ דחה</button>
+                            <button onClick={() => handleMeetingResponse(idx, 'accepted')}>✅ Accept</button>
+                            <button onClick={() => handleMeetingResponse(idx, 'declined')}>❌ Decline</button>
                           </div>
                         )}
 
                         {msg.sender !== 'user' && msg.status === 'accepted' && (
-                          <p className="meeting-status">✔️ אישרת את המפגש</p>
+                          <p className="meeting-status">✔️ You accepted the meeting</p>
                         )}
                         {msg.sender !== 'user' && msg.status === 'declined' && (
-                          <p className="meeting-status">❌ דחית את ההזמנה</p>
+                          <p className="meeting-status">❌ You declined the invitation</p>
                         )}
 
                         {msg.sender === 'user' && (
                           <p className="meeting-status">
-                            {msg.status === 'accepted' && '✔️ המשתמש אישר את המפגש'}
-                            {msg.status === 'declined' && '❌ המשתמש דחה את ההזמנה'}
-                            {msg.status == null && '🕗 ממתין לאישור...'}
+                            {msg.status === 'accepted' && '✔️ The user accepted the meeting'}
+                            {msg.status === 'declined' && '❌ The user declined the invitation'}
+                            {msg.status == null && '🕗 Waiting for confirmation...'}
                           </p>
                         )}
 
@@ -218,13 +247,12 @@ function ChatModal({ onClose, chatHistory, setChatHistory }) {
                 onChange={(e) => setMeetingDate(e.target.value)}
               />
               <div className="meeting-dialog-actions">
-                <button onClick={handleSendMeeting}>שלח הזמנה</button>
-                <button onClick={() => setShowMeetingDialog(false)}>ביטול</button>
+                <button onClick={handleSendMeeting}>Send Invitation</button>
+                <button onClick={() => setShowMeetingDialog(false)}>Cancel</button>
               </div>
             </div>
           )}
         </div>
-
       </div>
     </div>
   );

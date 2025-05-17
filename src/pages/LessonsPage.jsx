@@ -23,7 +23,7 @@ function LessonsPage() {
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // sort by newest first
 
   return (
-    <div className="container mt-2">
+    <div className="container mt-4">
       <h1 className="leadconnections-title">YOUR MIFGASHIM</h1>
       <h5 className="text-center mb-3">
         Keep exploring, teaching and learning!
