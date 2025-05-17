@@ -4,9 +4,12 @@ import FriendCardStyled from "../components/FriendCardStyled";
 import { mockFriends } from "../data/FriendsData";
 import { useState } from "react";
 import ProfileModal from "../components/ProfileModal";
+import MatchPreferencesModal from "../components/MatchPreferencesModal";
+import { findBestMatch } from "../utils/matchUtils";
 
 function FriendsPage() {
   const [selectedFriend, setSelectedFriend] = useState(null);
+  const [showMatchModal, setShowMatchModal] = useState(false);
 
   const visibleFriends = mockFriends.filter(friend => friend.isFriend === true);
 
@@ -43,12 +46,28 @@ function FriendsPage() {
         </div>
 
         <div className="friends-buttons mt-4">
-          <button className="friends-button">Add New Friend</button>
+          <button
+            className="friends-button"
+            onClick={() => setShowMatchModal(true)}
+          >
+            Add New Friend
+          </button>
         </div>
       </div>
 
       {selectedFriend && (
         <ProfileModal friend={selectedFriend} onClose={handleCloseModal} />
+      )}
+
+      {showMatchModal && (
+        <MatchPreferencesModal
+          onClose={() => setShowMatchModal(false)}
+          onAcceptMatch={(match) => {
+            alert(`You matched with ${match.name}! 🎉`);
+            setShowMatchModal(false);
+          }}
+          candidates={mockFriends}
+        />
       )}
     </div>
   );
