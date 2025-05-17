@@ -1,167 +1,137 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
+import './CreateLessonModal.css';
 
 function CreateLessonModal({ show, onClose, friends, onSave }) {
   const [language, setLanguage] = useState('');
   const [selectedFriendId, setSelectedFriendId] = useState('');
-  const [suggestion, setSuggestion] = useState('');
-  const [approved, setApproved] = useState(false);
+  const [lessonIndex, setLessonIndex] = useState(0);
   const [saved, setSaved] = useState(false);
-  const [generatedTopic, setGeneratedTopic] = useState('');
+  const [hasGeneratedOnce, setHasGeneratedOnce] = useState(false);
+  const [step, setStep] = useState(1);
+
+  const sampleLessons = [
+    {
+      topic: 'פואטרי סלאם',
+      fullContent: `🎯 מטרות:\n- להיחשף לעולם הפואטרי סלאם\n- לתרגל הבעה בעל פה\n\n🧠 מילים חדשות:\n- במה, קהל, שיר, רגש, קצב\n\n💬 דיאלוג:\n- המשתמש משתף שיר קצר עם החבר, החבר מגיב ומספר מה הבין\n\n📝 תרגול:\n1. כתיבת שורת פתיחה לשיר אישי\n2. תרגום מילים בסיסיות לעברית`
+    },
+    {
+      topic: 'ארוחות שישי',
+      fullContent: `🎯 מטרות:\n- לדבר על מסורות ערב שבת\n- ללמוד מילים שקשורות לאוכל, משפחה ומנהגים\n\n🧠 מילים חדשות:\n- חלה, נרות, קידוש, דג, סלטים\n\n💬 דיאלוג:\n- שיחה בין שני חברים על איך נראית אצלם ארוחת שבת\n\n📝 תרגול:\n1. תיאור תמונה של שולחן שבת\n2. השלמת משפטים לפי מנהגים שונים`
+    }
+  ];
 
   useEffect(() => {
     if (!show) {
       setLanguage('');
       setSelectedFriendId('');
-      setSuggestion('');
-      setApproved(false);
       setSaved(false);
-      setGeneratedTopic('');
+      setLessonIndex(0);
+      setHasGeneratedOnce(false);
+      setStep(1);
     }
   }, [show]);
 
+  if (!show) return null;
+
   const actualFriends = friends.filter((f) => f.isFriend);
 
-const generateSuggestion = () => {
-  const friend = friends.find((f) => f.id === Number(selectedFriendId));
-  if (!friend || !language) {
-    setSuggestion('⚠ נא לבחור שפה וחבר לפני יצירת רעיון לשיעור.');
-    return;
-  }
-
-  const topicEnglish = friend.interests?.[0] || 'שיחה כללית';
-
-  // מפה פשוטה של תרגום תחומי עניין
-  const translations = {
-    'Poetry slams': 'פואטרי סלאם',
-    'Yoga': 'יוגה',
-    'Going to the beach': 'חוף ים',
-    'Comedy podcasts': 'פודקאסטים מצחיקים',
-    'Vegan recipes': 'מתכונים טבעוניים'
+  const generateSuggestion = () => {
+    setSaved(false);
+    setHasGeneratedOnce(true);
+    setLessonIndex((prev) => (prev + 1) % sampleLessons.length);
+    setStep(2);
   };
 
-  const topicHebrew = translations[topicEnglish] || topicEnglish;
-
-  let generated = '';
-  if (language === 'Hebrew') {
-    generated = `נושא השיעור המומלץ הוא:\n\n🗣 שיחה בנושא: ${topicHebrew}`;
-  } else {
-    generated = `Recommended topic:\n\n🗣 Conversation about: ${topicEnglish}`;
-  }
-
-  setSuggestion(generated);
-  setGeneratedTopic(language === 'Hebrew' ? topicHebrew : topicEnglish);
-  setApproved(false);
-  setSaved(false);
-};
-
-
-  const getFullLessonContent = () => {
-    return {
-      topic: generatedTopic,
-      language,
-      recipients: [Number(selectedFriendId)],
-      description: '${generatedTopic}',
-      createdAt: new Date().toISOString().split('T')[0],
-fullContent: `🎯 מטרות:\n- לנהל שיחה בנושא "${generatedTopic}"\n\n🧠 מילים חדשות:\n- אוצר מילים רלוונטי לנושא\n\n💬 דיאלוג:\n- דיאלוג מדומה בנושא בין המשתמש לחבר\n\n📝 תרגול:\n1. השלמת משפטים\n2. התאמה בין מושגים בעברית ואנגלית`
-    };
+  const goBack = () => {
+    setStep(1);
+    setSaved(false);
   };
 
-  const approveLesson = () => {
-    setApproved(true);
-  };
+  const currentLesson = sampleLessons[lessonIndex];
 
   const saveLesson = () => {
-    const newLesson = getFullLessonContent();
+    const newLesson = {
+      topic: currentLesson.topic,
+      language,
+      recipients: [Number(selectedFriendId)],
+      description:
+        language === 'Hebrew'
+          ? `שיחה בנושא: ${currentLesson.topic}`
+          : `Conversation about: ${currentLesson.topic}`,
+      createdAt: new Date().toISOString().split('T')[0],
+      fullContent: currentLesson.fullContent
+    };
     if (onSave) onSave(newLesson);
     setSaved(true);
   };
 
   return (
-    <Modal show={show} onHide={onClose} centered size="lg">
-      <Modal.Header closeButton>
-        <Modal.Title>צור שיעור חדש</Modal.Title>
-      </Modal.Header>
+    <div className="lesson-modal-overlay">
+      <div className="lesson-modal-container wide centered-modal">
+        <button className="modal-close-button" onClick={onClose}>✕</button>
+        <h2 className="modal-title">CREATE A NEW LESSON</h2>
 
-      <Modal.Body>
-        <Form dir="rtl">
-          <Form.Group className="mb-3">
-            <Form.Label>בחר שפה:</Form.Label>
-            <div>
-              <Form.Check
-                type="radio"
-                inline
-                label="עברית"
-                value="Hebrew"
-                checked={language === 'Hebrew'}
-                onChange={() => setLanguage('Hebrew')}
-              />
-              <Form.Check
-                type="radio"
-                inline
-                label="English"
-                value="English"
-                checked={language === 'English'}
-                onChange={() => setLanguage('English')}
-              />
-            </div>
-          </Form.Group>
+        <div className="step-indicator">
+          <div className={`step-dot ${step === 1 ? 'active' : ''}`}></div>
+          <div className={`step-dot ${step === 2 ? 'active' : ''}`}></div>
+        </div>
 
-          <Form.Group className="mb-3">
-            <Form.Label>בחר חבר:</Form.Label>
-            <Form.Select
-              value={selectedFriendId}
-              onChange={(e) => setSelectedFriendId(e.target.value)}
-            >
-              <option value="">...Select a friend</option>
-              {actualFriends.map((f) => (
-                <option key={f.id} value={f.id}>
-                  {f.name}
-                </option>
-              ))}
-            </Form.Select>
-          </Form.Group>
-
-          <div className="d-flex gap-2 mb-3">
-            <Button variant="primary" onClick={generateSuggestion}>
-              Generate Lesson
-            </Button>
-            {suggestion && !approved && (
-              <Button variant="success" onClick={approveLesson}>
-                Approve
-              </Button>
-            )}
+        {step === 2 && (
+          <div className="back-top-button-wrapper">
+            <button type="button" className="back-button" onClick={goBack}>← Back</button>
           </div>
+        )}
 
-          {suggestion && (
-            <div className="p-3 bg-light border rounded mb-3" dir="rtl">
-              {suggestion}
-            </div>
+        <div className="modal-body-scroll">
+          {step === 1 && (
+            <>
+              <div className="form-group">
+                <label className="form-label">Choose a Language:</label>
+                <label><input type="radio" name="lang" value="Hebrew" checked={language === 'Hebrew'} onChange={() => setLanguage('Hebrew')} /> Hebrew</label>
+                <label><input type="radio" name="lang" value="English" checked={language === 'English'} onChange={() => setLanguage('English')} /> English</label>
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Choose a Friend:</label>
+                <div className="friend-scroll-box">
+                  {actualFriends.map((f) => (
+                    <div
+                      key={f.id}
+                      className={`friend-option ${selectedFriendId === f.id.toString() ? 'selected' : ''}`}
+                      onClick={() => setSelectedFriendId(f.id.toString())}
+                    >
+                      <img src={f.image} alt={f.name} className="friend-avatar" />
+                      <div className="friend-name">{f.name}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <button className="generate-button" onClick={generateSuggestion} disabled={!language || !selectedFriendId}>
+                Generate Lesson
+              </button>
+            </>
           )}
 
-          {approved && (
-            <div className="p-3 border rounded bg-white" dir="rtl">
-              <h5>🎓 מערך שיעור לדוגמה</h5>
-              <p><strong>מטרות:</strong> לנהל שיחה בנושא "{generatedTopic}"</p>
-              <p><strong>מילים חדשות:</strong> אוצר מילים רלוונטי לנושא</p>
-              <p><strong>דיאלוג:</strong> דיאלוג מדומה בנושא בין המשתמש לחבר</p>
-              <p><strong>תרגול:</strong> השלמת משפטים, התאמה בין מושגים בעברית ואנגלית</p>
-              {!saved ? (
-                <Button className="mt-2" variant="outline-success" onClick={saveLesson}>
-                  Save this Lesson
-                </Button>
-              ) : (
-                <div className="mt-2 text-success">✅ השיעור נשמר לרשימה שלך</div>
-              )}
-            </div>
+          {step === 2 && (
+            <>
+              <div className="lesson-box" dir="rtl">
+                <h4>🎓 מערך שיעור בנושא: {currentLesson.topic}</h4>
+                <pre>{currentLesson.fullContent}</pre>
+                {!saved ? (
+                  <div className="approve-actions vertical">
+                    <button type="button" className="generate-button" onClick={generateSuggestion}>Regenerate</button>
+                    <button type="button" className="save-button" onClick={saveLesson}>Save Lesson</button>
+                  </div>
+                ) : (
+                  <div className="saved-message">✅ Lesson saved successfully</div>
+                )}
+              </div>
+            </>
           )}
-        </Form>
-      </Modal.Body>
-
-      <Modal.Footer>
-        <Button variant="secondary" onClick={onClose}>Close</Button>
-      </Modal.Footer>
-    </Modal>
+        </div>
+      </div>
+    </div>
   );
 }
 

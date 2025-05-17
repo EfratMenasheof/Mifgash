@@ -19,7 +19,7 @@
 }
 
 .bg-blue {
-  background-color: #110976;
+  background-color: #d1dcf8;
   width: 100vw; /* זה הפתרון: מרחיב את הרקע לרוחב כל המסך */
   position: relative;
   left: 50%;
@@ -49,7 +49,7 @@
 
 .section-text {
   font-size: 1.5rem;
-  color: #ffffff;
+  color: #110976;
 }
 
 .black-text {
@@ -59,7 +59,7 @@
 .testimonial {
   font-size: 2rem;
   margin-bottom: 2rem;
-  color: #ffffff;
+  color: #110976;
   font-family: "Kalam", cursive;
 }
 
@@ -67,7 +67,7 @@
   display: block;
   margin-top: 0.5rem;
   font-style: normal;
-  font-weight: 500;
+  font-weight: 600;
   color: #ffbd66;
   font-family: "Inter", sans-serif;
   font-size: 1.5rem;

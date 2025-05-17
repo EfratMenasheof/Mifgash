@@ -1,0 +1,208 @@
+.lesson-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.lesson-modal-container.wide.centered-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border-radius: 12px;
+  width: 600px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  font-family: 'Inter', sans-serif;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.modal-close-button {
+  position: absolute;
+  top: 12px;
+  left: 16px;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  font-weight: 1200;
+  color: #666;
+  cursor: pointer;
+  transition: color 0.2s;
+  z-index: 10;
+}
+
+.modal-close-button:hover {
+  color: #000;
+}
+
+.modal-title {
+  text-align: center;
+  font-size: 30px;
+  font-family: 'Bebas Neue', sans-serif;
+  color: #001278;
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.step-indicator {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.step-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #ccc;
+  transition: background-color 0.2s;
+}
+
+.step-dot.active {
+  background-color: #001278;
+}
+
+.back-top-button-wrapper {
+  display: flex;
+  justify-content: flex-start;
+  padding-left: 16px;
+  margin-bottom: 8px;
+}
+
+.back-button {
+  background-color: transparent;
+  border: none;
+  color: #001278;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.modal-body-scroll {
+  overflow-y: auto;
+  flex-grow: 1;
+  padding-right: 4px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-label {
+  font-weight: bold;
+}
+
+.friend-scroll-box {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  max-height: 160px;
+  overflow-y: auto;
+  background-color: #d8f1ff;
+  padding: 10px;
+  border-radius: 6px;
+  justify-content: start;
+}
+
+.friend-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  padding: 6px 8px;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.friend-option:hover {
+  background-color: #e0f4ff;
+}
+
+.friend-option.selected {
+  background-color: #c0e5ff;
+}
+
+.friend-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 4px;
+}
+
+.friend-name {
+  font-size: 12px;
+  text-align: center;
+  font-weight: bold;
+  color: #001278;
+}
+
+.generate-button,
+.save-button {
+  background-color: #ffb800;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 16px;
+  min-width: 160px;
+  height: 44px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  margin: 0 auto;
+}
+
+.generate-button:hover {
+  background-color: #e5a700;
+}
+
+.save-button {
+  background-color: #d8f1ff;
+  color: #001278;
+  margin-top: 12px;
+}
+
+.save-button:hover {
+  background-color: #c1e6fa;
+}
+
+.approve-actions.vertical {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.lesson-box {
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 16px;
+  border-radius: 6px;
+  margin-top: 16px;
+}
+
+.saved-message {
+  margin-top: 16px;
+  color: #28a745;
+  font-weight: bold;
+  text-align: center;
+}
