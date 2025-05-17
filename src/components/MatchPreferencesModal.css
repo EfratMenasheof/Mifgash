@@ -23,6 +23,7 @@
     position: relative;
     max-height: 90vh;
     overflow-y: auto;
+    text-align: center;
   }
   
   .match-modal label {
@@ -184,10 +185,11 @@
     cursor: pointer;
   }
   
-  button:not(.tag):not(.category-header-modern):hover {
+  button:not(.tag):not(.category-header-modern):not(.modal-close-button):hover {
     color: #000000;
     background-color: #fd9f33;
   }
+  
   
   /* כפתור סגירה */
   .modal-close-button {

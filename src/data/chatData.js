@@ -1,41 +1,50 @@
 const chatData = {
     "1": [
-      {
-        "sender": "user",
-        "text": "Hi Adam! Nice to meet you, are you really visiting Israel?",
-        "time": "12:00",
-        "date": "5/7/2025",
-        "fullDate": "2025-05-07T12:00:00"
-      },
-      {
-        "sender": 1,
-        "text": "Hey Maya! Yeah, this summer, Tel Aviv \ud83d\ude0e",
-        "time": "12:07",
-        "date": "5/7/2025",
-        "fullDate": "2025-05-07T12:07:00"
-      },
-      {
-        "sender": "user",
-        "text": "That's awesome. Falafel tour?",
-        "time": "12:14",
-        "date": "5/7/2025",
-        "fullDate": "2025-05-07T12:14:00"
-      },
-      {
-        "sender": 1,
-        "text": "100%! But I choose the place.",
-        "time": "12:22",
-        "date": "5/7/2025",
-        "fullDate": "2025-05-07T12:22:00"
-      },
-      {
-        "sender": "user",
-        "text": "Deal.",
-        "time": "12:30",
-        "date": "5/7/2025",
-        "fullDate": "2025-05-07T12:30:00"
-      }
-    ],
+  {
+    "sender": "user",
+    "text": "Hi Adam! Nice to meet you, are you really visiting Israel?",
+    "time": "12:00",
+    "date": "5/7/2025",
+    "fullDate": "2025-05-07T12:00:00"
+  },
+  {
+    "sender": 1,
+    "text": "Hey Maya! Yeah, this summer, Tel Aviv 😎",
+    "time": "12:07",
+    "date": "5/7/2025",
+    "fullDate": "2025-05-07T12:07:00"
+  },
+  {
+    "sender": "user",
+    "text": "That's awesome. Falafel tour?",
+    "time": "12:14",
+    "date": "5/7/2025",
+    "fullDate": "2025-05-07T12:14:00"
+  },
+  {
+    "sender": 1,
+    "text": "100%! But I choose the place.",
+    "time": "12:22",
+    "date": "5/7/2025",
+    "fullDate": "2025-05-07T12:22:00"
+  },
+  {
+    "sender": "user",
+    "text": "Deal.",
+    "time": "12:30",
+    "date": "5/7/2025",
+    "fullDate": "2025-05-07T12:30:00"
+  },
+  {
+    "sender": "1",
+    "type": "meeting",
+    "meetingDate": "2025-05-25T17:30",
+    "time": "17:00",
+    "date": "5/7/2025",
+    "fullDate": "2025-05-07T17:00:00.000Z",
+    "status": null
+  }  
+],
     "2": [
       {
         "sender": "user",
