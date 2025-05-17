@@ -3,7 +3,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 12px 20px;
-  height: 70px; /* ← הוספתי נקודה-פסיק! */
+  height: 70px;
   position: fixed;
   top: 0;
   left: 0;
@@ -12,9 +12,8 @@
   background-color: rgb(232, 238, 250);
   z-index: 1000;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
+  overflow: hidden;
 }
-
 
 .top-left-logo {
   height: 60px;
@@ -53,11 +52,10 @@
   cursor: pointer;
   transition: color 0.3s, text-decoration 0.3s;
 }
+
 .profile-name:hover {
   color: #1446ac;
-  /* text-decoration: underline; */
 }
-
 
 .navbar {
   position: relative;
@@ -83,12 +81,11 @@
   padding: 5px 20px;
   border-radius: 15px;
   font-weight: 500;
-  letter-spacing: 1.5px; /* אופציונלי, לריווח */
-  font-size: 1.3rem;   /* תרגישי חופשי לשחק עם זה */
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  letter-spacing: 1.5px;
+  font-size: 1.3rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   transition: background-color 0.3s, color 0.3s, transform 0.2s;
 }
-
 
 .nav-link:hover {
   background-color: #4065bd;
@@ -114,3 +111,40 @@
   border-radius: 2px;
 }
 
+/* 🔔 Notification styles */
+
+.notification-bell {
+  position: relative;
+  margin-left: 12px;
+  cursor: pointer;
+  font-size: 1.5rem;
+  padding: 6px;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+}
+
+.notification-bell:hover {
+  background-color: #e2e2e2;
+}
+
+.notification-bell.has-alert {
+  background-color: #ff4d4d;
+  color: white;
+}
+
+.notification-count {
+  position: absolute;
+  top: -8px;
+  right: -10px;
+  background-color: white;
+  color: #ff4d4d;
+  border-radius: 50%;
+  font-size: 0.7rem;
+  width: 16px;
+  height: 16px;
+  text-align: center;
+  line-height: 16px;
+  font-weight: bold;
+}
+
+/* הסרנו notification-hover */

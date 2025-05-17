@@ -30,7 +30,7 @@ function ProfileModal({ friend, onClose }) {
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <button className="modal-close-button" onClick={onClose}>&times;</button>
+        <button className="modal-close-button" onClick={onClose}>✕</button>
 
         <img
           src={friend.image || '/Profile-pics/default.jpg'}

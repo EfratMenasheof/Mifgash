@@ -1,14 +1,16 @@
 export const mockFriends = [
-  {id: 'user',
+  {
+    id: 'user',
     name: 'Maya Chen',
     gender: 'Woman',
     age: 24,
     language: 'Hebrew',
-    bio: 'Statistics, Data Science & MATAR student, live in Jerusalem and love it! ',
+    bio: 'Statistics, Data Science & MATAR student, live in Jerusalem and love it!',
     interests: ['Going to the beach', 'Yoga', 'Vegan recipes', 'Comedy podcasts'],
     image: '/Profile-pics/user.jpg',
-    location: { city: 'Jerusalem', region: 'Jerusalem', country: 'IL' }  },
-    
+    location: { city: 'Jerusalem', region: 'Jerusalem', country: 'IL' },
+    matchRequests: []
+  },
   {
     id: 1,
     name: 'Adam Sandler',
@@ -20,7 +22,8 @@ export const mockFriends = [
     isFriend: true,
     bio: 'Loves hanging out with friends, currently studying film at UW-Milwaukee, visiting Israel in the summer!',
     interests: ['Going to the beach', 'Hanging out with friends', 'Horror movies', 'Baseball'],
-    image: '/Profile-pics/1.jpg'
+    image: '/Profile-pics/1.jpg',
+    matchRequests: []
   },
   {
     id: 2,
@@ -33,7 +36,8 @@ export const mockFriends = [
     isFriend: true,
     bio: 'Major in Theater and Literature. Loves fantasy books and is part of a Jewish book club.',
     interests: ['Poetry slams', 'Fantasy novels', 'Shabbat dinners', 'Street theater'],
-    image: '/Profile-pics/2.jpg'
+    image: '/Profile-pics/2.jpg',
+    matchRequests: []
   },
   {
     id: 3,
@@ -46,7 +50,8 @@ export const mockFriends = [
     isFriend: true,
     bio: 'Passionate about community work and history. Interning at a museum and helping run a Jewish heritage project.',
     interests: ['Jewish history', 'Volunteering', 'Coffee shop hopping', 'Photography'],
-    image: '/Profile-pics/3.jpg'
+    image: '/Profile-pics/3.jpg',
+    matchRequests: []
   },
   {
     id: 4,
@@ -59,7 +64,8 @@ export const mockFriends = [
     isFriend: true,
     bio: 'Studying psychology and very into mindfulness and emotional intelligence. Hosted a Hebrew-English language exchange last semester.',
     interests: ['Yoga', 'Mindfulness apps', 'Singing Israeli songs', 'Romantic comedies'],
-    image: '/Profile-pics/4.jpg'
+    image: '/Profile-pics/4.jpg',
+    matchRequests: []
   },
   {
     id: 5,
@@ -72,7 +78,8 @@ export const mockFriends = [
     isFriend: true,
     bio: 'Mixing art and activism. Currently working on a zine about Jewish women in pop culture.',
     interests: ['Zine-making', 'Art shows', 'Hebrew calligraphy', 'Indie films'],
-    image: '/Profile-pics/5.jpg'
+    image: '/Profile-pics/5.jpg',
+    matchRequests: []
   },
   {
     id: 6,
@@ -85,7 +92,8 @@ export const mockFriends = [
     isFriend: false,
     bio: 'STEM student and Hebrew school assistant teacher. Excited to meet Israeli peers who love science too.',
     interests: ['Biology', 'Science podcasts', 'Teaching kids', 'Baking challah'],
-    image: '/Profile-pics/6.jpg'
+    image: '/Profile-pics/6.jpg',
+    matchRequests: []
   },
   {
     id: 7,
@@ -98,7 +106,8 @@ export const mockFriends = [
     isFriend: true,
     bio: 'Passionate about books and activism. Recently joined a virtual Hebrew poetry group.',
     interests: ['Hebrew poetry', 'Vegan recipes', 'Environmental advocacy', 'Classical literature'],
-    image: '/Profile-pics/7.jpg'
+    image: '/Profile-pics/7.jpg',
+    matchRequests: []
   },
   {
     id: 8,
@@ -111,7 +120,8 @@ export const mockFriends = [
     isFriend: true,
     bio: 'Film student and aspiring director. Loves connecting with Israeli cousins through culture.',
     interests: ['Directing shorts', 'Israeli indie rock', 'Basketball', 'Hummus making'],
-    image: '/Profile-pics/8.jpg'
+    image: '/Profile-pics/8.jpg',
+    matchRequests: []
   },
   {
     id: 9,
@@ -124,7 +134,8 @@ export const mockFriends = [
     isFriend: true,
     bio: 'Jewish culture blogger and college student. Runs a Jewish-American TikTok channel.',
     interests: ['Jewish memes', 'Street fashion', 'Music festivals', 'Podcasting'],
-    image: '/Profile-pics/9.jpg'
+    image: '/Profile-pics/9.jpg',
+    matchRequests: []
   },
   {
     id: 10,
@@ -137,7 +148,8 @@ export const mockFriends = [
     isFriend: false,
     bio: 'Comedy writer and Jewish holiday enthusiast. Planning a Purim sketch night.',
     interests: ['Writing sketches', 'Purim parties', 'Comedy podcasts', 'Latkes'],
-    image: '/Profile-pics/10.jpg'
+    image: '/Profile-pics/10.jpg',
+    matchRequests: []
   },
   {
     id: 11,
@@ -150,6 +162,7 @@ export const mockFriends = [
     isFriend: false,
     bio: 'Hebrew learner and social justice activist. Wants to meet Israelis to practice slang.',
     interests: ['Hebrew slang', 'Protests', 'Collaging', 'Comedy shows'],
-    image: '/Profile-pics/11.jpg'
+    image: '/Profile-pics/11.jpg',
+    matchRequests: []
   }
 ];

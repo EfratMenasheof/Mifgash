@@ -2,7 +2,7 @@ import './Navbar.css';
 import logo from '../assets/mifgash_logo.png';
 import { Link, useLocation } from 'react-router-dom';
 
-function Navbar({ onProfileClick }) {
+function Navbar({ onProfileClick, onAlertClick, pendingCount }) {
   const location = useLocation();
 
   return (
@@ -12,16 +12,36 @@ function Navbar({ onProfileClick }) {
       <nav className="navbar">
         <ul className="nav-list">
           <li>
-            <Link to="/home" className={`nav-link ${location.pathname === '/home' ? 'active' : ''}`}>Home</Link>
+            <Link
+              to="/home"
+              className={`nav-link ${location.pathname === '/home' ? 'active' : ''}`}
+            >
+              Home
+            </Link>
           </li>
           <li>
-            <Link to="/friends" className={`nav-link ${location.pathname === '/friends' ? 'active' : ''}`}>Connections</Link>
+            <Link
+              to="/friends"
+              className={`nav-link ${location.pathname === '/friends' ? 'active' : ''}`}
+            >
+              Connections
+            </Link>
           </li>
           <li>
-            <Link to="/lessons" className={`nav-link ${location.pathname === '/lessons' ? 'active' : ''}`}>Mifgashim</Link>
+            <Link
+              to="/lessons"
+              className={`nav-link ${location.pathname === '/lessons' ? 'active' : ''}`}
+            >
+              Mifgashim
+            </Link>
           </li>
           <li>
-            <Link to="/about" className={`nav-link ${location.pathname === '/about' ? 'active' : ''}`}>About</Link>
+            <Link
+              to="/about"
+              className={`nav-link ${location.pathname === '/about' ? 'active' : ''}`}
+            >
+              About
+            </Link>
           </li>
         </ul>
       </nav>
@@ -34,6 +54,16 @@ function Navbar({ onProfileClick }) {
           className="user-profile-pic"
           onClick={onProfileClick}
         />
+
+        <div
+          className={`notification-bell ${pendingCount > 0 ? 'has-alert' : ''}`}
+          onClick={onAlertClick}
+        >
+          🔔
+          {pendingCount > 0 && (
+            <span className="notification-count">{pendingCount}</span>
+          )}
+        </div>
       </div>
     </div>
   );
