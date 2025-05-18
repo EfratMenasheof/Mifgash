@@ -107,6 +107,26 @@
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
 }
+.leadconnections-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-top: 32px; /* ⬅️ תוספת חדשה או הגדלה */
+  margin-bottom: 4px;
+  color: #110976;
+  text-align: center;
+  letter-spacing: 1.5px;
+}
+.mifgash-subtitle {
+  font-family: 'Shadows Into Light Two', cursive;
+  font-size: 1.8rem;
+  color: #333;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  text-shadow: 0.3px 0.3px 0 #333;
+}
+
+
 
 .lesson-modal-title {
   margin: 0;

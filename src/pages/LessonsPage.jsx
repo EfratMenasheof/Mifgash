@@ -25,9 +25,10 @@ function LessonsPage() {
   return (
     <div className="container mt-4">
       <h1 className="leadconnections-title">YOUR MIFGASHIM</h1>
-      <h5 className="text-center mb-3">
-        Keep exploring, teaching and learning!
-      </h5>
+      <h5 className="mifgash-subtitle">
+  From dialogue to connection – every mifgash matters ✨
+</h5>
+
 
       <div className="lesson-wrapper smaller">
         <div className="d-flex justify-content-between align-items-center mb-0">

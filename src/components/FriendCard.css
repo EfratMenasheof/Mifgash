@@ -51,7 +51,7 @@
     font-weight: bold;
     text-align: center;
     color: #031146    ;
-    font-size: 1.05rem;
+    font-size: 1.05rem !important;
   }
   
   .streak-text {

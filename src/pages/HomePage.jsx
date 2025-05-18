@@ -13,9 +13,9 @@ function HomePage() {
     <div className="container">
       {/* משפט Welcome */}
       <h1 className="welcome-title mt-4 mb-1">Welcome back, Maya!</h1>
-      <h5 className="text-center mb-3">
-        From different corners of the world, we’re part of the same heartbeat!
-      </h5>
+      <h5 className="homepage-subtitle">
+  Bringing people closer, one word at a time 🫱🏻‍🫲🏼
+</h5>
 
       <div className="row align-items-stretch gx-5 gx-md-7">
         {/* שמאל – חברים */}

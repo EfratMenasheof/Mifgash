@@ -8,7 +8,7 @@ import './FriendsMap.css'; // הוספה
 function FriendsMap() {
   return (
     <div className="friends-map-wrapper">
-      <h2 className="section-title">Connections around the world</h2>
+      <h2 className="section-title">Connections around the world 🌎</h2>
       <div className="friends-map-container">
         <MapContainer
           center={[20, 0]}
