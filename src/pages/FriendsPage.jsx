@@ -51,7 +51,7 @@ function FriendsPage() {
             className="friends-button"
             onClick={() => setShowMatchModal(true)}
           >
-            Add New Friend
+            Make a New Connection
           </button>
         </div>
       </div>
@@ -64,7 +64,7 @@ function FriendsPage() {
         <MatchPreferencesModal
           onClose={() => setShowMatchModal(false)}
           onAcceptMatch={(match) => {
-            alert(`You matched with ${match.name}! 🎉`);
+            alert(`Request sent to ${match.name} They'll need to approve it.`);
             setShowMatchModal(false);
           }}
           candidates={mockFriends}
