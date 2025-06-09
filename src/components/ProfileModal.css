@@ -8,7 +8,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 2000; /* ← עודכן כדי שיהיה מעל כפתורי המפה */
+  z-index: 2000;
+  overflow-y: auto; /* מאפשר גלילה אם המסך נמוך מדי */
+  padding: 2rem 1rem; /* מרווח מהקצוות במסכים צרים */
 }
 
 .modal-content {
@@ -20,7 +22,7 @@
   text-align: left;
   position: relative;
   max-height: 80vh;
-  overflow-y: auto;
+  overflow-y: auto; /* התוכן יכול לגלול אם ארוך מדי */
 }
 
 .profile-pic {
@@ -58,7 +60,7 @@
 .Profile-title {
   font-family: 'Bebas Neue', sans-serif;
   font-size: 2rem;
-  font-weight: bold 700;
+  font-weight: 700;
   margin-bottom: 12px;
   color: #110976;
   text-align: center;
@@ -107,4 +109,12 @@
 
 .modal-close-button:hover {
   color: #000;
+}
+
+/* שינוי למסכים נמוכים במיוחד */
+@media (max-height: 600px) {
+  .modal-content {
+    max-height: 70vh;
+    font-size: 0.9rem;
+  }
 }
