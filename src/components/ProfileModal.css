@@ -19,6 +19,8 @@
   width: 90%;
   text-align: left;
   position: relative;
+  max-height: 80vh;
+  overflow-y: auto;
 }
 
 .profile-pic {
