@@ -1,6 +1,6 @@
 import '../App.css';
 import Navbar from './components/Navbar';
-import logo from './assets/mifgash_logo.png';
+import logo from './assets/MIFGASH_LOGO.png';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useState } from 'react';
 
