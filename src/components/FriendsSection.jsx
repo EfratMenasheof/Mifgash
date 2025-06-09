@@ -43,7 +43,7 @@ function FriendsSection() {
 
   return (
     <div className="friends-section">
-      <h2 className="section-title">NOAM LOOSER</h2>
+      <h2 className="section-title">YOUR CONNECTIONS</h2>
 
       <div className="friends-list">
         {friends
