@@ -76,7 +76,7 @@ function ChatModal({ onClose, chatHistory, setChatHistory, currentUser }) {
       date: now.toLocaleDateString(),
       fullDate: now.toISOString(),
       status: null,
-      text: `${userName} wants to schedule a Mifgash!`,
+      text: `Maya wants to schedule a Mifgash!`,
       language: language
     };
 

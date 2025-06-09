@@ -9,7 +9,7 @@ function IncomingRequestsModal({ friends, onAccept, onClose }) {
     <div className="modal-overlay">
       <div className="match-modal">
         <button className="modal-close-button" onClick={onClose}>✕</button>
-        <h2>Incoming Match Requests</h2>
+        <h2>Incoming Connection Requests</h2>
 
         {requests.length === 0 ? (
           <p>No new requests right now 😊</p>

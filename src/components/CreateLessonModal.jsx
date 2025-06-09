@@ -113,7 +113,7 @@ function CreateLessonModal({ show, onClose, friends, onSave }) {
               </div>
 
               <button className="generate-button" onClick={generateSuggestion} disabled={!language || !selectedFriendId}>
-                Generate Lesson
+                Generate Mifgash Plan
               </button>
             </>
           )}
@@ -129,7 +129,7 @@ function CreateLessonModal({ show, onClose, friends, onSave }) {
                     <button type="button" className="save-button" onClick={saveLesson}>Save</button>
                   </div>
                 ) : (
-                  <div className="saved-message">✅ Lesson saved successfully</div>
+                  <div className="saved-message">✅ Mifgash plan saved successfully</div>
                 )}
               </div>
             </>

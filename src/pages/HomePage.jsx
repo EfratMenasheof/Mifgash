@@ -28,7 +28,7 @@ function HomePage() {
           <div className="mb-3">
             <MifgashCard
               friend={mifgashFriend}
-              date="July 17th, 4pm"
+              date="May 20th, 6pm"
               location="Zoom call"
               topic="You’ll teach Hebrew!"
               onClick={setSelectedFriend}
