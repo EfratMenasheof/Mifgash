@@ -1,7 +1,7 @@
 import './Navbar.css';
-import logo from '../assets/mifgash_logo.png';
+import logo from '../assets/MIFGASH_LOGO.png';
 import { Link, useLocation } from 'react-router-dom';
-
+//// just trying Noam AFASIT
 function Navbar({ onProfileClick, onAlertClick, pendingCount }) {
   const location = useLocation();
 
