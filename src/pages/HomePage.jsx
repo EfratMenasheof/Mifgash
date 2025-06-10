@@ -1,32 +1,44 @@
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 import MifgashCard from '../components/MifgashCard';
 import FriendsSection from '../components/FriendsSection';
 import { mockFriends } from '../data/FriendsData';
 import ProfileModal from '../components/ProfileModal';
 import FriendsMap from '../components/FriendsMap';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
 
 function HomePage() {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [selectedFriend, setSelectedFriend] = useState(null);
+
   const mifgashFriend = mockFriends.find(f => f.name === 'Daniel Radcliffe');
 
   useEffect(() => {
-    axios.get('http://localhost:4000/api/current-user', { withCredentials: true })
-      .then(res => {
-        setUser(res.data); // יהיה null אם לא מחובר
+    axios
+      .get(`${import.meta.env.VITE_BACKEND_URL}/api/current-user`, {
+        withCredentials: true,
       })
-      .catch(err => {
+      .then((res) => {
+        setUser(res.data); // אם אין משתמש - null
+      })
+      .catch((err) => {
         console.error('Error fetching user:', err);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, []);
 
+  if (loading) {
+    return <div className="container text-center mt-5">Loading...</div>;
+  }
+
   if (!user) {
     return (
-      <div className="text-center mt-5">
-        <h2>Please log in</h2>
-        <a href="http://localhost:4000/auth/google">
-          <button className="btn btn-primary">Login with Google</button>
+      <div className="container text-center mt-5">
+        <h2>Welcome to Mifgash!</h2>
+        <a href={`${import.meta.env.VITE_BACKEND_URL}/auth/google`}>
+          <button className="btn btn-primary mt-3">Login with Google</button>
         </a>
       </div>
     );
