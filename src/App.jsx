@@ -31,8 +31,14 @@ function App() {
 
   useEffect(() => {
     axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/current-user`, { withCredentials: true })
-      .then(res => setUser(res.data))
-      .catch(() => setUser(null));
+      .then(res => {
+        if (res.data) {
+          setUser(res.data);
+        } else {
+      setUser(null);
+        }
+    })
+  .catch(() => setUser(null));
   }, []);
 
   const pendingCount = friends.filter(f => f.matchRequests?.includes('user')).length;
