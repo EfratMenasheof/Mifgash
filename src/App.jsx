@@ -21,7 +21,7 @@ import IncomingRequestsModal from './components/IncomingRequestsModal';
 
 function App() {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true); // חדש
+  const [loadingUser, setLoadingUser] = useState(true); // ← שלב א
   const [friends, setFriends] = useState(mockFriends);
   const currentUser = friends.find(f => f.id === 'user');
   const [selectedFriend, setSelectedFriend] = useState(null);
@@ -40,12 +40,10 @@ function App() {
         }
       })
       .catch(() => setUser(null))
-      .finally(() => setLoading(false)); // חדש
+      .finally(() => setLoadingUser(false)); // ← שלב א
   }, []);
 
   const pendingCount = friends.filter(f => f.matchRequests?.includes('user')).length;
-
-  if (loading) return null; // חדש - מונע טעינה לפני שיודעים אם יש user
 
   return (
     <Router>
@@ -61,21 +59,28 @@ function App() {
       )}
 
       <div className="main-content">
-        <Routes>
-          <Route path="/" element={user ? <HomePage user={user} /> : <Login />} />
-          <Route path="/home" element={<HomePage user={user} />} />
-          <Route path="/friends" element={<FriendsPage />} />
-          <Route path="/lessons" element={<LessonsPage />} />
-          <Route path="/about" element={<AboutPage />} />
-        </Routes>
+        {loadingUser ? (
+          <div className="container text-center mt-5">Loading...</div> // ← שלב ב
+        ) : (
+          <Routes>
+            <Route path="/" element={user ? <HomePage user={user} /> : <Login />} />
+            <Route path="/home" element={<HomePage user={user} />} />
+            <Route path="/friends" element={<FriendsPage />} />
+            <Route path="/lessons" element={<LessonsPage />} />
+            <Route path="/about" element={<AboutPage />} />
+          </Routes>
+        )}
       </div>
 
       {user && (
         <>
-          <FloatingMessageButton onClick={() => {
-            setIsChatOpen(true);
-            setHasNewMessage(false);
-          }} hasNewMessage={hasNewMessage} />
+          <FloatingMessageButton
+            onClick={() => {
+              setIsChatOpen(true);
+              setHasNewMessage(false);
+            }}
+            hasNewMessage={hasNewMessage}
+          />
 
           {selectedFriend && (
             <ProfileModal friend={selectedFriend} onClose={() => setSelectedFriend(null)} />
