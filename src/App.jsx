@@ -21,6 +21,7 @@ import IncomingRequestsModal from './components/IncomingRequestsModal';
 
 function App() {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true); // חדש
   const [friends, setFriends] = useState(mockFriends);
   const currentUser = friends.find(f => f.id === 'user');
   const [selectedFriend, setSelectedFriend] = useState(null);
@@ -35,13 +36,16 @@ function App() {
         if (res.data) {
           setUser(res.data);
         } else {
-      setUser(null);
+          setUser(null);
         }
-    })
-  .catch(() => setUser(null));
+      })
+      .catch(() => setUser(null))
+      .finally(() => setLoading(false)); // חדש
   }, []);
 
   const pendingCount = friends.filter(f => f.matchRequests?.includes('user')).length;
+
+  if (loading) return null; // חדש - מונע טעינה לפני שיודעים אם יש user
 
   return (
     <Router>
