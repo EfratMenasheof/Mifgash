@@ -1,0 +1,71 @@
+.registration-form {
+  background-color: #d1dcf8;
+  padding: 32px 40px;
+  border-radius: 12px;
+  max-width: 600px;
+  margin: 40px auto;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  text-align: center;
+}
+
+.registration-form h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #110976;
+  letter-spacing: 1.5px;
+  margin-bottom: 16px;
+}
+
+.registration-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  font-family: 'Inter', sans-serif;
+}
+
+.registration-form input,
+.registration-form select,
+.registration-form textarea {
+  font-size: 1rem;
+  padding: 10px 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.registration-form textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.registration-form label {
+  font-size: 0.95rem;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-align: left;
+}
+
+.registration-form input[type="checkbox"] {
+  transform: scale(1.2);
+}
+
+.registration-form button {
+  background-color: #fbb76a;
+  color: black;
+  font-weight: 550;
+  padding: 12px;
+  border: none;
+  border-radius: 13px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s;
+}
+
+.registration-form button:hover {
+  background-color: #ffa239;
+  color: #ffffff;
+}
