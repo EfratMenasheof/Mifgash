@@ -1,7 +1,7 @@
 import '../App.css';
 import Navbar from './components/Navbar';
 import logo from './assets/MIFGASH_LOGO.png';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 
 // Pages
@@ -18,33 +18,38 @@ import FloatingMessageButton from './components/FloatingMessageButton';
 import ChatModal from './components/ChatModal';
 import IncomingRequestsModal from './components/IncomingRequestsModal';
 
-function App() {
-  const [user, setUser] = useState(null);
+function AppContent({ user, setUser }) {
   const [selectedFriend, setSelectedFriend] = useState(null);
   const [hasNewMessage, setHasNewMessage] = useState(true);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [showRequestsModal, setShowRequestsModal] = useState(false);
 
+  const location = useLocation();
+  const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
+
   return (
-    <Router>
-      <div className="header-bar">
-        {user && (
-          <>
-            <img src={logo} alt="Mifgash Logo" className="top-left-logo" />
-            <Navbar
-              onProfileClick={() => setSelectedFriend(user)}
-              onAlertClick={() => setShowRequestsModal(true)}
-              pendingCount={0}
-            />
-          </>
-        )}
-      </div>
+    <>
+      {!isAuthPage && (
+        <div className="header-bar">
+          {user && (
+            <>
+              <img src={logo} alt="Mifgash Logo" className="top-left-logo" />
+              <Navbar
+                onProfileClick={() => setSelectedFriend(user)}
+                onAlertClick={() => setShowRequestsModal(true)}
+                pendingCount={0}
+              />
+            </>
+          )}
+        </div>
+      )}
 
       <div className="main-content">
         <Routes>
-          <Route path="/complete-registration" element={<CompleteRegistration setUser={setUser} />} />
+          <Route path="/register" element={<CompleteRegistration setUser={setUser} />} />
+          <Route path="/login" element={<Login setUser={setUser} />} />
           {!user ? (
-            <Route path="*" element={<Login setUser={setUser} />} />
+            <Route path="*" element={<Navigate to="/login" />} />
           ) : (
             <>
               <Route path="/" element={<Navigate to="/home" />} />
@@ -57,7 +62,7 @@ function App() {
         </Routes>
       </div>
 
-      {user && (
+      {user && !isAuthPage && (
         <>
           <FloatingMessageButton
             onClick={() => {
@@ -88,6 +93,16 @@ function App() {
           )}
         </>
       )}
+    </>
+  );
+}
+
+function App() {
+  const [user, setUser] = useState(null);
+
+  return (
+    <Router>
+      <AppContent user={user} setUser={setUser} />
     </Router>
   );
 }
