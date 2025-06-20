@@ -24,3 +24,4 @@ dist-ssr
 *.sw?
 mifgash-2c01b-firebase-adminsdk-fbsvc-6fb35924bf.json
 #CHECK
+.env
