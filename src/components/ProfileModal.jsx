@@ -40,7 +40,7 @@ function ProfileModal({ friend, onClose }) {
         />
         <h2 className="Profile-title">{friend.name}</h2>
         <p><strong>Age:</strong> {friend.age}</p>
-        <p><strong>Location:</strong> {friend.location.city}, {friend.location.region}, {friend.location.country} {countryToFlag(friend.location.country === 'USA' ? 'US' : friend.location.country)}</p>
+        {/* <p><strong>Location:</strong> {friend.location.city}, {friend.location.region}, {friend.location.country} {countryToFlag(friend.location.country === 'USA' ? 'US' : friend.location.country)}</p> */}
         <p><strong>Language:</strong> {friend.language}</p>
         <p><strong>Bio:</strong> {friend.bio}</p>
 

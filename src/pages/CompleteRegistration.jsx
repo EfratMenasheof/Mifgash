@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import './CompleteRegistration.css';
-import useUploadImage from '../hooks/useUploadImage';
 import { db } from '../firebase';
 import { doc, setDoc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import InterestSelector from '../components/InterestSelector';
 import { useNavigate, Link } from 'react-router-dom';
+import { uploadImageToCloudinary } from '../utils/uploadToCloudinary'; // חדש
 
 function CompleteRegistration() {
   const [formData, setFormData] = useState({
@@ -21,12 +21,11 @@ function CompleteRegistration() {
     learningGoal: '',
   });
 
+  const [imageFile, setImageFile] = useState(null); // חדש
   const [uploading, setUploading] = useState(false);
-  const uploadImage = useUploadImage();
   const navigate = useNavigate();
 
-  const isEnglish = (text) => /^[\p{ASCII}]*$/.test(text);
-
+  const isEnglish = (text) => /^[A-Za-z0-9 .,!?'"@#$%^&*()_\-+=\[\]{}:;|<>/~`\\]*$/.test(text);
   const validateForm = () => {
     const errors = [];
 
@@ -37,6 +36,7 @@ function CompleteRegistration() {
     if (!formData.about.trim() || formData.about.length > 200) errors.push('Tell us about yourself in 1–200 English characters.');
     if (!isEnglish(formData.about)) errors.push('"About you" section must be in English.');
     if (formData.interests.length < 2) errors.push('Please select at least 2 interests.');
+    if (!imageFile) errors.push('Please upload a profile picture.');
 
     return errors;
   };
@@ -44,6 +44,13 @@ function CompleteRegistration() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageFile(file);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -57,8 +64,10 @@ function CompleteRegistration() {
       const uid = auth.currentUser?.uid;
       if (!uid) throw new Error('User not authenticated');
 
-      const imageUrl = ''; // נכניס העלאת תמונה בהמשך
+      // שלב 1: מעלים תמונה ל-Cloudinary
+      const imageUrl = await uploadImageToCloudinary(imageFile);
 
+      // שלב 2: שומרים את כל הנתונים בפיירבייס
       await setDoc(doc(db, 'users', uid), {
         ...formData,
         profileImage: imageUrl,
@@ -130,6 +139,10 @@ function CompleteRegistration() {
             setFormData((prev) => ({ ...prev, interests }))
           }
         />
+
+        {/* 💡 שדה להעלאת תמונה */}
+        <label>Upload a profile picture:</label>
+        <input type="file" accept="image/*" onChange={handleImageChange} required />
 
         <button type="submit" className="submit-btn" disabled={uploading}>
           {uploading ? 'Submitting...' : 'Finish Registration'}
