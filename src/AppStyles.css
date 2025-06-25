@@ -1,0 +1,73 @@
+/* AppStyles.css */
+
+.section-box {
+  background-color: #d1dcf8;
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.section-box.tall {
+  min-height: 520px; /* גובה כפול לחברים */
+}
+
+.section-title {
+  font-weight: 700;
+  font-size: 1.6rem;
+  color: #1b1464;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.empty-state {
+  display: flex;
+  align-items: center;      /* מרכוז אנכי */
+  justify-content: center;  /* מרכוז אופקי */
+  text-align: center;
+  font-size: 1.4rem;
+  font-weight: 400;
+  color: #495057;
+  height: 100%;
+  line-height: 1.6;
+  font-style: normal;
+  margin: 0;
+}
+
+
+
+.friends-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 12px;
+  margin-bottom: auto; /* ⬅ זה שומר שהכפתורים ירדו לתחתית */
+}
+
+
+.button-row-bottom {
+  display: flex;
+  justify-content: center;     /* מרכז אופקית */
+  gap: 20px;
+  margin-top: auto;
+  padding-bottom: 16px;        /* ריווח מהתחתית */
+}
+
+
+.btn-orange {
+  background-color: #fbb76a;
+  color: black;
+  font-weight: 500;
+  border-radius: 12px;
+  padding: 8px 16px;
+  border: none;
+  font-size: 1rem;
+}
+
+.btn-orange:hover {
+  background-color: #ffa239;
+  color: white;
+}

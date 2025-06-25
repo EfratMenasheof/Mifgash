@@ -1,48 +1,58 @@
 import 'leaflet/dist/leaflet.css';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import { mockFriends } from '../data/FriendsData';
-import { cityCoordinates } from '../data/CityCoordinates';
 import L from 'leaflet';
-import './FriendsMap.css'; // הוספה
+import '../AppStyles.css';
 
-function FriendsMap() {
+function FriendsMap({ friends, user }) {
+  const userLocation = user.location || { lat: 31.7683, lng: 35.2137 };
+
   return (
-    <div className="friends-map-wrapper">
+    <div className="section-box" style={{ height: '300px' }}>
       <h2 className="section-title">Connections around the world 🌎</h2>
-      <div className="friends-map-container">
+      <div className="w-100 h-100 rounded overflow-hidden">
         <MapContainer
-          center={[20, 0]}
+          center={[userLocation.lat, userLocation.lng]}
           zoom={2}
           scrollWheelZoom={true}
-          style={{ height: '100%', width: '100%' }}
+          className="w-100 h-100"
         >
           <TileLayer
             url="https://{s}.tile.thunderforest.com/neighbourhood/{z}/{x}/{y}.png?apikey=66752847c4ba487da7a118cb871004a5"
             attribution='&copy; <a href="https://www.thunderforest.com/">Thunderforest</a>, Data &copy; OpenStreetMap contributors'
           />
-          {mockFriends.map((friend) => {
-            const key = `${friend.location.city}, ${friend.location.region}`;
-            const coords = cityCoordinates[key];
-            if (!coords) return null;
-
-            return (
-              <Marker
-                key={friend.id}
-                position={[coords.lat, coords.lng]}
-                icon={L.divIcon({
-                  className: 'emoji-marker',
-                  html: `<div style="font-size: 28px;">${friend.id === 'user' ? '🏠' : '📍'}</div>`,
-                  iconSize: [28, 28],
-                  iconAnchor: [14, 28]
-                })}
-              >
-                <Popup>
-                  <strong>{friend.name}</strong><br />
-                  {friend.location.city}, {friend.location.region}
-                </Popup>
-              </Marker>
-            );
-          })}
+          {friends.length === 0 ? (
+            <Marker
+              position={[userLocation.lat, userLocation.lng]}
+              icon={L.divIcon({
+                className: 'emoji-marker',
+                html: `<div style="font-size: 28px;">🏠</div>`,
+                iconSize: [28, 28],
+                iconAnchor: [14, 28]
+              })}
+            >
+              <Popup>You are here!</Popup>
+            </Marker>
+          ) : (
+            friends.map(friend => (
+              friend.location && (
+                <Marker
+                  key={friend.id}
+                  position={[friend.location.lat, friend.location.lng]}
+                  icon={L.divIcon({
+                    className: 'emoji-marker',
+                    html: `<div style="font-size: 28px;">📍</div>`,
+                    iconSize: [28, 28],
+                    iconAnchor: [14, 28]
+                  })}
+                >
+                  <Popup>
+                    <strong>{friend.name}</strong><br />
+                    {friend.location.city}, {friend.location.region}
+                  </Popup>
+                </Marker>
+              )
+            ))
+          )}
         </MapContainer>
       </div>
     </div>

@@ -1,13 +1,31 @@
+import { useEffect, useState } from 'react';
+import { collection, getDocs, query, where } from 'firebase/firestore';
+import { db } from '../firebase';
 import MifgashCard from '../components/MifgashCard';
 import FriendsSection from '../components/FriendsSection';
-import { mockFriends } from '../data/FriendsData';
 import ProfileModal from '../components/ProfileModal';
 import FriendsMap from '../components/FriendsMap';
-import { useState } from 'react';
 
 function HomePage({ user }) {
+  const [friends, setFriends] = useState([]);
   const [selectedFriend, setSelectedFriend] = useState(null);
-  const mifgashFriend = mockFriends.find(f => f.name === 'Daniel Radcliffe');
+
+  useEffect(() => {
+    const fetchFriends = async () => {
+      try {
+        const q = query(
+          collection(db, 'users'),
+          where('isFriend', '==', true)
+        );
+        const snapshot = await getDocs(q);
+        const fetched = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        setFriends(fetched);
+      } catch (err) {
+        console.error('Failed to load friends:', err);
+      }
+    };
+    fetchFriends();
+  }, []);
 
   return (
     <div className="container">
@@ -18,20 +36,14 @@ function HomePage({ user }) {
 
       <div className="row align-items-stretch gx-5 gx-md-7">
         <div className="col-md-6 ps-md-4 d-flex flex-column justify-content-start">
-          <FriendsSection />
+          <FriendsSection friends={friends} />
         </div>
 
         <div className="col-md-6 pe-md-4 d-flex flex-column justify-content-start">
           <div className="mb-3">
-            <MifgashCard
-              friend={mifgashFriend}
-              date="May 20th, 6pm"
-              location="Zoom call"
-              topic="You’ll teach Hebrew!"
-              onClick={setSelectedFriend}
-            />
+            <MifgashCard friend={friends[0]} onClick={setSelectedFriend} />
           </div>
-          <FriendsMap />
+          <FriendsMap friends={friends} user={user} />
         </div>
       </div>
 

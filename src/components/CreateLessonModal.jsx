@@ -1,24 +1,28 @@
-// CreateLessonModal.jsx – Groq with llama3 + compact prompt version + simplified teaching language selection
-
 import React, { useState, useEffect } from 'react';
 import './CreateLessonModal.css';
 
-function CreateLessonModal({ show, onClose, friends, onSave }) {
+function CreateLessonModal({ show, onClose, user, friends, onSave }) {
   const [mode, setMode] = useState('');
   const [selectedFriendId, setSelectedFriendId] = useState('');
   const [customTopic, setCustomTopic] = useState('');
-  const [teachingLanguage, setTeachingLanguage] = useState('Hebrew');
   const [generatedLesson, setGeneratedLesson] = useState(null);
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [saved, setSaved] = useState(false);
+
+  const getTeachingLanguage = () => {
+    if (!user?.learningGoal) return 'Hebrew';
+    return user.learningGoal === 'English' ? 'Hebrew' : 'English';
+  };
+
+  const teachingLanguage = getTeachingLanguage();
+  const actualFriends = friends.filter(f => f.isFriend);
 
   useEffect(() => {
     if (!show) {
       setMode('');
       setSelectedFriendId('');
       setCustomTopic('');
-      setTeachingLanguage('Hebrew');
       setGeneratedLesson(null);
       setStep(1);
       setSaved(false);
@@ -26,8 +30,6 @@ function CreateLessonModal({ show, onClose, friends, onSave }) {
   }, [show]);
 
   if (!show) return null;
-
-  const actualFriends = friends.filter(f => f.isFriend);
 
   const generateLesson = async () => {
     setLoading(true);
@@ -41,29 +43,29 @@ function CreateLessonModal({ show, onClose, friends, onSave }) {
       const friend = actualFriends.find(f => f.id.toString() === selectedFriendId);
       const interests = friend?.interests || [];
       const chosenInterest = interests[0] || 'a topic relevant to Jewish-American youth';
-      topicDescription = `${chosenInterest}`;
-      prompt = `You are a creative language teacher. Create a short and simple lesson in ${teachingLanguage} for the topic "${chosenInterest}".
+      topicDescription = chosenInterest;
+      prompt = `
+You are a creative language teacher. Create a short and simple lesson in ${teachingLanguage} for the topic "${chosenInterest}".
 
-Return the lesson in a clear and structured format with the following 4 sections, each marked by emoji headers:
+🎯 Objectives – 2 short bullet points  
+🧠 Vocabulary – 5 useful words in ${teachingLanguage}  
+💬 Dialogue – 2 short lines of dialogue  
+📝 Practice – 1 short exercise  
 
-🎯 Objectives – 2 short bullet points
-🧠 Vocabulary – 5 useful words in ${teachingLanguage}
-💬 Dialogue – 2 short lines of dialogue in ${teachingLanguage}
-📝 Practice – 1 short exercise in ${teachingLanguage}
+Only respond in ${teachingLanguage}. Return only the formatted content.`.trim();
+    }
 
-Only respond in ${teachingLanguage}. Do not translate or explain in English. Return only the formatted content.`.trim();
-    } else if (mode === 'custom') {
+    if (mode === 'custom') {
       topicDescription = customTopic.trim();
-      prompt = `You are a creative language teacher. Create a short and simple lesson in ${teachingLanguage} for the topic "${customTopic}".
+      prompt = `
+You are a creative language teacher. Create a short and simple lesson in ${teachingLanguage} for the topic "${customTopic}".
 
-Return the lesson in a clear and structured format with the following 4 sections, each marked by emoji headers:
+🎯 Objectives – 2 short bullet points  
+🧠 Vocabulary – 5 useful words  
+💬 Dialogue – 2 short lines of dialogue  
+📝 Practice – 1 short exercise  
 
-🎯 Objectives – 2 short bullet points
-🧠 Vocabulary – 5 useful words in ${teachingLanguage}
-💬 Dialogue – 2 short lines of dialogue in ${teachingLanguage}
-📝 Practice – 1 short exercise in ${teachingLanguage}
-
-Only respond in ${teachingLanguage}. Do not translate or explain in English. Return only the formatted content.`.trim();
+Only respond in ${teachingLanguage}. Return only the formatted content.`.trim();
     }
 
     try {
@@ -85,6 +87,7 @@ Only respond in ${teachingLanguage}. Do not translate or explain in English. Ret
       const data = await response.json();
       const content = data.choices?.[0]?.message?.content || 'Error: No lesson received.';
       const displayTitle = topicDescription;
+
       setGeneratedLesson({
         topic: displayTitle,
         description: displayTitle,
@@ -121,9 +124,9 @@ Only respond in ${teachingLanguage}. Do not translate or explain in English. Ret
 
   return (
     <div className="lesson-modal-overlay">
-      <div className="lesson-modal-container wide centered-modal">
+      <div className="lesson-modal-container centered-modal">
         <button className="modal-close-button" onClick={onClose}>✕</button>
-        <h2 className="modal-title">CREATE A NEW MIFGASH</h2>
+        <h2 className="modal-title">Create a New Mifgash</h2>
 
         <div className="step-indicator">
           <div className={`step-dot ${step === 1 ? 'active' : ''}`}></div>
@@ -139,48 +142,34 @@ Only respond in ${teachingLanguage}. Do not translate or explain in English. Ret
         <div className="modal-body-scroll">
           {step === 1 && (
             <>
-              <div className="form-group">
-                <label className="form-label">Select the language you want to teach:</label>
-                <label>
-                  <input
-                    type="radio"
-                    name="teachingLang"
-                    value="Hebrew"
-                    checked={teachingLanguage === 'Hebrew'}
-                    onChange={() => setTeachingLanguage('Hebrew')}
-                  /> Hebrew
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="teachingLang"
-                    value="English"
-                    checked={teachingLanguage === 'English'}
-                    onChange={() => setTeachingLanguage('English')}
-                  /> English
-                </label>
-              </div>
+              <p className="form-label" style={{ textAlign: 'center' }}>
+                You’ll be teaching: <strong>{teachingLanguage}</strong>
+              </p>
 
               <div className="form-group">
                 <label className="form-label">Choose lesson creation method:</label>
-                <label>
-                  <input
-                    type="radio"
-                    name="mode"
-                    value="friend"
-                    checked={mode === 'friend'}
-                    onChange={() => setMode('friend')}
-                  /> Teach a friend
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="mode"
-                    value="custom"
-                    checked={mode === 'custom'}
-                    onChange={() => setMode('custom')}
-                  /> Custom topic
-                </label>
+                <div className="radio-wrapper">
+                  <label>
+                    <input
+                      type="radio"
+                      name="mode"
+                      value="friend"
+                      checked={mode === 'friend'}
+                      onChange={() => setMode('friend')}
+                    />
+                    Teach a friend
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      name="mode"
+                      value="custom"
+                      checked={mode === 'custom'}
+                      onChange={() => setMode('custom')}
+                    />
+                    Custom topic
+                  </label>
+                </div>
               </div>
 
               {mode === 'friend' && (
@@ -219,8 +208,7 @@ Only respond in ${teachingLanguage}. Do not translate or explain in English. Ret
                 onClick={generateLesson}
                 disabled={
                   loading ||
-                  (mode === 'friend' && !selectedFriendId) ||
-                  (mode === 'custom' && !customTopic.trim())
+                  (!mode || (mode === 'friend' && !selectedFriendId) || (mode === 'custom' && !customTopic.trim()))
                 }
               >
                 {loading ? 'Generating...' : 'Generate Mifgash Plan'}
@@ -229,7 +217,7 @@ Only respond in ${teachingLanguage}. Do not translate or explain in English. Ret
           )}
 
           {step === 2 && generatedLesson && (
-            <div className="lesson-box" dir="rtl" style={{ fontFamily: 'Heebo, sans-serif' }}>
+            <div className="lesson-box" dir={teachingLanguage === 'Hebrew' ? 'rtl' : 'ltr'}>
               <h4>{generatedLesson.topic}</h4>
               <pre>{generatedLesson.fullContent}</pre>
               {!saved ? (

@@ -1,4 +1,5 @@
 import '../App.css';
+import './AppStyles.css';
 import Navbar from './components/Navbar';
 import logo from './assets/MIFGASH_LOGO.png';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
