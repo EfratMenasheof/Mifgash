@@ -1,9 +1,28 @@
 import './Navbar.css';
 import logo from '../assets/MIFGASH_LOGO.png';
 import { Link, useLocation } from 'react-router-dom';
-//// just trying Noam AFASIT
+import { useEffect, useState } from 'react';
+import { onAuthStateChanged } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
+import { auth, db } from '../firebase';
+
 function Navbar({ onProfileClick, onAlertClick, pendingCount }) {
   const location = useLocation();
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const docRef = doc(db, 'users', user.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setUserData(docSnap.data());
+        }
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   return (
     <div className="header-bar">
@@ -47,9 +66,16 @@ function Navbar({ onProfileClick, onAlertClick, pendingCount }) {
       </nav>
 
       <div className="profile-section">
-        <span className="profile-name" onClick={onProfileClick}>Maya Chen</span>
+        <span className="profile-name" onClick={onProfileClick}>
+          {userData
+            ? userData.fullName ||
+              [userData.firstName, userData.middleName, userData.lastName]
+                .filter(Boolean)
+                .join(' ')
+            : 'Loading...'}
+        </span>
         <img
-          src="/Profile-pics/user.jpg"
+          src={userData?.profileImage || '/Profile-pics/user.jpg'}
           alt="Profile"
           className="user-profile-pic"
           onClick={onProfileClick}

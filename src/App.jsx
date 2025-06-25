@@ -35,7 +35,7 @@ function AppContent({ user, setUser }) {
             <>
               <img src={logo} alt="Mifgash Logo" className="top-left-logo" />
               <Navbar
-                onProfileClick={() => setSelectedFriend(user)}
+                onProfileClick={() => setSelectedFriend({ id: 'user' })}
                 onAlertClick={() => setShowRequestsModal(true)}
                 pendingCount={0}
               />

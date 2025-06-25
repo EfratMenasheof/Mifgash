@@ -69,8 +69,17 @@ function CompleteRegistration() {
 
       // שלב 2: שומרים את כל הנתונים בפיירבייס
       await setDoc(doc(db, 'users', uid), {
-        ...formData,
+        uid,
+        email: auth.currentUser.email,
+        fullName: `${formData.firstName} ${formData.middleName} ${formData.lastName}`.trim(),
+        birthDate: formData.birthDate,
+        country: formData.country,
+        state: formData.state || '',
+        city: formData.city,
+        about: formData.about,
+        interests: formData.interests,
         profileImage: imageUrl,
+        learningGoal: formData.learningGoal, // נשמר לשימוש עתידי
       });
 
       alert('Registration complete!');
