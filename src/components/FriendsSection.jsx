@@ -3,8 +3,9 @@ import FriendCard from '../components/FriendCard';
 import ProfileModal from '../components/ProfileModal';
 import MatchPreferencesModal from '../components/MatchPreferencesModal';
 import MatchSuggestionCard from '../components/MatchSuggestionCard';
-import { findBestMatch } from '../utils/matchUtils';
 import { useNavigate } from 'react-router-dom';
+import { db, auth } from '../firebase';
+import { doc, updateDoc, arrayUnion } from 'firebase/firestore';
 import '../AppStyles.css';
 
 function FriendsSection({ friends }) {
@@ -13,9 +14,29 @@ function FriendsSection({ friends }) {
   const [suggestedMatch, setSuggestedMatch] = useState(null);
   const navigate = useNavigate();
 
-  const handleAcceptMatch = (match) => {
+  const handleAcceptMatch = async (match) => {
     setSuggestedMatch(null);
-    alert(`Request sent to ${match.name}!`);
+
+    const currentUserId = auth.currentUser?.uid;
+    if (!currentUserId || !match?.id) return;
+
+    try {
+      const senderRef = doc(db, "users", currentUserId);
+      const receiverRef = doc(db, "users", match.id);
+
+      await updateDoc(senderRef, {
+        sentRequests: arrayUnion(match.id),
+      });
+
+      await updateDoc(receiverRef, {
+        receivedRequests: arrayUnion(currentUserId),
+      });
+
+      alert(`Request sent to ${match.fullName}!`);
+    } catch (error) {
+      console.error("Error sending match request:", error);
+      alert("Something went wrong while sending the request.");
+    }
   };
 
   const handleSkipMatch = () => {
@@ -58,7 +79,6 @@ function FriendsSection({ friends }) {
         <MatchPreferencesModal
           onClose={() => setShowPreferencesModal(false)}
           onAcceptMatch={handleAcceptMatch}
-          candidates={friends}
         />
       )}
 

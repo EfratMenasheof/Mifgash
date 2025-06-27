@@ -1,11 +1,12 @@
-import { useState } from "react";
 import "./MatchPreferencesModal.css";
 import { findBestMatch } from "../utils/matchUtils";
 import MatchSuggestionCard from "./MatchSuggestionCard";
 import interestsData from "../data/Interests_Categories.json";
-import { mockFriends } from "../data/FriendsData";
+import { db, auth, sendConnectionRequest } from "../firebase";
+import { collection, getDocs, doc, getDoc } from "firebase/firestore";
+import { useEffect, useState } from "react";
 
-function MatchPreferencesModal({ onClose, onAcceptMatch, candidates }) {
+function MatchPreferencesModal({ onClose, onAcceptMatch }) {
   const [step, setStep] = useState("form");
   const [minAge, setMinAge] = useState(18);
   const [maxAge, setMaxAge] = useState(80);
@@ -13,8 +14,36 @@ function MatchPreferencesModal({ onClose, onAcceptMatch, candidates }) {
   const [expandedCategories, setExpandedCategories] = useState([]);
   const [match, setMatch] = useState(null);
   const [alreadySuggested, setAlreadySuggested] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [candidates, setCandidates] = useState([]);
 
-  const currentUser = mockFriends.find(f => f.id === 'user');
+  useEffect(() => {
+    const fetchData = async () => {
+      const userId = auth.currentUser?.uid;
+      if (!userId) return;
+
+      const userDoc = await getDoc(doc(db, "users", userId));
+      const userData = { id: userId, ...userDoc.data() };
+      setCurrentUser(userData);
+
+      const allDocs = await getDocs(collection(db, "users"));
+      const learningLang = userData.learningGoal;
+      const myNativeLang = learningLang === "English" ? "Hebrew" : "English";
+
+      const allUsers = allDocs.docs
+        .map(doc => ({ id: doc.id, ...doc.data() }))
+        .filter(u =>
+          u.id !== userId &&
+          !u.isFriend &&
+          u.learningGoal === myNativeLang
+        );
+
+      setCandidates(allUsers);
+    };
+
+    fetchData();
+  }, []);
+
   const userInterests = currentUser?.interests || [];
 
   const toggleTag = (tag) => {
@@ -30,7 +59,7 @@ function MatchPreferencesModal({ onClose, onAcceptMatch, candidates }) {
   };
 
   const getNewMatch = (prefs, excludeIds = []) => {
-    return findBestMatch(prefs, candidates.filter(c => !excludeIds.includes(c.id)));
+    return findBestMatch(currentUser, prefs, candidates.filter(c => !excludeIds.includes(c.id)));
   };
 
   const handleSubmit = () => {
@@ -53,8 +82,19 @@ function MatchPreferencesModal({ onClose, onAcceptMatch, candidates }) {
     }
   };
 
-  const handleAccept = (matchedFriend) => {
-    onAcceptMatch(matchedFriend);
+  // ✅ פונקציה חדשה לשליחת בקשת התאמה
+  const handleAccept = async (matchedFriend) => {
+    const senderId = auth.currentUser?.uid;
+    const receiverId = matchedFriend?.id;
+    if (!senderId || !receiverId) return;
+
+    try {
+      await sendConnectionRequest(senderId, receiverId);
+      alert(`Request sent to ${matchedFriend.fullName || "user"}!`);
+    } catch (error) {
+      console.error("Failed to send request:", error);
+    }
+
     onClose();
   };
 
@@ -111,7 +151,6 @@ function MatchPreferencesModal({ onClose, onAcceptMatch, candidates }) {
             <div className="interests-scroll">
               {Object.entries(interestsData).map(([category, { emoji, items }]) => {
                 const isExpanded = expandedCategories.includes(category);
-
                 return (
                   <div key={category} className="interest-category modern">
                     <button
@@ -143,7 +182,6 @@ function MatchPreferencesModal({ onClose, onAcceptMatch, candidates }) {
             </div>
 
             <button onClick={handleSubmit}>Find My Match</button>
-            {/* <button className="secondary" onClick={onClose}>Cancel</button> */}
           </>
         ) : (
           <MatchSuggestionCard

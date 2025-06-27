@@ -3,7 +3,7 @@ import './AppStyles.css';
 import Navbar from './components/Navbar';
 import logo from './assets/MIFGASH_LOGO.png';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 // Pages
 import HomePage from './pages/HomePage';
@@ -19,14 +19,41 @@ import FloatingMessageButton from './components/FloatingMessageButton';
 import ChatModal from './components/ChatModal';
 import IncomingRequestsModal from './components/IncomingRequestsModal';
 
+// Firebase
+import { auth, db } from './firebase';
+import { doc, getDoc } from 'firebase/firestore';
+
 function AppContent({ user, setUser }) {
   const [selectedFriend, setSelectedFriend] = useState(null);
   const [hasNewMessage, setHasNewMessage] = useState(true);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [showRequestsModal, setShowRequestsModal] = useState(false);
+  const [pendingCount, setPendingCount] = useState(0);
+  const [incomingRequests, setIncomingRequests] = useState([]);
 
   const location = useLocation();
   const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
+
+  useEffect(() => {
+    const fetchRequests = async () => {
+      if (!user?.uid) return;
+
+      const userSnap = await getDoc(doc(db, 'users', user.uid));
+      const data = userSnap.data();
+
+      const receivedIds = data?.receivedRequests || [];
+      setPendingCount(receivedIds.length);
+
+      const requestDocs = await Promise.all(receivedIds.map(id => getDoc(doc(db, 'users', id))));
+      const requestUsers = requestDocs
+        .filter(doc => doc.exists())
+        .map(doc => ({ id: doc.id, ...doc.data() }));
+
+      setIncomingRequests(requestUsers);
+    };
+
+    fetchRequests();
+  }, [showRequestsModal, user]);
 
   return (
     <>
@@ -38,7 +65,7 @@ function AppContent({ user, setUser }) {
               <Navbar
                 onProfileClick={() => setSelectedFriend({ id: 'user' })}
                 onAlertClick={() => setShowRequestsModal(true)}
-                pendingCount={0}
+                pendingCount={pendingCount}
               />
             </>
           )}
@@ -87,7 +114,7 @@ function AppContent({ user, setUser }) {
 
           {showRequestsModal && (
             <IncomingRequestsModal
-              friends={[]}
+              friends={incomingRequests}
               onAccept={() => {}}
               onClose={() => setShowRequestsModal(false)}
             />

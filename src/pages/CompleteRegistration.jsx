@@ -5,7 +5,8 @@ import { doc, setDoc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import InterestSelector from '../components/InterestSelector';
 import { useNavigate, Link } from 'react-router-dom';
-import { uploadImageToCloudinary } from '../utils/uploadToCloudinary'; // חדש
+import { uploadImageToCloudinary } from '../utils/uploadToCloudinary';
+import { Country, State, City } from 'country-state-city';
 
 function CompleteRegistration() {
   const [formData, setFormData] = useState({
@@ -21,35 +22,54 @@ function CompleteRegistration() {
     learningGoal: '',
   });
 
-  const [imageFile, setImageFile] = useState(null); // חדש
+  const [imageFile, setImageFile] = useState(null);
   const [uploading, setUploading] = useState(false);
+  const [states, setStates] = useState([]);
+  const [cities, setCities] = useState([]);
   const navigate = useNavigate();
 
-  const isEnglish = (text) => /^[A-Za-z0-9 .,!?'"@#$%^&*()_\-+=\[\]{}:;|<>/~`\\]*$/.test(text);
   const validateForm = () => {
     const errors = [];
-
     const age = new Date().getFullYear() - new Date(formData.birthDate).getFullYear();
     if (age < 18) errors.push('You must be at least 18 years old to register.');
     if (!formData.firstName.trim() || !formData.lastName.trim()) errors.push('First and Last names are required.');
-    if (!isEnglish(formData.firstName + formData.middleName + formData.lastName)) errors.push('Names must be in English.');
-    if (!formData.about.trim() || formData.about.length > 200) errors.push('Tell us about yourself in 1–200 English characters.');
-    if (!isEnglish(formData.about)) errors.push('"About you" section must be in English.');
+    if (!formData.about.trim() || formData.about.length > 200) errors.push('Tell us about yourself in 1–200 characters.');
     if (formData.interests.length < 2) errors.push('Please select at least 2 interests.');
     if (!imageFile) errors.push('Please upload a profile picture.');
-
     return errors;
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       setImageFile(file);
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    if (name === 'country') {
+      const selectedCountry = Country.getCountryByCode(value);
+      setFormData((prev) => ({
+        ...prev,
+        country: value,
+        state: '',
+        city: ''
+      }));
+      const newStates = State.getStatesOfCountry(value);
+      setStates(newStates);
+      setCities([]);
+    } else if (name === 'state') {
+      setFormData((prev) => ({
+        ...prev,
+        state: value,
+        city: ''
+      }));
+      const newCities = City.getCitiesOfState(formData.country, value);
+      setCities(newCities);
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
     }
   };
 
@@ -64,22 +84,31 @@ function CompleteRegistration() {
       const uid = auth.currentUser?.uid;
       if (!uid) throw new Error('User not authenticated');
 
-      // שלב 1: מעלים תמונה ל-Cloudinary
       const imageUrl = await uploadImageToCloudinary(imageFile);
 
-      // שלב 2: שומרים את כל הנתונים בפיירבייס
       await setDoc(doc(db, 'users', uid), {
         uid,
         email: auth.currentUser.email,
         fullName: `${formData.firstName} ${formData.middleName} ${formData.lastName}`.trim(),
         birthDate: formData.birthDate,
-        country: formData.country,
-        state: formData.state || '',
-        city: formData.city,
+        location:
+          formData.country === "IL"
+            ? {
+                country: "Israel",
+                city: formData.city
+              }
+            : {
+                country: "United States",
+                state: formData.state,
+                city: formData.city
+              },
         about: formData.about,
         interests: formData.interests,
         profileImage: imageUrl,
-        learningGoal: formData.learningGoal, // נשמר לשימוש עתידי
+        learningGoal: formData.learningGoal,
+        sentRequests: [],
+        receivedRequests: [],
+        friends: []
       });
 
       alert('Registration complete!');
@@ -104,22 +133,28 @@ function CompleteRegistration() {
         <input type="date" name="birthDate" value={formData.birthDate} onChange={handleChange} required />
 
         <label>Where are you from?</label>
-        <select name="country" value={formData.country} onChange={handleChange} required>
+        <select name="country" onChange={handleChange} required>
           <option value="">Select your country</option>
-          <option value="USA">United States</option>
-          <option value="Israel">Israel</option>
+          <option value="IL">Israel</option>
+          <option value="US">United States</option>
         </select>
-        <p className="small-note">This helps us connect you with people from the other region</p>
 
-        {formData.country === 'USA' && (
-          <>
-            <input type="text" name="state" placeholder="State*" value={formData.state} onChange={handleChange} required />
-            <input type="text" name="city" placeholder="City*" value={formData.city} onChange={handleChange} required />
-          </>
+        {states.length > 0 && (
+          <select name="state" value={formData.state} onChange={handleChange} required>
+            <option value="">Select your state</option>
+            {states.map((s) => (
+              <option key={s.isoCode} value={s.isoCode}>{s.name}</option>
+            ))}
+          </select>
         )}
 
-        {formData.country === 'Israel' && (
-          <input type="text" name="city" placeholder="City*" value={formData.city} onChange={handleChange} required />
+        {cities.length > 0 && (
+          <select name="city" value={formData.city} onChange={handleChange} required>
+            <option value="">Select your city</option>
+            {cities.map((city) => (
+              <option key={city.name} value={city.name}>{city.name}</option>
+            ))}
+          </select>
         )}
 
         <label>Tell us a bit about yourself:</label>
@@ -149,7 +184,6 @@ function CompleteRegistration() {
           }
         />
 
-        {/* 💡 שדה להעלאת תמונה */}
         <label>Upload a profile picture:</label>
         <input type="file" accept="image/*" onChange={handleImageChange} required />
 
