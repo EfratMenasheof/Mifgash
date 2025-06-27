@@ -21,7 +21,6 @@
 }
 
 /* 🛠 פתרון לבעיה של כפתורי המפה שמופיעים מעל ה-modal */
-.leaflet-top,
-.leaflet-bottom {
+.leaflet-control{
   z-index: 500 !important;
 }

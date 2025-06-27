@@ -41,3 +41,9 @@ body {
   margin-bottom: 1.5rem;
   text-shadow: 0.3px 0.3px 0 #333;
 }
+
+.leaflet-control,
+.leaflet-top,
+.leaflet-bottom {
+  z-index: 500 !important;
+}
