@@ -28,7 +28,7 @@ function HomePage({ user }) {
   }, []);
 
   return (
-    <div className="container">
+    <div className="container text-center">
       <h1 className="welcome-title mt-4 mb-1">Welcome back, {user.name}!</h1>
       <h5 className="homepage-subtitle">
         Bringing people closer, one word at a time 🫱🏻‍🫲🏼

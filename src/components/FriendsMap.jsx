@@ -7,7 +7,7 @@ function FriendsMap({ friends, user }) {
   const userLocation = user.location || { lat: 31.7683, lng: 35.2137 };
 
   return (
-    <div className="section-box" style={{ height: '300px' }}>
+    <div className="section-box" style={{ height: '500px' }}>
       <h2 className="section-title">Connections around the world 🌎</h2>
       <div className="w-100 h-100 rounded overflow-hidden">
         <MapContainer
