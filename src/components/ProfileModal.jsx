@@ -5,6 +5,8 @@ import { auth, db } from '../firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { signOut } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
+import IsraelFlag from '../assets/israel.png';
+import UsaFlag from '../assets/usa.png';
 
 // אימוג'ים לתחומי עניין
 const interestEmojiMap = {};
@@ -126,7 +128,11 @@ function ProfileModal({ friend, onClose }) {
         {locationText && (
           <p>
             <strong>Location:</strong> {locationText}{" "}
-            {language === "English" ? "🇮🇱" : language === "Hebrew" ? "🇺🇸" : ""}
+            {language === "English" ? (
+              <img src={IsraelFlag} alt="IL" style={{ width: "20px", marginLeft: "6px" }} />
+            ) : language === "Hebrew" ? (
+              <img src={UsaFlag} alt="US" style={{ width: "20px", marginLeft: "6px" }} />
+            ) : null}
           </p>
         )}
 
