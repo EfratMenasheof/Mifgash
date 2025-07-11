@@ -7,6 +7,8 @@ import InterestSelector from '../components/InterestSelector';
 import { useNavigate, Link } from 'react-router-dom';
 import { uploadImageToCloudinary } from '../utils/uploadToCloudinary';
 import { Country, State, City } from 'country-state-city';
+import Select from 'react-select';
+import { israelCities } from '../data/israel_full_cities'; // ✅ הוספה
 
 function CompleteRegistration() {
   const [formData, setFormData] = useState({
@@ -46,31 +48,58 @@ function CompleteRegistration() {
     }
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  const getCoordinates = async (locationString) => {
+    const apiKey = import.meta.env.VITE_OPENCAGE_API_KEY;
+    const response = await fetch(`https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(locationString)}&key=${apiKey}`);
+    const data = await response.json();
+    if (data.results.length > 0) {
+      const { lat, lng } = data.results[0].geometry;
+      return { lat, lng };
+    }
+    return null;
+  };
 
-    if (name === 'country') {
-      const selectedCountry = Country.getCountryByCode(value);
-      setFormData((prev) => ({
-        ...prev,
-        country: value,
-        state: '',
-        city: ''
-      }));
+  const handleCountryChange = (selectedOption) => {
+    const value = selectedOption.value;
+    setFormData((prev) => ({
+      ...prev,
+      country: value,
+      state: '',
+      city: ''
+    }));
+
+    if (value === 'US') {
       const newStates = State.getStatesOfCountry(value);
       setStates(newStates);
       setCities([]);
-    } else if (name === 'state') {
-      setFormData((prev) => ({
-        ...prev,
-        state: value,
-        city: ''
-      }));
-      const newCities = City.getCitiesOfState(formData.country, value);
-      setCities(newCities);
-    } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
+    } else if (value === 'IL') {
+      setStates([]);
+      setCities(israelCities.map(name => ({ name }))); // ✅ שימוש ברשימה מ־JS
     }
+  };
+
+  const handleStateChange = (selectedOption) => {
+    const value = selectedOption.value;
+    setFormData((prev) => ({
+      ...prev,
+      state: value,
+      city: ''
+    }));
+    const newCities = City.getCitiesOfState('US', value);
+    setCities(newCities);
+  };
+
+  const handleCityChange = (selectedOption) => {
+    const value = selectedOption.value;
+    setFormData((prev) => ({
+      ...prev,
+      city: value
+    }));
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
@@ -86,30 +115,41 @@ function CompleteRegistration() {
 
       const imageUrl = await uploadImageToCloudinary(imageFile);
 
+      const locationString =
+        formData.country === 'IL'
+          ? `${formData.city}, Israel`
+          : `${formData.city}, ${formData.state}, United States`;
+
+      const coordinates = await getCoordinates(locationString);
+
+      const locationData =
+        formData.country === 'IL'
+          ? {
+              country: 'Israel',
+              city: formData.city,
+              coordinates
+            }
+          : {
+              country: 'United States',
+              state: formData.state,
+              city: formData.city,
+              coordinates
+            };
+
       await setDoc(doc(db, 'users', uid), {
-        uid,
-        email: auth.currentUser.email,
-        fullName: `${formData.firstName} ${formData.middleName} ${formData.lastName}`.trim(),
-        birthDate: formData.birthDate,
-        location:
-          formData.country === "IL"
-            ? {
-                country: "Israel",
-                city: formData.city
-              }
-            : {
-                country: "United States",
-                state: formData.state,
-                city: formData.city
-              },
-        about: formData.about,
-        interests: formData.interests,
-        profileImage: imageUrl,
-        learningGoal: formData.learningGoal,
-        sentRequests: [],
-        receivedRequests: [],
-        friends: []
-      });
+  uid,
+  email: auth.currentUser.email,
+  fullName: `${formData.firstName} ${formData.middleName} ${formData.lastName}`.trim(),
+  birthDate: formData.birthDate,
+  location: locationData,
+  about: formData.about,
+  interests: formData.interests,
+  profileImage: imageUrl,
+  learningGoal: formData.learningGoal,
+  sentRequests: [],
+  receivedRequests: [],
+  friends: []
+}, { merge: true });
 
       alert('Registration complete!');
       navigate('/login');
@@ -132,29 +172,36 @@ function CompleteRegistration() {
         <label>Birth Date*</label>
         <input type="date" name="birthDate" value={formData.birthDate} onChange={handleChange} required />
 
-        <label>Where are you from?</label>
-        <select name="country" onChange={handleChange} required>
-          <option value="">Select your country</option>
-          <option value="IL">Israel</option>
-          <option value="US">United States</option>
-        </select>
+        <label>Country</label>
+        <Select
+          options={[
+            { value: 'IL', label: 'Israel' },
+            { value: 'US', label: 'United States' }
+          ]}
+          onChange={handleCountryChange}
+          placeholder="Select your country"
+        />
 
-        {states.length > 0 && (
-          <select name="state" value={formData.state} onChange={handleChange} required>
-            <option value="">Select your state</option>
-            {states.map((s) => (
-              <option key={s.isoCode} value={s.isoCode}>{s.name}</option>
-            ))}
-          </select>
+        {formData.country === 'US' && (
+          <>
+            <label>State</label>
+            <Select
+              options={states.map((s) => ({ value: s.isoCode, label: s.name }))}
+              onChange={handleStateChange}
+              placeholder="Select your state"
+            />
+          </>
         )}
 
         {cities.length > 0 && (
-          <select name="city" value={formData.city} onChange={handleChange} required>
-            <option value="">Select your city</option>
-            {cities.map((city) => (
-              <option key={city.name} value={city.name}>{city.name}</option>
-            ))}
-          </select>
+          <>
+            <label>City</label>
+            <Select
+              options={cities.map((c) => ({ value: c.name, label: c.name }))}
+              onChange={handleCityChange}
+              placeholder="Select your city"
+            />
+          </>
         )}
 
         <label>Tell us a bit about yourself:</label>

@@ -6,7 +6,7 @@ import { db, auth, sendConnectionRequest } from "../firebase";
 import { collection, getDocs, doc, getDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 
-function MatchPreferencesModal({ onClose, onAcceptMatch }) {
+function MatchPreferencesModal({ onClose }) {
   const [step, setStep] = useState("form");
   const [minAge, setMinAge] = useState(18);
   const [maxAge, setMaxAge] = useState(80);
@@ -17,39 +17,38 @@ function MatchPreferencesModal({ onClose, onAcceptMatch }) {
   const [matchQueue, setMatchQueue] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
- useEffect(() => {
-  const fetchData = async () => {
-    const userId = auth.currentUser?.uid;
-    if (!userId) return;
+  useEffect(() => {
+    const fetchData = async () => {
+      const userId = auth.currentUser?.uid;
+      if (!userId) return;
 
-    const userDoc = await getDoc(doc(db, "users", userId));
-    const userData = { id: userId, ...userDoc.data() };
-    setCurrentUser(userData);
+      const userDoc = await getDoc(doc(db, "users", userId));
+      const userData = { id: userId, ...userDoc.data() };
+      setCurrentUser(userData);
 
-    const allDocs = await getDocs(collection(db, "users"));
-    const learningLang = userData.learningGoal;
-    const myNativeLang = learningLang === "English" ? "Hebrew" : "English";
+      const allDocs = await getDocs(collection(db, "users"));
+      const learningLang = userData.learningGoal;
+      const myNativeLang = learningLang === "English" ? "Hebrew" : "English";
 
-    const blockedIds = new Set([
-      userId,
-      ...(userData.friends || []),
-      ...(userData.sentRequests || []),
-      ...(userData.receivedRequests || [])
-    ]);
+      const blockedIds = new Set([
+        userId,
+        ...(userData.friends || []),
+        ...(userData.sentRequests || []),
+        ...(userData.receivedRequests || [])
+      ]);
 
-    const allUsers = allDocs.docs
-      .map(doc => ({ id: doc.id, ...doc.data() }))
-      .filter(u =>
-        !blockedIds.has(u.id) &&
-        u.learningGoal === myNativeLang
-      );
+      const allUsers = allDocs.docs
+        .map(doc => ({ id: doc.id, ...doc.data() }))
+        .filter(u =>
+          !blockedIds.has(u.id) &&
+          u.learningGoal === myNativeLang
+        );
 
-    setCandidates(allUsers);
-  };
+      setCandidates(allUsers);
+    };
 
-  fetchData();
-}, []);
-
+    fetchData();
+  }, []);
 
   const userInterests = currentUser?.interests || [];
 
@@ -77,7 +76,7 @@ function MatchPreferencesModal({ onClose, onAcceptMatch }) {
     if (currentIndex + 1 < matchQueue.length) {
       setCurrentIndex(prev => prev + 1);
     } else {
-      setCurrentIndex(-1);
+      setCurrentIndex(-1); // אין עוד התאמות
     }
   };
 
@@ -96,12 +95,15 @@ function MatchPreferencesModal({ onClose, onAcceptMatch }) {
     onClose();
   };
 
-  const handleClose = () => {
-  setStep("form");
-  setMatchQueue([]);
-  setCurrentIndex(0);
-};
+  const handleCloseModal = () => {
+    onClose(); // סוגר את כל המודל
+  };
 
+  const handleBackToPreferences = () => {
+    setStep("form");
+    setMatchQueue([]);
+    setCurrentIndex(0);
+  };
 
   const calculateBackground = () => {
     const min = 18;
@@ -197,7 +199,8 @@ function MatchPreferencesModal({ onClose, onAcceptMatch }) {
             match={currentMatch}
             onAccept={handleAccept}
             onSkip={handleSkip}
-            onClose={handleClose}
+            onClose={handleCloseModal}
+            onBackToPreferences={handleBackToPreferences}
           />
         )}
       </div>

@@ -1,18 +1,39 @@
-import 'leaflet/dist/leaflet.css';
+import { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { collection, getDocs } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
+import { db } from '../firebase';
 import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 import '../AppStyles.css';
 
-function FriendsMap({ friends, user }) {
-  const userLocation = user.location || { lat: 31.7683, lng: 35.2137 };
+function FriendsMap() {
+  const [user, setUser] = useState(null);
+  const [friends, setFriends] = useState([]);
 
-  const formatLocation = (loc) => {
-    if (!loc?.city || !loc?.country) return '';
-    if (loc.country === "United States" && loc.state) {
-      return `${loc.city}, ${loc.state}, USA`;
-    }
-    return `${loc.city}, ${loc.country}`;
-  };
+  useEffect(() => {
+    const fetchUserAndFriends = async () => {
+      const auth = getAuth();
+      const uid = auth.currentUser?.uid;
+      if (!uid) return;
+
+      const usersSnapshot = await getDocs(collection(db, 'users'));
+      const allUsers = usersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+      const currentUser = allUsers.find(u => u.id === uid);
+      setUser(currentUser);
+
+      const myFriends = allUsers.filter(u => currentUser?.friends?.includes(u.id));
+      setFriends(myFriends);
+    };
+
+    fetchUserAndFriends();
+  }, []);
+
+  if (!user) return <div>Loading map...</div>;
+
+  const userLocation = user.location?.coordinates;
+  if (!userLocation) return <div>No location data available for your profile.</div>;
 
   return (
     <div className="section-box" style={{ height: '500px' }}>
@@ -29,7 +50,7 @@ function FriendsMap({ friends, user }) {
             attribution='&copy; <a href="https://www.thunderforest.com/">Thunderforest</a>, Data &copy; OpenStreetMap contributors'
           />
 
-          {/* 🏠 המשתמש עצמו */}
+          {/* User marker 🏠 */}
           <Marker
             position={[userLocation.lat, userLocation.lng]}
             icon={L.divIcon({
@@ -42,13 +63,15 @@ function FriendsMap({ friends, user }) {
             <Popup>You are here!</Popup>
           </Marker>
 
-          {/* 📍 החברים */}
-          {friends
-            .filter(friend => friend.location?.lat && friend.location?.lng)
-            .map(friend => (
+          {/* Friends markers 📍 */}
+          {friends.map(friend => {
+            const coords = friend.location?.coordinates;
+            if (!coords || typeof coords.lat !== 'number' || typeof coords.lng !== 'number') return null;
+
+            return (
               <Marker
                 key={friend.id}
-                position={[friend.location.lat, friend.location.lng]}
+                position={[coords.lat, coords.lng]}
                 icon={L.divIcon({
                   className: 'emoji-marker',
                   html: `<div style="font-size: 28px;">📍</div>`,
@@ -57,11 +80,13 @@ function FriendsMap({ friends, user }) {
                 })}
               >
                 <Popup>
-                  <strong>{friend.fullName || friend.name || 'Friend'}</strong><br />
-                  {formatLocation(friend.location)}
+                  <strong>{friend.fullName || friend.name}</strong><br />
+                  {friend.location.city}
+                  {friend.location.state ? `, ${friend.location.state}` : ''}, {friend.location.country}
                 </Popup>
               </Marker>
-            ))}
+            );
+          })}
         </MapContainer>
       </div>
     </div>
