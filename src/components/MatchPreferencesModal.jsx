@@ -12,37 +12,44 @@ function MatchPreferencesModal({ onClose, onAcceptMatch }) {
   const [maxAge, setMaxAge] = useState(80);
   const [selectedTags, setSelectedTags] = useState([]);
   const [expandedCategories, setExpandedCategories] = useState([]);
-  const [match, setMatch] = useState(null);
-  const [alreadySuggested, setAlreadySuggested] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
   const [candidates, setCandidates] = useState([]);
+  const [matchQueue, setMatchQueue] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const userId = auth.currentUser?.uid;
-      if (!userId) return;
+ useEffect(() => {
+  const fetchData = async () => {
+    const userId = auth.currentUser?.uid;
+    if (!userId) return;
 
-      const userDoc = await getDoc(doc(db, "users", userId));
-      const userData = { id: userId, ...userDoc.data() };
-      setCurrentUser(userData);
+    const userDoc = await getDoc(doc(db, "users", userId));
+    const userData = { id: userId, ...userDoc.data() };
+    setCurrentUser(userData);
 
-      const allDocs = await getDocs(collection(db, "users"));
-      const learningLang = userData.learningGoal;
-      const myNativeLang = learningLang === "English" ? "Hebrew" : "English";
+    const allDocs = await getDocs(collection(db, "users"));
+    const learningLang = userData.learningGoal;
+    const myNativeLang = learningLang === "English" ? "Hebrew" : "English";
 
-      const allUsers = allDocs.docs
-        .map(doc => ({ id: doc.id, ...doc.data() }))
-        .filter(u =>
-          u.id !== userId &&
-          !u.isFriend &&
-          u.learningGoal === myNativeLang
-        );
+    const blockedIds = new Set([
+      userId,
+      ...(userData.friends || []),
+      ...(userData.sentRequests || []),
+      ...(userData.receivedRequests || [])
+    ]);
 
-      setCandidates(allUsers);
-    };
+    const allUsers = allDocs.docs
+      .map(doc => ({ id: doc.id, ...doc.data() }))
+      .filter(u =>
+        !blockedIds.has(u.id) &&
+        u.learningGoal === myNativeLang
+      );
 
-    fetchData();
-  }, []);
+    setCandidates(allUsers);
+  };
+
+  fetchData();
+}, []);
+
 
   const userInterests = currentUser?.interests || [];
 
@@ -58,31 +65,22 @@ function MatchPreferencesModal({ onClose, onAcceptMatch }) {
     );
   };
 
-  const getNewMatch = (prefs, excludeIds = []) => {
-    return findBestMatch(currentUser, prefs, candidates.filter(c => !excludeIds.includes(c.id)));
-  };
-
   const handleSubmit = () => {
     const preferences = { ageRange: [minAge, maxAge], interests: selectedTags };
-    const best = getNewMatch(preferences);
-    setMatch(best || null);
-    setAlreadySuggested(best ? [best.id] : []);
+    const allMatches = findBestMatch(currentUser, preferences, candidates);
+    setMatchQueue(allMatches || []);
+    setCurrentIndex(0);
     setStep("match");
   };
 
   const handleSkip = () => {
-    const preferences = { ageRange: [minAge, maxAge], interests: selectedTags };
-    const next = getNewMatch(preferences, alreadySuggested);
-
-    if (next) {
-      setMatch(next);
-      setAlreadySuggested(prev => [...prev, next.id]);
+    if (currentIndex + 1 < matchQueue.length) {
+      setCurrentIndex(prev => prev + 1);
     } else {
-      setMatch(null);
+      setCurrentIndex(-1);
     }
   };
 
-  // ✅ פונקציה חדשה לשליחת בקשת התאמה
   const handleAccept = async (matchedFriend) => {
     const senderId = auth.currentUser?.uid;
     const receiverId = matchedFriend?.id;
@@ -98,6 +96,13 @@ function MatchPreferencesModal({ onClose, onAcceptMatch }) {
     onClose();
   };
 
+  const handleClose = () => {
+  setStep("form");
+  setMatchQueue([]);
+  setCurrentIndex(0);
+};
+
+
   const calculateBackground = () => {
     const min = 18;
     const max = 80;
@@ -107,6 +112,10 @@ function MatchPreferencesModal({ onClose, onAcceptMatch }) {
       background: `linear-gradient(to right, #ccc ${left}%, #ffa239 ${left}%, #ffa239 ${right}%, #ccc ${right}%)`
     };
   };
+
+  const currentMatch = currentIndex >= 0 && currentIndex < matchQueue.length
+    ? matchQueue[currentIndex]
+    : null;
 
   return (
     <div className="modal-overlay">
@@ -185,9 +194,10 @@ function MatchPreferencesModal({ onClose, onAcceptMatch }) {
           </>
         ) : (
           <MatchSuggestionCard
-            match={match}
+            match={currentMatch}
             onAccept={handleAccept}
             onSkip={handleSkip}
+            onClose={handleClose}
           />
         )}
       </div>

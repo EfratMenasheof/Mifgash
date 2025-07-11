@@ -15,31 +15,54 @@ export function findBestMatch(currentUser, userPreferences, candidates) {
   const [minAge, maxAge] = ageRange;
 
   const userLearning = currentUser.learningGoal?.toLowerCase();
-  const userInterests = Array.isArray(currentUser.interests) ? currentUser.interests : [];
+  const userInterests = Array.isArray(currentUser.interests)
+    ? currentUser.interests.map(i => i.toLowerCase())
+    : [];
 
-  if (!userLearning) return null;
+  if (!userLearning) return [];
 
-  let bestMatch = null;
-  let bestScore = -1;
+  const myNativeLang = userLearning === "english" ? "hebrew" : "english";
 
-  for (const candidate of candidates) {
-    if (candidate.id === currentUser.id) continue;
+  // שלב 1: מסננים רק לפי שפה הפוכה
+  const langFiltered = candidates.filter(
+    c => c.learningGoal?.toLowerCase() === myNativeLang
+  );
 
-    const candidateLearning = candidate.learningGoal?.toLowerCase();
-    if (!candidateLearning || candidateLearning === userLearning) continue;
+  if (langFiltered.length === 0) return [];
 
+  // שלב 2: ניקוד ודירוג התאמות
+  const scoredMatches = langFiltered.map(candidate => {
     const candidateAge = calculateAge(candidate.birthDate);
-    if (!candidateAge || candidateAge < minAge || candidateAge > maxAge) continue;
+    const isInAgeRange = candidateAge && candidateAge >= minAge && candidateAge <= maxAge;
 
-    const candidateInterests = Array.isArray(candidate.interests) ? candidate.interests : [];
-    const shared = candidateInterests.filter((i) => userInterests.includes(i));
-    const score = shared.length;
+    const candidateInterests = Array.isArray(candidate.interests)
+      ? candidate.interests.map(i => i.toLowerCase())
+      : [];
 
-    if (score > bestScore) {
-      bestScore = score;
-      bestMatch = { ...candidate, sharedInterests: shared };
-    }
-  }
+    const shared = candidateInterests.filter(i => userInterests.includes(i));
+    const sharedCount = shared.length;
 
-  return bestMatch;
+    // דירוג לפי התאמה:
+    // 1 = מושלמת (שפה + גיל + תחומי עניין)
+    // 2 = שפה + גיל
+    // 3 = רק שפה
+    let tier = 3;
+    if (isInAgeRange && sharedCount > 0) tier = 1;
+    else if (isInAgeRange) tier = 2;
+
+    return {
+      ...candidate,
+      sharedInterests: shared,
+      score: sharedCount,
+      tier
+    };
+  });
+
+  // שלב 3: ממיינים לפי tier ואז כמות תחומי עניין משותפים
+  scoredMatches.sort((a, b) => {
+    if (a.tier !== b.tier) return a.tier - b.tier;
+    return b.score - a.score;
+  });
+
+  return scoredMatches;
 }
