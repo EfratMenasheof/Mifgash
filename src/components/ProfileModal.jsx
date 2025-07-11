@@ -16,19 +16,7 @@ Object.values(interestsData).forEach(category => {
   });
 });
 
-function countryToFlag(countryCode) {
-  try {
-    return countryCode
-      .toUpperCase()
-      .replace(/./g, char =>
-        String.fromCodePoint(127397 + char.charCodeAt())
-      );
-  } catch {
-    return '';
-  }
-}
-
-function ProfileModal({ friend, onClose }) {
+function ProfileModal({ friend, onClose, isMatchSuggestion = false, onConnect, onSkip }) {
   const [currentUserData, setCurrentUserData] = useState(null);
   const [authUserData, setAuthUserData] = useState(null);
   const isCurrentUser = friend?.id === 'user';
@@ -86,7 +74,6 @@ function ProfileModal({ friend, onClose }) {
   const language = displayUser.learningGoal;
   const location = displayUser.location || {};
   const locationText = [location.city, location.state, location.country].filter(Boolean).join(", ");
-  const flag = location.country ? countryToFlag(location.country) : "";
 
   const calculateAge = (birthDate) => {
     if (!birthDate) return null;
@@ -151,32 +138,37 @@ function ProfileModal({ friend, onClose }) {
           })}
         </div>
 
-        {isCurrentUser ? (
-          <>
-            <div className="modal-buttons">
-              <button className="friends-button">Edit Profile</button>
-            </div>
-            <div className="logout-wrapper">
-              <button className="logout-button" onClick={() => {
-                signOut(auth);
-                navigate("/login");
-              }}>
-                Log Out
+        <div className="modal-buttons">
+          {isMatchSuggestion ? (
+            <>
+              <button className="friends-button" onClick={() => onConnect?.(displayUser)}>
+                Connect!
               </button>
-            </div>
-          </>
-        ) : (
-          <div className="modal-buttons">
-            {isAlreadyFriend ? (
+              <button className="logout-button" onClick={onSkip}>
+                Skip
+              </button>
+            </>
+          ) : isCurrentUser ? (
+            <>
+              <button className="friends-button">Edit Profile</button>
+              <div className="logout-wrapper">
+                <button className="logout-button" onClick={() => {
+                  signOut(auth);
+                  navigate("/login");
+                }}>
+                  Log Out
+                </button>
+              </div>
+            </>
+          ) : isAlreadyFriend ? (
+            <button className="friends-button">Send a Message</button>
+          ) : (
+            <>
+              <button className="send-request-button">Send Friend Request</button>
               <button className="friends-button">Send a Message</button>
-            ) : (
-              <>
-                <button className="send-request-button">Send Friend Request</button>
-                <button className="friends-button">Send a Message</button>
-              </>
-            )}
-          </div>
-        )}
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -37,7 +37,10 @@ function FriendsPage() {
         }));
 
         // שלב 3: סינון רק את החברים של המשתמש
-        const matchedFriends = allUsers.filter(user => friendIDs.includes(user.id));
+        const matchedFriends = allUsers
+  .filter(user => friendIDs.includes(user.id))
+  .map(user => ({ ...user, isFriend: true }));
+
 
         setFriends(matchedFriends);
       }

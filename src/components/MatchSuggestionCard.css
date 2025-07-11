@@ -84,11 +84,10 @@ button.secondary {
 }
 
 .interest-tag.shared {
-  background-color: white;
-  border: 1.8px solid #ffa239;
-  color: #ffa239;
-  font-weight: 500;
+  border: 2px solid #fbb76a;
+  color: #000;
 }
+
 
 .interest-emoji {
   font-size: 1rem;
