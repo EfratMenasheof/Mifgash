@@ -1,17 +1,50 @@
 import "../components/FriendMiniCard.css";
 import "./FriendsPage.css";
 import FriendCardStyled from "../components/FriendCardStyled";
-import { mockFriends } from "../data/FriendsData";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ProfileModal from "../components/ProfileModal";
 import MatchPreferencesModal from "../components/MatchPreferencesModal";
 import { findBestMatch } from "../utils/matchUtils";
+import { getFirestore, doc, getDoc, collection, getDocs } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
 function FriendsPage() {
   const [selectedFriend, setSelectedFriend] = useState(null);
   const [showMatchModal, setShowMatchModal] = useState(false);
+  const [friends, setFriends] = useState([]);
 
-  const visibleFriends = mockFriends.filter(friend => friend.isFriend === true);
+  useEffect(() => {
+    const fetchFriends = async () => {
+      const db = getFirestore();
+      const auth = getAuth();
+      const currentUser = auth.currentUser;
+
+      if (!currentUser) return;
+
+      // שלב 1: הבאת המידע של המשתמש הנוכחי
+      const userDocRef = doc(db, "users", currentUser.uid);
+      const userSnap = await getDoc(userDocRef);
+
+      if (userSnap.exists()) {
+        const userData = userSnap.data();
+        const friendIDs = userData.friends || [];
+
+        // שלב 2: הבאת כל המשתמשים במסד הנתונים
+        const usersCollection = await getDocs(collection(db, "users"));
+        const allUsers = usersCollection.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+
+        // שלב 3: סינון רק את החברים של המשתמש
+        const matchedFriends = allUsers.filter(user => friendIDs.includes(user.id));
+
+        setFriends(matchedFriends);
+      }
+    };
+
+    fetchFriends();
+  }, []);
 
   const handleFriendClick = (friend) => {
     setSelectedFriend(friend);
@@ -25,18 +58,17 @@ function FriendsPage() {
     <div className="container mt-2">
       <h1 className="leadconnections-title">YOUR CONNECTIONS</h1>
       <h5 className="connections-subtitle">
-  One People. Many Places. Shared Heart. 🌍
-</h5>
-
+        One People. Many Places. Shared Heart. 🌍
+      </h5>
 
       <div className="friends-section">
         <div className="text-start mb-0 fw-bold">
-          You have {visibleFriends.length} connections
+          You have {friends.length} connections
         </div>
 
         <div className="friends-grid-container">
           <div className="friends-grid">
-            {visibleFriends.map(friend => (
+            {friends.map(friend => (
               <FriendCardStyled
                 key={friend.id}
                 friend={friend}
@@ -64,10 +96,10 @@ function FriendsPage() {
         <MatchPreferencesModal
           onClose={() => setShowMatchModal(false)}
           onAcceptMatch={(match) => {
-            alert(`Request sent to ${match.name} They'll need to approve it.`);
+            alert(`Request sent to ${match.fullName}. They'll need to approve it.`);
             setShowMatchModal(false);
           }}
-          candidates={mockFriends}
+          candidates={friends}
         />
       )}
     </div>

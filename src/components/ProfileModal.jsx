@@ -1,13 +1,12 @@
 import './ProfileModal.css';
 import interestsData from '../data/Interests_Categories.json';
-import { mockFriends } from '../data/FriendsData';
 import { useEffect, useState } from 'react';
 import { auth, db } from '../firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { signOut } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 
-// מיפוי של תחומי עניין -> אימוג'י מתוך הקובץ
+// אימוג'ים לתחומי עניין
 const interestEmojiMap = {};
 Object.values(interestsData).forEach(category => {
   category.items.forEach(item => {
@@ -16,11 +15,15 @@ Object.values(interestsData).forEach(category => {
 });
 
 function countryToFlag(countryCode) {
-  return countryCode
-    .toUpperCase()
-    .replace(/./g, char =>
-      String.fromCodePoint(127397 + char.charCodeAt())
-    );
+  try {
+    return countryCode
+      .toUpperCase()
+      .replace(/./g, char =>
+        String.fromCodePoint(127397 + char.charCodeAt())
+      );
+  } catch {
+    return '';
+  }
 }
 
 function ProfileModal({ friend, onClose }) {
@@ -30,43 +33,32 @@ function ProfileModal({ friend, onClose }) {
   const isAlreadyFriend = friend?.isFriend === true;
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    signOut(auth).then(() => {
-      navigate('/login');
-    });
-  };
-
   useEffect(() => {
-    const fetchCurrentUser = async () => {
-      if (isCurrentUser && auth.currentUser) {
+    if (isCurrentUser && auth.currentUser) {
+      const fetchCurrentUser = async () => {
         const docRef = doc(db, 'users', auth.currentUser.uid);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
           const data = docSnap.data();
           const formatted = {
             id: 'user',
-            name:
-              data.fullName ||
-              [data.firstName, data.middleName, data.lastName].filter(Boolean).join(' ') ||
-              'Unnamed',
-            image: data.profileImage || '/Profile-pics/default.jpg',
-            age: calculateAge(data.birthDate),
-            location: {
-              city: data.city || '',
-              region: data.state || '',
-              country: data.country || '',
-            },
-            language: data.learningGoal,
-            bio: data.about,
+            fullName: data.fullName,
+            profileImage: data.profileImage || '/Profile-pics/default.jpg',
+            birthDate: data.birthDate,
+            about: data.about,
+            learningGoal: data.learningGoal,
             interests: data.interests || [],
-            isFriend: false,
+            location: {
+              city: data.location?.city || '',
+              state: data.location?.state || '',
+              country: data.location?.country || '',
+            },
           };
           setCurrentUserData(formatted);
         }
-      }
-    };
-
-    fetchCurrentUser();
+      };
+      fetchCurrentUser();
+    }
   }, [isCurrentUser]);
 
   useEffect(() => {
@@ -79,22 +71,38 @@ function ProfileModal({ friend, onClose }) {
         }
       }
     };
-
     fetchAuthUserData();
   }, []);
 
   const displayUser = isCurrentUser ? currentUserData : friend;
   if (!displayUser) return null;
 
-  const location = displayUser.location || { city: '', region: '', country: '' };
+  const fullName = displayUser.fullName || "Unknown";
+  const profileImage = displayUser.profileImage || "/Profile-pics/default.jpg";
+  const about = displayUser.about || "";
   const interests = displayUser.interests || [];
+  const language = displayUser.learningGoal;
+  const location = displayUser.location || {};
+  const locationText = [location.city, location.state, location.country].filter(Boolean).join(", ");
+  const flag = location.country ? countryToFlag(location.country) : "";
 
-  let currentUserInterests = [];
-  if (isCurrentUser) {
-    currentUserInterests = displayUser?.interests || [];
-  } else {
-    currentUserInterests = authUserData?.interests || [];
-  }
+  const calculateAge = (birthDate) => {
+    if (!birthDate) return null;
+    const birth = new Date(birthDate);
+    const today = new Date();
+    let age = today.getFullYear() - birth.getFullYear();
+    const m = today.getMonth() - birth.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
+      age--;
+    }
+    return age;
+  };
+
+  const age = calculateAge(displayUser.birthDate);
+
+  const currentUserInterests = isCurrentUser
+    ? displayUser.interests || []
+    : authUserData?.interests || [];
 
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -102,29 +110,27 @@ function ProfileModal({ friend, onClose }) {
         <button className="modal-close-button" onClick={onClose}>✕</button>
 
         <img
-          src={displayUser.image || '/Profile-pics/default.jpg'}
-          onError={(e) => (e.target.src = '/Profile-pics/default.jpg')}
-          alt={displayUser.name}
+          src={profileImage}
+          onError={(e) => (e.target.src = "/Profile-pics/default.jpg")}
+          alt={fullName}
           className="profile-pic"
         />
-        <h2 className="Profile-title">{displayUser.name}</h2>
 
-        {displayUser.age && <p><strong>Age:</strong> {displayUser.age}</p>}
+        <h2 className="Profile-title">{fullName.toUpperCase()}</h2>
+        {age && <p><strong>Age:</strong> {age}</p>}
 
-        {(location.city || location.region || location.country) && (
+        {language && (
+          <p><strong>Speaks fluently:</strong> {language === 'English' ? 'Hebrew' : 'English'}</p>
+        )}
+
+        {locationText && (
           <p>
-            <strong>Location:</strong> {location.city}, {location.region}, {location.country}{" "}
-            {location.country && countryToFlag(location.country === 'USA' ? 'US' : location.country)}
+            <strong>Location:</strong> {locationText}{" "}
+            {language === "English" ? "🇮🇱" : language === "Hebrew" ? "🇺🇸" : ""}
           </p>
         )}
 
-        {displayUser.language && (
-          <p><strong>Speaks fluently:</strong> {displayUser.language === 'English' ? 'Hebrew' : 'English'}</p>
-        )}
-
-        {displayUser.bio && (
-          <p><strong>Bio:</strong> {displayUser.bio}</p>
-        )}
+        {about && <p><strong>Bio:</strong> {about}</p>}
 
         <p><strong>Interests:</strong></p>
         <div className="interests-wrapper">
@@ -139,43 +145,35 @@ function ProfileModal({ friend, onClose }) {
           })}
         </div>
 
-        {isCurrentUser && (
+        {isCurrentUser ? (
           <>
             <div className="modal-buttons">
-              <button className="friends-button">
-                Edit Profile
-              </button>
+              <button className="friends-button">Edit Profile</button>
             </div>
             <div className="logout-wrapper">
-              <button className="logout-button" onClick={handleLogout}>
+              <button className="logout-button" onClick={() => {
+                signOut(auth);
+                navigate("/login");
+              }}>
                 Log Out
               </button>
             </div>
           </>
-        )}
-
-        {!isCurrentUser && !isAlreadyFriend && (
-          <button className="send-request-button">
-            Send Friend Request
-          </button>
-        )}
-
-        {!isCurrentUser && (
+        ) : (
           <div className="modal-buttons">
-            <button onClick={onClose} className="friends-button">Send a Message</button>
+            {isAlreadyFriend ? (
+              <button className="friends-button">Send a Message</button>
+            ) : (
+              <>
+                <button className="send-request-button">Send Friend Request</button>
+                <button className="friends-button">Send a Message</button>
+              </>
+            )}
           </div>
         )}
       </div>
     </div>
   );
-}
-
-function calculateAge(birthDate) {
-  if (!birthDate) return null;
-  const birth = new Date(birthDate);
-  const diff = Date.now() - birth.getTime();
-  const age = new Date(diff).getUTCFullYear() - 1970;
-  return age;
 }
 
 export default ProfileModal;
