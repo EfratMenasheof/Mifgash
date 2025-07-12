@@ -6,10 +6,13 @@ import { db } from '../firebase';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import '../AppStyles.css';
+import ProfileModal from './ProfileModal';
 
 function FriendsMap() {
   const [user, setUser] = useState(null);
   const [friends, setFriends] = useState([]);
+  const [selectedFriend, setSelectedFriend] = useState(null);
+  const [showProfileModal, setShowProfileModal] = useState(false);
 
   useEffect(() => {
     const fetchUserAndFriends = async () => {
@@ -57,7 +60,7 @@ function FriendsMap() {
               className: 'emoji-marker',
               html: `<div style="font-size: 28px;">🏠</div>`,
               iconSize: [28, 28],
-              iconAnchor: [14, 28]
+              iconAnchor: [10, 36]
             })}
           >
             <Popup>You are here!</Popup>
@@ -76,19 +79,50 @@ function FriendsMap() {
                   className: 'emoji-marker',
                   html: `<div style="font-size: 28px;">📍</div>`,
                   iconSize: [28, 28],
-                  iconAnchor: [14, 28]
+                  iconAnchor: [10, 36],
+                  popupAnchor: [8, -24]
                 })}
               >
                 <Popup>
-                  <strong>{friend.fullName || friend.name}</strong><br />
-                  {friend.location.city}
-                  {friend.location.state ? `, ${friend.location.state}` : ''}, {friend.location.country}
+                  <div
+                    style={{ textAlign: 'center', cursor: 'pointer' }}
+                    onClick={() => {
+                      setSelectedFriend(friend);
+                      setShowProfileModal(true);
+                    }}
+                  >
+                    {friend.profileImage && (
+                      <img
+                        src={friend.profileImage}
+                        alt={friend.fullName}
+                        style={{
+                          width: '50px',
+                          height: '50px',
+                          borderRadius: '50%',
+                          objectFit: 'cover',
+                          marginBottom: '10px'
+                        }}
+                      />
+                    )}
+                    <div><strong>{friend.fullName || friend.name}</strong></div>
+                    <div>
+                      {friend.location.city}
+                      {friend.location.state ? `, ${friend.location.state}` : ''}, {friend.location.country}
+                    </div>
+                  </div>
                 </Popup>
               </Marker>
             );
           })}
         </MapContainer>
       </div>
+
+      {showProfileModal && selectedFriend && (
+        <ProfileModal
+          friend={selectedFriend}
+          onClose={() => setShowProfileModal(false)}
+        />
+      )}
     </div>
   );
 }
