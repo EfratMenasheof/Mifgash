@@ -1,26 +1,36 @@
-import { doc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
-import { db } from '../firebase';
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../firebase";
 
+/**
+ * Fetches a user's friends from Firestore
+ * @param {string} userId - The UID of the current user
+ * @returns {Promise<Array>} - Array of friend user objects
+ */
 export const fetchUserFriends = async (userId) => {
   try {
-    const userRef = doc(db, 'users', userId);
-    const userSnap = await getDoc(userRef);
+    // Get all users
+    const snapshot = await getDocs(collection(db, "users"));
+    const allUsers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-    if (userSnap.exists()) {
-      const userData = userSnap.data();
-      const friendIds = userData.friends || [];
+    // Find the current user in the list
+    const currentUser = allUsers.find(u => u.uid === userId);
 
-      if (friendIds.length === 0) return [];
-
-      const q = query(collection(db, 'users'), where('__name__', 'in', friendIds));
-      const snapshot = await getDocs(q);
-
-      return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    if (!currentUser) {
+      console.warn("Current user not found in Firestore");
+      return [];
     }
 
-    return [];
+    const friendIds = currentUser.friends || [];
+
+    if (!Array.isArray(friendIds)) {
+      console.warn("currentUser.friends is not an array");
+      return [];
+    }
+
+    // Return only users whose UID is in the friendIds array
+    return allUsers.filter(u => friendIds.includes(u.uid));
   } catch (error) {
-    console.error('Error fetching friends:', error);
+    console.error("Error fetching friends:", error);
     return [];
   }
 };

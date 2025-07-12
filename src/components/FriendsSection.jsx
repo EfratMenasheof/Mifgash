@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import FriendCard from '../components/FriendCard';
+import FriendMiniCard from '../components/FriendMiniCard';
 import ProfileModal from '../components/ProfileModal';
 import MatchPreferencesModal from '../components/MatchPreferencesModal';
 import MatchSuggestionCard from '../components/MatchSuggestionCard';
@@ -21,8 +21,8 @@ function FriendsSection({ friends }) {
     if (!currentUserId || !match?.id) return;
 
     try {
-      const senderRef = doc(db, "users", currentUserId);
-      const receiverRef = doc(db, "users", match.id);
+      const senderRef = doc(db, 'users', currentUserId);
+      const receiverRef = doc(db, 'users', match.id);
 
       await updateDoc(senderRef, {
         sentRequests: arrayUnion(match.id),
@@ -34,8 +34,8 @@ function FriendsSection({ friends }) {
 
       alert(`Request sent to ${match.fullName}!`);
     } catch (error) {
-      console.error("Error sending match request:", error);
-      alert("Something went wrong while sending the request.");
+      console.error('Error sending match request:', error);
+      alert('Something went wrong while sending the request.');
     }
   };
 
@@ -48,18 +48,21 @@ function FriendsSection({ friends }) {
     <div className="section-box tall">
       <h2 className="section-title">YOUR CONNECTIONS</h2>
 
-      {friends.length === 0 ? (
+      {Array.isArray(friends) && friends.length === 0 ? (
         <p className="empty-state">
           You don’t have any connections yet. It’s the perfect time to connect!
         </p>
       ) : (
         <div className="friends-list">
           {friends
-            .filter(friend => friend.streak >= 3)
-            .sort((a, b) => b.streak - a.streak)
-            .slice(0, 4)
+            .sort((a, b) => a.fullName.localeCompare(b.fullName))
+            .slice(0, 6)
             .map((friend) => (
-              <FriendCard key={friend.id} friend={friend} onClick={setSelectedFriend} />
+              <FriendMiniCard
+                key={friend.uid}
+                friend={friend}
+                onClick={() => setSelectedFriend(friend)}
+              />
             ))}
         </div>
       )}

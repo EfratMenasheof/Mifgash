@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import { collection, getDocs, query, where } from 'firebase/firestore';
-import { db } from '../firebase';
 import MifgashCard from '../components/MifgashCard';
 import FriendsSection from '../components/FriendsSection';
 import ProfileModal from '../components/ProfileModal';
 import FriendsMap from '../components/FriendsMap';
 import ScheduleMeetingModal from '../components/ScheduleMeetingModal';
+import { fetchUserFriends } from '../utils/fetchFriends';
+import FriendMiniCard from '../components/FriendMiniCard';
 
 function HomePage({ user }) {
   const [friends, setFriends] = useState([]);
@@ -13,21 +13,19 @@ function HomePage({ user }) {
   const [showScheduleModal, setShowScheduleModal] = useState(false);
 
   useEffect(() => {
-    const fetchFriends = async () => {
+    const loadFriends = async () => {
       try {
-        const q = query(
-          collection(db, 'users'),
-          where('isFriend', '==', true)
+        const fetched = await fetchUserFriends(user.uid);
+        const sorted = [...fetched].sort((a, b) =>
+          a.fullName.localeCompare(b.fullName)
         );
-        const snapshot = await getDocs(q);
-        const fetched = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        setFriends(fetched);
+        setFriends(sorted); // לא מגביל ל־6 כאן כי המיון מתבצע לפי סטרייק ב-FriendsSection
       } catch (err) {
-        console.error('Failed to load friends:', err);
+        console.error("Error fetching friends in HomePage:", err);
       }
     };
-    fetchFriends();
-  }, []);
+    loadFriends();
+  }, [user]);
 
   return (
     <div className="container text-center">
@@ -39,7 +37,7 @@ function HomePage({ user }) {
       {/* כפתור לפתיחת מודל */}
       <div className="my-3">
         <button className="btn btn-warning" onClick={() => setShowScheduleModal(true)}>
-          📅 קבע מפגש
+          📅 Schedule a Mifgash
         </button>
       </div>
 
@@ -61,15 +59,14 @@ function HomePage({ user }) {
         onClose={() => setSelectedFriend(null)}
       />
 
-      {/* מודל קביעת מפגש */}
       {showScheduleModal && (
         <ScheduleMeetingModal
           onClose={() => setShowScheduleModal(false)}
-          currentUser={user}   // ← נוספה העברה של המשתמש
+          currentUser={user}
         />
       )}
     </div>
   );
 }
 
-export default HomePage;
+export default HomePage;רגע
