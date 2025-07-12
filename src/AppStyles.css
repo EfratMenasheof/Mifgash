@@ -42,16 +42,14 @@
 }
 
 
-
 .friends-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  justify-content: center;
-  margin-top: 12px;
-  margin-bottom: auto; /* ⬅ זה שומר שהכפתורים ירדו לתחתית */
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px 32px;
+  max-width: 660px;         /* גבול ברור לרוחב הגריד */
+  margin: 0 auto 30px;      /* מרכוז אופקי */
+  align-items: start;
 }
-
 
 .button-row-bottom {
   display: flex;

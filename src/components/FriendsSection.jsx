@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import FriendMiniCard from '../components/FriendMiniCard';
 import ProfileModal from '../components/ProfileModal';
 import MatchPreferencesModal from '../components/MatchPreferencesModal';
@@ -14,24 +14,24 @@ function FriendsSection({ friends }) {
   const [suggestedMatch, setSuggestedMatch] = useState(null);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    console.log("🧡 Friends received by FriendsSection:", friends);
+  }, [friends]);
+
   const handleAcceptMatch = async (match) => {
     setSuggestedMatch(null);
-
     const currentUserId = auth.currentUser?.uid;
     if (!currentUserId || !match?.id) return;
 
     try {
       const senderRef = doc(db, 'users', currentUserId);
       const receiverRef = doc(db, 'users', match.id);
-
       await updateDoc(senderRef, {
         sentRequests: arrayUnion(match.id),
       });
-
       await updateDoc(receiverRef, {
         receivedRequests: arrayUnion(currentUserId),
       });
-
       alert(`Request sent to ${match.fullName}!`);
     } catch (error) {
       console.error('Error sending match request:', error);
@@ -48,24 +48,24 @@ function FriendsSection({ friends }) {
     <div className="section-box tall">
       <h2 className="section-title">YOUR CONNECTIONS</h2>
 
-      {Array.isArray(friends) && friends.length === 0 ? (
-        <p className="empty-state">
-          You don’t have any connections yet. It’s the perfect time to connect!
-        </p>
-      ) : (
-        <div className="friends-list">
-          {friends
+      <div className="friends-list">
+        {Array.isArray(friends) && friends.length > 0 ? (
+          friends
             .sort((a, b) => a.fullName.localeCompare(b.fullName))
-            .slice(0, 6)
+            .slice(0, 9)
             .map((friend) => (
               <FriendMiniCard
-                key={friend.uid}
+                key={friend.id}
                 friend={friend}
                 onClick={() => setSelectedFriend(friend)}
               />
-            ))}
-        </div>
-      )}
+            ))
+        ) : (
+          <p className="empty-state">
+            You don’t have any connections yet. It’s the perfect time to connect!
+          </p>
+        )}
+      </div>
 
       <div className="button-row-bottom">
         <button className="btn-orange" onClick={() => setShowPreferencesModal(true)}>

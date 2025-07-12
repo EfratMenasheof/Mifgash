@@ -1,18 +1,11 @@
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 
-/**
- * Fetches a user's friends from Firestore
- * @param {string} userId - The UID of the current user
- * @returns {Promise<Array>} - Array of friend user objects
- */
 export const fetchUserFriends = async (userId) => {
   try {
-    // Get all users
     const snapshot = await getDocs(collection(db, "users"));
     const allUsers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-    // Find the current user in the list
     const currentUser = allUsers.find(u => u.uid === userId);
 
     if (!currentUser) {
@@ -27,8 +20,7 @@ export const fetchUserFriends = async (userId) => {
       return [];
     }
 
-    // Return only users whose UID is in the friendIds array
-    return allUsers.filter(u => friendIds.includes(u.uid));
+    return allUsers.filter(u => friendIds.includes(u.id)); // ✅ שונה מ־u.uid ל־u.id
   } catch (error) {
     console.error("Error fetching friends:", error);
     return [];

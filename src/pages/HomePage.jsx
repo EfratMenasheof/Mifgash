@@ -5,7 +5,6 @@ import ProfileModal from '../components/ProfileModal';
 import FriendsMap from '../components/FriendsMap';
 import ScheduleMeetingModal from '../components/ScheduleMeetingModal';
 import { fetchUserFriends } from '../utils/fetchFriends';
-import FriendMiniCard from '../components/FriendMiniCard';
 
 function HomePage({ user }) {
   const [friends, setFriends] = useState([]);
@@ -13,19 +12,18 @@ function HomePage({ user }) {
   const [showScheduleModal, setShowScheduleModal] = useState(false);
 
   useEffect(() => {
+    if (!user?.uid) return;
+
     const loadFriends = async () => {
-      try {
-        const fetched = await fetchUserFriends(user.uid);
-        const sorted = [...fetched].sort((a, b) =>
-          a.fullName.localeCompare(b.fullName)
-        );
-        setFriends(sorted); // לא מגביל ל־6 כאן כי המיון מתבצע לפי סטרייק ב-FriendsSection
-      } catch (err) {
-        console.error("Error fetching friends in HomePage:", err);
-      }
+      const fetched = await fetchUserFriends(user.uid);
+      console.log("✅ Fetched friends in HomePage:", fetched); // בדיקה
+
+      const sorted = [...fetched].sort((a, b) => a.fullName.localeCompare(b.fullName));
+      setFriends(sorted.slice(0, 6));
     };
+
     loadFriends();
-  }, [user]);
+  }, [user?.uid]);
 
   return (
     <div className="container text-center">
@@ -34,7 +32,6 @@ function HomePage({ user }) {
         Bringing people closer, one word at a time 🫱🏻‍🫲🏼
       </h5>
 
-      {/* כפתור לפתיחת מודל */}
       <div className="my-3">
         <button className="btn btn-warning" onClick={() => setShowScheduleModal(true)}>
           📅 Schedule a Mifgash
@@ -63,6 +60,7 @@ function HomePage({ user }) {
         <ScheduleMeetingModal
           onClose={() => setShowScheduleModal(false)}
           currentUser={user}
+          friends={friends}
         />
       )}
     </div>
