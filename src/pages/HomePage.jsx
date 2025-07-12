@@ -5,10 +5,12 @@ import MifgashCard from '../components/MifgashCard';
 import FriendsSection from '../components/FriendsSection';
 import ProfileModal from '../components/ProfileModal';
 import FriendsMap from '../components/FriendsMap';
+import ScheduleMeetingModal from '../components/ScheduleMeetingModal';
 
 function HomePage({ user }) {
   const [friends, setFriends] = useState([]);
   const [selectedFriend, setSelectedFriend] = useState(null);
+  const [showScheduleModal, setShowScheduleModal] = useState(false);
 
   useEffect(() => {
     const fetchFriends = async () => {
@@ -34,6 +36,13 @@ function HomePage({ user }) {
         Bringing people closer, one word at a time 🫱🏻‍🫲🏼
       </h5>
 
+      {/* כפתור לפתיחת מודל */}
+      <div className="my-3">
+        <button className="btn btn-warning" onClick={() => setShowScheduleModal(true)}>
+          📅 קבע מפגש
+        </button>
+      </div>
+
       <div className="row align-items-stretch gx-5 gx-md-7">
         <div className="col-md-6 ps-md-4 d-flex flex-column justify-content-start">
           <FriendsSection friends={friends} />
@@ -51,6 +60,14 @@ function HomePage({ user }) {
         friend={selectedFriend}
         onClose={() => setSelectedFriend(null)}
       />
+
+      {/* מודל קביעת מפגש */}
+      {showScheduleModal && (
+        <ScheduleMeetingModal
+          onClose={() => setShowScheduleModal(false)}
+          currentUser={user}   // ← נוספה העברה של המשתמש
+        />
+      )}
     </div>
   );
 }
