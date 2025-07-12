@@ -69,4 +69,4 @@ function HomePage({ user }) {
   );
 }
 
-export default HomePage;רגע
+export default HomePage;
