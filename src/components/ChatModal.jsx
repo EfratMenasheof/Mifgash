@@ -185,17 +185,17 @@ function ChatModal({ onClose, chatHistory, setChatHistory, currentUser }) {
                 {msg.type === 'meeting' ? (
                   <div className={`meeting-card ${msg.sender === 'user' ? 'me' : 'them'}`}>
                     <strong>{msg.text}</strong><br />
-📅 {msg.meetingDate.includes('T')
-  ? new Date(msg.meetingDate).toLocaleString(msg.language === 'he' ? 'he-IL' : 'en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false,
-      timeZone: 'Asia/Jerusalem'
-    })
-  : msg.meetingDate}
+                📅 {msg.meetingDate.includes('T')
+                  ? new Date(msg.meetingDate).toLocaleString(msg.language === 'he' ? 'he-IL' : 'en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      hour12: false,
+                      timeZone: 'Asia/Jerusalem'
+                    })
+                  : msg.meetingDate}
 
                     {msg.sender !== 'user' && msg.status == null && (
                       <div className="meeting-actions">
@@ -293,6 +293,11 @@ function ChatModal({ onClose, chatHistory, setChatHistory, currentUser }) {
             </div>
           )}
         </div>
+        <div className="chat-coming-soon-overlay">
+  <div className="coming-soon-text">
+    <div className="coming-soon-label">COMING SOON</div>
+  </div>
+</div>
       </div>
     </div>
   );

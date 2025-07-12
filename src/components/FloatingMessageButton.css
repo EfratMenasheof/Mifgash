@@ -40,15 +40,3 @@
     background-color: #ffa239;
   }
   
-  /* נקודה אדומה */
-  .floating-msg-btn.has-new::after {
-    content: '';
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    width: 12px;
-    height: 12px;
-    background-color: red;
-    border-radius: 50%;
-    border: 2px solid white;
-  }
