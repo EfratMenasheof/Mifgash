@@ -24,12 +24,16 @@
 
 .modal-close-button {
   position: absolute;
-  top: 12px;
-  left: 16px;
+  top: 16px;
+  background: none;
   border: none;
-  background: transparent;
-  font-size: 1.6rem;
+  font-size: 24px;
   cursor: pointer;
+  z-index: 1;
+}
+
+.modal-close-button:hover {
+  color: #000;
 }
 
 .search-input {
@@ -61,7 +65,7 @@
 }
 
 .friend-item:hover {
-  background-color: #f3f3f3;
+  background-color: #b31515 !important;
 }
 
 .friend-item.selected {
@@ -99,4 +103,44 @@
 .send-request-btn:disabled {
   background-color: #ccc;
   cursor: not-allowed;
+}
+.modal-title {
+  font-family: 'Bebas Neue', sans-serif;
+  margin-top: 0;
+  padding-right: 40px; /* כדי למנוע מה-X להתנגש בכותרת */
+  text-align: center;
+  font-size: 30px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: #110976;
+}
+.modal-subtitle {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 0.6rem;
+  text-align: left;
+}
+.modal-subtitle {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 0.6rem;
+  text-align: left;
+}
+.radio-wrapper {
+  background-color: #e0e9ff;
+  border-radius: 12px;
+  padding: 12px;
+  margin: 1rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.radio-wrapper label {
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
