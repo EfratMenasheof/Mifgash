@@ -1,34 +1,62 @@
-import React, { useState } from 'react';
-import './LessonsPage.css';
-import { mockFriends } from '../data/FriendsData';
-import { mockLessons } from '../data/MockLessons';
-import LessonModal from '../components/LessonModal';
-import CreateLessonModal from '../components/CreateLessonModal';
-import LessonCard from '../components/LessonCard';
+import React, { useEffect, useState } from "react";
+import "./LessonsPage.css";
+import LessonModal from "../components/LessonModal";
+import CreateLessonModal from "../components/CreateLessonModal";
+import LessonCard from "../components/LessonCard";
+import { getAuth } from "firebase/auth";
+import { db } from "../firebase";
+import { collection, getDocs } from "firebase/firestore";
 
 function LessonsPage() {
+  const [user, setUser] = useState(null);
+  const [lessons, setLessons] = useState([]);
   const [selectedLesson, setSelectedLesson] = useState(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [lessons, setLessons] = useState(mockLessons);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
 
+  // 🟦 Load current user
+  useEffect(() => {
+    const auth = getAuth();
+    setUser(auth.currentUser);
+  }, []);
+
+  // 🟧 Fetch lessons from Firestore
+  useEffect(() => {
+    const fetchLessons = async () => {
+      const snapshot = await getDocs(collection(db, "lessons"));
+      const allLessons = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      // 🟨 Filter only lessons created by current user
+      const userLessons = allLessons.filter(
+        lesson => lesson.createdBy === user?.uid
+      );
+      setLessons(userLessons);
+    };
+
+    if (user?.uid) {
+      fetchLessons();
+    }
+  }, [user]);
+
+  // 🟩 When a lesson is saved, update state immediately
   const handleSaveLesson = (newLesson) => {
-    setLessons((prevLessons) => [...prevLessons, newLesson]);
+    setLessons(prev => [...prev, newLesson]);
   };
 
   const filteredLessons = lessons
     .filter((lesson) =>
       lesson.topic?.toLowerCase().includes(searchTerm.toLowerCase())
     )
-    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // sort by newest first
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
   return (
     <div className="container mt-4">
       <h1 className="leadconnections-title">YOUR MIFGASHIM</h1>
       <h5 className="mifgash-subtitle">
-  From dialogue to connection – every mifgash matters ✨
-</h5>
-
+        From dialogue to connection – every mifgash matters ✨
+      </h5>
 
       <div className="lesson-wrapper smaller">
         <div className="d-flex justify-content-between align-items-center mb-0">
@@ -69,7 +97,7 @@ function LessonsPage() {
       <CreateLessonModal
         show={showCreateModal}
         onClose={() => setShowCreateModal(false)}
-        friends={mockFriends}
+        user={user}
         onSave={handleSaveLesson}
       />
     </div>
@@ -77,4 +105,3 @@ function LessonsPage() {
 }
 
 export default LessonsPage;
-////3////
