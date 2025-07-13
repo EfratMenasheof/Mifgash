@@ -14,10 +14,25 @@ function LessonsPage() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
-  // 🟦 Load current user
+  // 🟦 Load full user data from Firestore
   useEffect(() => {
-    const auth = getAuth();
-    setUser(auth.currentUser);
+    const fetchCurrentUser = async () => {
+      const auth = getAuth();
+      const currentUser = auth.currentUser;
+
+      if (!currentUser) return;
+
+      try {
+        const snapshot = await getDocs(collection(db, "users"));
+        const allUsers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        const fullUser = allUsers.find(u => u.uid === currentUser.uid);
+        setUser(fullUser);
+      } catch (error) {
+        console.error("Failed to fetch full user from Firestore", error);
+      }
+    };
+
+    fetchCurrentUser();
   }, []);
 
   // 🟧 Fetch lessons from Firestore

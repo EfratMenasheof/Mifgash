@@ -1,115 +1,85 @@
-.lesson-modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0,0,0,0.3);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-
+/* ✨ מודל כללי */
 .lesson-modal-container {
   background: white;
   border-radius: 16px;
-  max-width: 600px;
+  max-width: 500px;
   width: 90%;
-  padding: 32px;
+  padding: 24px 24px 16px;
   position: relative;
   display: flex;
   flex-direction: column;
   max-height: 90vh;
-}
-
-.centered-modal {
-  justify-content: flex-start;
   overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
 
+/* 🔸 איקס */
 .modal-close-button {
   position: absolute;
-  top: 20px;
-  left: 20px;
-  font-size: 1.4rem;
+  top: 14px;
+  left: 18px;
+  font-size: 1.6rem;
+  color: #444;
   background: none;
   border: none;
   cursor: pointer;
+  transition: color 0.2s;
 }
 
+.modal-close-button:hover {
+  color: #000;
+}
+
+/* 🔹 כותרת */
 .modal-title {
   text-align: center;
-  font-size: 1.8rem;
+  font-size: 1.6rem;
+  font-weight: bold;
   color: #1b1464;
-  margin-bottom: 16px;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
 }
 
+/* 🔘 נקודות שלב */
 .step-indicator {
   display: flex;
   justify-content: center;
+  margin-bottom: 16px;
   gap: 8px;
-  margin-bottom: 20px;
 }
 
 .step-dot {
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: #d3d3d3;
+  background: #ccc;
 }
 
 .step-dot.active {
   background: #1b1464;
 }
 
+/* 🧾 גוף המודל */
 .modal-body-scroll {
-  overflow-y: auto;
   flex: 1;
+  overflow-y: auto;
+  padding-bottom: 12px;
 }
 
-.form-label {
-  font-weight: 600;
-  text-align: center;
-  display: block;
-  font-size: 1.1rem;
-  margin-bottom: 8px;
-}
-
-.radio-wrapper {
-  background-color: #e0e9ff;
-  border-radius: 12px;
-  padding: 12px;
-  margin: 12px 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.radio-wrapper label {
-  font-size: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
+/* 🟦 כפתור יצירת שיעור */
 .generate-button {
   background-color: #f9a825;
   color: black;
   font-weight: 600;
   border: none;
-  padding: 14px;
-  border-radius: 12px;
+  padding: 12px 20px;
+  border-radius: 10px;
   cursor: pointer;
-  width: 100%;
+  width: fit-content;
   font-size: 1rem;
-  transition: all 0.2s ease;
-}
-
-.generate-button:disabled {
-  background-color: #cccccc;
-  color: #666;
-  cursor: not-allowed;
+  margin: 16px auto 0;
+  display: block;
+  transition: background-color 0.2s;
 }
 
 .generate-button:hover:not(:disabled) {
@@ -117,52 +87,76 @@
   color: white;
 }
 
-.friend-scroll-box {
-  max-height: 160px;
-  overflow-y: auto;
-  border: 1px solid #ccc;
-  border-radius: 12px;
-  padding: 8px;
+.generate-button:disabled {
+  background-color: #ddd;
+  color: #666;
+  cursor: not-allowed;
 }
 
+/* 🧍‍♀️ תמונת חבר */
+.friend-avatar {
+  width: 20px !important;
+  height: 20px !important;
+  object-fit: cover !important;
+  border-radius: 50% !important;
+  margin-right: 10px;
+  flex-shrink: 0;
+}
+
+.mini-profile {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+}
+
+
+/* 💬 חברים */
 .friend-option {
   display: flex;
   align-items: center;
-  padding: 6px;
-  border-radius: 8px;
+  gap: 10px;
+  padding: 8px;
+  border-radius: 10px;
   cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.friend-option:hover {
+  background-color: #f3f3f3;
 }
 
 .friend-option.selected {
-  background-color: #e0e9ff;
+  background-color: #ffe8bb;
 }
 
-.friend-avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  margin-right: 10px;
-}
-
-.lesson-box {
-  background-color: #f2f2f2;
-  border-radius: 12px;
-  padding: 16px;
-  white-space: pre-wrap;
+/* 📝 טופס */
+.form-label {
+  font-weight: 600;
   font-size: 1rem;
-  margin-top: 10px;
+  margin-bottom: 6px;
+  display: block;
+  text-align: left;
 }
 
-.approve-actions.vertical {
+.radio-wrapper {
+  background-color: #e0e9ff;
+  border-radius: 10px;
+  padding: 12px;
+  margin: 8px 0 16px;
   display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: 20px;
+  flex-direction: row; /* ✨ שינוי מ־column */
+  justify-content: space-around;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
 }
 
-.saved-message {
-  text-align: center;
-  font-weight: bold;
-  margin-top: 16px;
-  color: green;
+
+.radio-wrapper label {
+  font-size: 1rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
