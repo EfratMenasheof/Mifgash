@@ -3,6 +3,7 @@ import "./ProfileModal.css";
 import interestsData from "../data/Interests_Categories.json";
 import { useEffect, useState } from "react";
 import { auth, db } from "../firebase";
+import EditProfileModal from "./EditProfileModal";
 import {
   doc,
   updateDoc,
@@ -39,6 +40,8 @@ export default function ProfileModal({
   const [infoText, setInfoText] = useState("");
   const navigate = useNavigate();
   const isCurrentUser = friend.id === "user";
+  const [showEditModal, setShowEditModal] = useState(false);
+
 
   // 2) טוען פרופיל המשתמש המחובר
   useEffect(() => {
@@ -184,10 +187,10 @@ export default function ProfileModal({
           {locationText && (
             <p>
               <strong>Location:</strong> {locationText}{" "}
-              {language === "English" ? (
+              {location.country === "Israel" ? (
                 <img src={IsraelFlag} alt="IL" className="flag-icon" />
               ) : (
-                language === "Hebrew" && (
+                location.country === "United States" && (
                   <img src={UsaFlag} alt="US" className="flag-icon" />
                 )
               )}
@@ -275,7 +278,12 @@ export default function ProfileModal({
             {/* הפרופיל שלי */}
             {isCurrentUser && (
               <>
-                <button className="edit-btn">Edit Profile</button>
+                <button
+                  className="edit-btn"
+                  onClick={() => setShowEditModal(true)}
+                >
+                  Edit Profile
+                </button>
                 <button
                   className="logout-btn"
                   onClick={() => {
@@ -334,6 +342,8 @@ export default function ProfileModal({
           </div>
         </div>
       )}
+      {showEditModal && <EditProfileModal userData={meData} onClose={() => setShowEditModal(false)} />}
+
     </>
   );
 }

@@ -263,3 +263,16 @@
   width: auto;
   margin: 0;
 }
+/* Center the tags inside each expanded category */
+.category-tags-modern {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* Make the profile picture circular */
+.profile-pic-circle {
+  border-radius: 50% !important;
+  object-fit: cover;
+}
