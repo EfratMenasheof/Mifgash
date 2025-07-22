@@ -56,96 +56,111 @@ function CreateLessonModal({ show, onClose, user, onSave }) {
     user.learningGoal === "Hebrew" ? "English" : null;
 
   const generateLesson = async () => {
-    if (!user || !user.learningGoal) {
-      alert("❌ User learning goal not set. Cannot generate lesson.");
+  if (!user || !user.learningGoal) {
+    alert("❌ User learning goal not set. Cannot generate lesson.");
+    return;
+  }
+
+  setLoading(true);
+  setStep(2);
+  setSaved(false);
+
+  let topicDescription = "";
+  if (mode === "friend") {
+    const friend = realFriends.find((f) => f.id === selectedFriendId);
+    const interests = friend?.interests || [];
+    topicDescription = interests.length > 0
+      ? interests[interestIndex % interests.length]
+      : "נושא שקשור בתרבות ישראלית";
+  }
+
+  if (mode === "custom") {
+    topicDescription = customTopic.trim();
+  }
+
+  const promptText = `
+You are an expert language teacher. Your task is to create a short and beginner-friendly lesson in the language: ${teachingLanguage}.
+
+Generate the entire lesson in ${teachingLanguage} only, using clear, simple language for beginner learners.
+
+Please follow this exact format — and write everything in ${teachingLanguage}, including section titles, text, and examples. Do not include any English if ${teachingLanguage} is Hebrew.
+
+---
+
+Format:
+
+1. Title (first line) — just the title text (no label like "Title:")
+2. One-line description (second line) — also without a label
+3. 🎯 Objectives section: 2 bullet points
+4. 🧠 Vocabulary section: 5 words with translations
+5. 💬 Dialogue section: 2 lines (Person A and Person B)
+6. 📝 Practice section: 1 simple question
+
+Use appropriate emojis for each section, bold section titles (if appropriate in ${teachingLanguage}), and make sure everything is well organized and visually clear.
+
+Topic: ${topicDescription}
+---`;
+
+  try {
+    const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        contents: [
+          {
+            parts: [{ text: promptText }],
+          },
+        ],
+      }),
+    });
+
+    const data = await response.json();
+    console.log("🔁 Gemini raw response:", data);
+
+    if (!response.ok) {
+      console.error("❌ Gemini error:", data);
+      alert("❌ Failed to generate lesson. Check console.");
       return;
     }
 
-    setLoading(true);
-    setStep(2);
-    setSaved(false);
+    const raw = data?.candidates?.[0]?.content?.parts?.[0]?.text || "שגיאה: לא התקבלה תשובה מג'מיני";
+    const lines = raw
+  .split("\n")
+  .map((l) => l.trim())
+  .filter((l) => l.length > 0); // סינון שורות ריקות
 
-    let topicDescription = "";
+    const title = lines[0] || topicDescription;
+    const description = lines[1] || "";
+
+    setGeneratedLesson({
+      topic: title,
+      description: description,
+      fullContent: lines.slice(2).join("\n"),  // שורות מ-3 והלאה
+
+
+      recipients: mode === "friend" ? [selectedFriendId] : [],
+      language: teachingLanguage,
+      createdBy: user.uid,
+      createdAt: new Date().toISOString(),
+    });
+
     if (mode === "friend") {
-      const friend = realFriends.find((f) => f.id === selectedFriendId);
-      const interests = friend?.interests || [];
-      topicDescription = interests.length > 0
-        ? interests[interestIndex % interests.length]
-        : "a relevant cultural topic";
+      setInterestIndex((prev) => prev + 1);
     }
+  } catch (err) {
+    console.error("❗ Gemini request failed:", err);
+    alert("❌ Gemini request failed. Check console.");
+  } finally {
+    setLoading(false);
+  }
+};
 
-    if (mode === "custom") {
-      topicDescription = customTopic.trim();
-    }
 
-    const prompt = `
-You are a creative language teacher. Create a short and simple language lesson in ${teachingLanguage} for the topic "${topicDescription}". Translate the topic into ${teachingLanguage} if needed.
-
-Your response must follow this exact structure. Separate each section using "===":
-
-1. Title – a short and catchy title, only in ${teachingLanguage}. Do NOT use English if ${teachingLanguage} is Hebrew, and vice versa.
-===
-2. Description – 1 short sentence (up to 10 words), only in ${teachingLanguage}.
-===
-3. Lesson Plan – write these 4 parts using ${teachingLanguage} only:
-
-🎯 Objectives  
-• Write 2 short bullet points in ${teachingLanguage}
-
-🧠 Vocabulary  
-• List 5 useful words in ${teachingLanguage}, each with its translation in parentheses:
-   - If teaching ${teachingLanguage} = Hebrew → translate to English  
-   - If teaching ${teachingLanguage} = English → translate to Hebrew
-
-💬 Dialogue  
-• 2 short lines of simple dialogue in ${teachingLanguage}
-
-📝 Practice  
-• 1 short sentence or question in ${teachingLanguage} for learners to complete or answer
-
-Return plain text only, fully structured. Do NOT include explanations. The entire response must be written in ${teachingLanguage}.
-`.trim();
-
-    try {
-      const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${import.meta.env.VITE_GROQ_API_KEY}`,
-        },
-        body: JSON.stringify({
-          model: "llama3-70b-8192",
-          messages: [
-            { role: "system", content: "You are a helpful and creative language lesson planner." },
-            { role: "user", content: prompt },
-          ],
-        }),
-      });
-
-      const data = await response.json();
-      const raw = data.choices?.[0]?.message?.content || "Error: No lesson received.";
-      const [title, description, content] = raw.split("===").map(part => part.trim());
-
-      setGeneratedLesson({
-        topic: title || topicDescription,
-        description: description || topicDescription,
-        fullContent: content || raw,
-        recipients: mode === "friend" ? [selectedFriendId] : [],
-        language: teachingLanguage,
-        createdBy: user.uid,
-        createdAt: new Date().toISOString(),
-      });
-
-      if (mode === "friend") {
-        setInterestIndex((prev) => prev + 1);
-      }
-    } catch (err) {
-      console.error("Groq error:", err);
-      alert("❌ Failed to generate lesson.");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const saveLesson = async () => {
     if (!generatedLesson) return;
@@ -171,7 +186,6 @@ Return plain text only, fully structured. Do NOT include explanations. The entir
       <div className="match-modal">
         <button className="modal-close-button" onClick={onClose}>✕</button>
         <h2 style={{ fontSize: "1.6rem", color: "#1b1464" }}>Create a New Mifgash</h2>
-
         <div className="step-indicator">
           <div className={`step-dot ${step === 1 ? "active" : ""}`}></div>
           <div className={`step-dot ${step === 2 ? "active" : ""}`}></div>
@@ -187,27 +201,14 @@ Return plain text only, fully structured. Do NOT include explanations. The entir
           {step === 1 && (
             <>
               <p className="form-label">You’ll be teaching: <strong>{teachingLanguage}</strong></p>
-
               <label className="form-label">Choose lesson creation method:</label>
               <div className="radio-wrapper">
                 <label>
-                  <input
-                    type="radio"
-                    name="mode"
-                    value="friend"
-                    checked={mode === "friend"}
-                    onChange={() => setMode("friend")}
-                  />
+                  <input type="radio" name="mode" value="friend" checked={mode === "friend"} onChange={() => setMode("friend")} />
                   Teach a friend
                 </label>
                 <label>
-                  <input
-                    type="radio"
-                    name="mode"
-                    value="custom"
-                    checked={mode === "custom"}
-                    onChange={() => setMode("custom")}
-                  />
+                  <input type="radio" name="mode" value="custom" checked={mode === "custom"} onChange={() => setMode("custom")} />
                   Custom topic
                 </label>
               </div>
@@ -217,20 +218,11 @@ Return plain text only, fully structured. Do NOT include explanations. The entir
                   <label className="form-label">Choose a friend to teach:</label>
                   <div className="friend-scroll-box">
                     {realFriends.map((f) => (
-                      <div
-                        key={f.id}
-                        className={`friend-option ${selectedFriendId === f.id ? "selected" : ""}`}
-                        onClick={() => {
-                          setSelectedFriendId(f.id);
-                          setInterestIndex(0);
-                        }}
-                      >
-                        <img
-  src={f.profileImage}
-  alt={f.fullName}
-  className="mini-profile"
-/>
-
+                      <div key={f.id} className={`friend-option ${selectedFriendId === f.id ? "selected" : ""}`} onClick={() => {
+                        setSelectedFriendId(f.id);
+                        setInterestIndex(0);
+                      }}>
+                        <img src={f.profileImage} alt={f.fullName} className="mini-profile" />
                         <div className="friend-name">{f.fullName}</div>
                       </div>
                     ))}
@@ -241,25 +233,11 @@ Return plain text only, fully structured. Do NOT include explanations. The entir
               {mode === "custom" && (
                 <>
                   <label className="form-label">Enter your topic (up to 5 words):</label>
-                  <input
-                    type="text"
-                    maxLength={40}
-                    value={customTopic}
-                    onChange={(e) => setCustomTopic(e.target.value)}
-                    placeholder="e.g. Israeli holidays or Hebrew slang"
-                    className="search-input"
-                  />
+                  <input type="text" maxLength={40} value={customTopic} onChange={(e) => setCustomTopic(e.target.value)} placeholder="e.g. Israeli holidays or Hebrew slang" className="search-input" />
                 </>
               )}
 
-              <button
-                className="generate-button"
-                onClick={generateLesson}
-                disabled={
-                  loading ||
-                  (!mode || (mode === "friend" && !selectedFriendId) || (mode === "custom" && !customTopic.trim()))
-                }
-              >
+              <button className="generate-button" onClick={generateLesson} disabled={loading || (!mode || (mode === "friend" && !selectedFriendId) || (mode === "custom" && !customTopic.trim()))}>
                 {loading ? "Generating..." : "Generate Mifgash Plan"}
               </button>
             </>

@@ -1,19 +1,31 @@
-/* ✨ מודל כללי */
-.lesson-modal-container {
+/* 🧱 מבנה כללי */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.match-modal {
   background: white;
   border-radius: 16px;
-  max-width: 500px;
+  max-width: 600px;
   width: 90%;
-  padding: 24px 24px 16px;
+  padding: 24px;
   position: relative;
   display: flex;
   flex-direction: column;
   max-height: 90vh;
   overflow: hidden;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
 
-/* 🔸 איקס */
+/* 🔸 כפתור סגירה */
 .modal-close-button {
   position: absolute;
   top: 14px;
@@ -30,17 +42,7 @@
   color: #000;
 }
 
-/* 🔹 כותרת */
-.modal-title {
-  text-align: center;
-  font-size: 1.6rem;
-  font-weight: bold;
-  color: #1b1464;
-  margin-top: 0.5rem;
-  margin-bottom: 1rem;
-}
-
-/* 🔘 נקודות שלב */
+/* 🔘 אינדיקציה לשלבים */
 .step-indicator {
   display: flex;
   justify-content: center;
@@ -59,14 +61,93 @@
   background: #1b1464;
 }
 
-/* 🧾 גוף המודל */
+/* ✍️ גוף המודל */
 .modal-body-scroll {
   flex: 1;
   overflow-y: auto;
   padding-bottom: 12px;
 }
 
-/* 🟦 כפתור יצירת שיעור */
+/* 📝 תוויות טופס */
+.form-label {
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 6px;
+  display: block;
+  text-align: left;
+}
+
+/* 🔘 רדיו */
+.radio-wrapper {
+  background-color: #e0e9ff;
+  border-radius: 10px;
+  padding: 12px;
+  margin: 8px 0 16px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.radio-wrapper label {
+  font-size: 1rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* 🧍‍♂️ חברים */
+.friend-scroll-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+  margin-top: 8px;
+}
+
+.friend-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.friend-option:hover {
+  background-color: #f3f3f3;
+}
+
+.friend-option.selected {
+  background-color: #ffe8bb;
+}
+
+.friend-name {
+  font-weight: 500;
+}
+
+.mini-profile {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* 🔍 אינפוט */
+.search-input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+/* 🟨 כפתורים */
 .generate-button {
   background-color: #f9a825;
   color: black;
@@ -93,70 +174,80 @@
   cursor: not-allowed;
 }
 
-/* 🧍‍♀️ תמונת חבר */
-.friend-avatar {
-  width: 20px !important;
-  height: 20px !important;
-  object-fit: cover !important;
-  border-radius: 50% !important;
-  margin-right: 10px;
-  flex-shrink: 0;
-}
-
-.mini-profile {
-  width: 36px !important;
-  height: 36px !important;
-  border-radius: 50% !important;
-  object-fit: cover !important;
-}
-
-
-/* 💬 חברים */
-.friend-option {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px;
+.save-button {
+  background-color: #1b1464;
+  color: white;
+  border: none;
+  padding: 12px 20px;
   border-radius: 10px;
   cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.friend-option:hover {
-  background-color: #f3f3f3;
-}
-
-.friend-option.selected {
-  background-color: #ffe8bb;
-}
-
-/* 📝 טופס */
-.form-label {
   font-weight: 600;
   font-size: 1rem;
-  margin-bottom: 6px;
-  display: block;
-  text-align: left;
 }
 
-.radio-wrapper {
-  background-color: #e0e9ff;
-  border-radius: 10px;
-  padding: 12px;
-  margin: 8px 0 16px;
-  display: flex;
-  flex-direction: row; /* ✨ שינוי מ־column */
-  justify-content: space-around;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-
-.radio-wrapper label {
-  font-size: 1rem;
+.secondary {
+  background: none;
+  border: none;
+  color: #1b1464;
   font-weight: 500;
+  cursor: pointer;
+}
+
+/* 📄 תצוגת שיעור */
+.lesson-box {
+  margin-top: 1rem;
+}
+
+.lesson-box pre {
+  white-space: pre-wrap;
+  line-height: 1.6;
+  unicode-bidi: plaintext;
+  font-size: 0.95rem;
+}
+
+/* 🔠 עברית / אנגלית */
+.hebrew-lesson {
+  font-family: "Noto Sans Hebrew", sans-serif;
+  text-align: right;
+  direction: rtl;
+}
+
+.english-lesson {
+  font-family: "Inter", sans-serif;
+  text-align: left;
+  direction: ltr;
+}
+
+/* ✅ הודעת שמירה */
+.saved-message {
+  margin-top: 12px;
+  color: green;
+  text-align: center;
+  font-weight: 600;
+}
+
+/* 🔁 כפתורי אישור */
+.approve-actions.vertical {
   display: flex;
+  flex-direction: column;
   align-items: center;
   gap: 10px;
+  margin-top: 16px;
+}
+.lesson-content {
+  margin-top: 1rem;
+  line-height: 1.7;
+  font-size: 0.96rem;
+}
+
+.hebrew-lesson .lesson-content {
+  direction: rtl;
+  text-align: right;
+  font-family: "Noto Sans Hebrew", sans-serif;
+}
+
+.english-lesson .lesson-content {
+  direction: ltr;
+  text-align: left;
+  font-family: "Inter", sans-serif;
 }
