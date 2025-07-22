@@ -253,10 +253,18 @@ export default function CompleteRegistration({ onClose }) {
               city: formData.city,
               coordinates: coords,
             };
+            const fullName = [
+        formData.firstName,
+        formData.middleName,
+        formData.lastName,
+      ]
+        .filter(Boolean)  
+        .join(" ");
 
       await setDoc(
         doc(db, "users", uid),
         {
+          fullName,
           ...formData,
          phone: formData.showPhone
            ? `${formData.whatsappCountryCode}${formData.whatsappNumber}`
@@ -279,7 +287,11 @@ export default function CompleteRegistration({ onClose }) {
     <div className="complete-registration">
       <div className="modal-overlay">
         <div className="match-modal registration-container">
-          <button className="modal-close-button" onClick={onClose}>
+          <button
+            type="button"
+            className="modal-close-button"
+            onClick={() => navigate("/login")}
+          >
             ✕
           </button>
           <h2 className="modal-title">
