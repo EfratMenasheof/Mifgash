@@ -1,28 +1,19 @@
 import '../AppStyles.css';
 
-function MifgashCard({ friend, date, location, topic, onClick }) {
+function MifgashCard({ onClick }) {
   return (
-    <div className="section-box">
-      <h2 className="section-title">Upcoming Mifgash</h2>
-
-      {friend ? (
-        <div className="mt-2">
-          <p>
-            Maya, your closest Mifgash is with{' '}
-            <span className="link" onClick={() => onClick(friend)} style={{ cursor: 'pointer' }}>
-              {friend.name}
-            </span>
-          </p>
-          <p>📅 {date}</p>
-          <p>📍 {location}</p>
-          <p>🌐 {topic}</p>
-        </div>
-      ) : (
-        <div className="empty-state">
-  <p>No upcoming Mifgash. Start connecting and schedule your first meeting!</p>
-</div>
-
-      )}
+    <div className="section-box text-center">
+      <h2 className="section-title">Create a New Mifgash</h2>
+      <p className="mifgash-details">
+        Create a language learning experience powered by AI!
+        <br />
+        Let us help you create a fun and personalized Mifgash plan based on your connection's interests or any topic you choose.
+        <br />
+        Go on and try it✨ 
+      </p>
+      <button className="btn-orange small-mifgash-button mt-2" onClick={onClick}>
+        Create a New Mifgash
+      </button>
     </div>
   );
 }

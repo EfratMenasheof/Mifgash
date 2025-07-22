@@ -4,6 +4,9 @@ import Navbar from './components/Navbar';
 import logo from './assets/MIFGASH_LOGO.png';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { onSnapshot, doc } from 'firebase/firestore';               // ← חדש
+import { auth, db } from './firebase';
+import { getDoc } from 'firebase/firestore';
 
 // Pages
 import HomePage from './pages/HomePage';
@@ -19,11 +22,8 @@ import FloatingMessageButton from './components/FloatingMessageButton';
 import ChatModal from './components/ChatModal';
 import IncomingRequestsModal from './components/IncomingRequestsModal';
 
-// Firebase
-import { auth, db } from './firebase';
-import { doc, getDoc } from 'firebase/firestore';
-
 function AppContent({ user, setUser }) {
+  const [userDoc, setUserDoc] = useState(null);                   // ← חדש
   const [selectedFriend, setSelectedFriend] = useState(null);
   const [hasNewMessage, setHasNewMessage] = useState(true);
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -34,24 +34,32 @@ function AppContent({ user, setUser }) {
   const location = useLocation();
   const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
 
+  // 1️⃣ live‐listener על מסמך המשתמש
+  useEffect(() => {
+    if (!user?.uid) return;
+    const unsubscribe = onSnapshot(
+      doc(db, 'users', user.uid),
+      snap => {
+        if (snap.exists()) {
+          setUserDoc({ uid: snap.id, ...snap.data() });
+        }
+      },
+      err => console.error(err)
+    );
+    return () => unsubscribe();
+  }, [user?.uid]);
+
   useEffect(() => {
     const fetchRequests = async () => {
       if (!user?.uid) return;
-
       const userSnap = await getDoc(doc(db, 'users', user.uid));
-      const data = userSnap.data();
-
-      const receivedIds = data?.receivedRequests || [];
+      const data = userSnap.data() || {};
+      const receivedIds = data.receivedRequests || [];
       setPendingCount(receivedIds.length);
-
       const requestDocs = await Promise.all(receivedIds.map(id => getDoc(doc(db, 'users', id))));
-      const requestUsers = requestDocs
-        .filter(doc => doc.exists())
-        .map(doc => ({ id: doc.id, ...doc.data() }));
-
+      const requestUsers = requestDocs.filter(d => d.exists()).map(d => ({ id: d.id, ...d.data() }));
       setIncomingRequests(requestUsers);
     };
-
     fetchRequests();
   }, [showRequestsModal, user]);
 
@@ -81,9 +89,9 @@ function AppContent({ user, setUser }) {
           ) : (
             <>
               <Route path="/" element={<Navigate to="/home" />} />
-              <Route path="/home" element={<HomePage user={user} />} />
-              <Route path="/friends" element={<FriendsPage user={user} />} />
-              <Route path="/lessons" element={<LessonsPage user={user} />} />
+              <Route path="/home" element={<HomePage user={userDoc} />} />           {/* ← pass userDoc */}
+              <Route path="/friends" element={<FriendsPage user={userDoc} />} />      {/* ← pass userDoc */}
+              <Route path="/lessons" element={<LessonsPage user={userDoc} />} />      {/* ← pass userDoc */}
               <Route path="/about" element={<AboutPage />} />
             </>
           )}
@@ -105,18 +113,16 @@ function AppContent({ user, setUser }) {
           )}
 
           {isChatOpen && (
-            <ChatModal
-              onClose={() => setIsChatOpen(false)}
-              chatHistory={[]}
-              setChatHistory={() => {}}
-            />
+            <ChatModal onClose={() => setIsChatOpen(false)} chatHistory={[]} setChatHistory={() => {}} />
           )}
 
           {showRequestsModal && (
             <IncomingRequestsModal
-              friends={incomingRequests}
-              onAccept={() => {}}
               onClose={() => setShowRequestsModal(false)}
+              onOpenProfile={user => {
+                setSelectedFriend(user);
+                setShowRequestsModal(false);
+              }}
             />
           )}
         </>
@@ -127,7 +133,6 @@ function AppContent({ user, setUser }) {
 
 function App() {
   const [user, setUser] = useState(null);
-
   return (
     <Router>
       <AppContent user={user} setUser={setUser} />

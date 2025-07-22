@@ -1,3 +1,4 @@
+// src/components/IncomingRequestsModal.jsx
 import "./IncomingRequestsModal.css";
 import { useEffect, useState } from "react";
 import { db, auth } from "../firebase";
@@ -9,7 +10,7 @@ import {
   arrayUnion,
 } from "firebase/firestore";
 
-function IncomingRequestsModal({ onClose }) {
+function IncomingRequestsModal({ onClose, onOpenProfile }) {
   const [requests, setRequests] = useState([]);
   const currentUser = auth.currentUser;
 
@@ -33,38 +34,37 @@ function IncomingRequestsModal({ onClose }) {
   }, [currentUser]);
 
   const handleAccept = async (sender) => {
-    const userRef = doc(db, "users", currentUser.uid);
-    const senderRef = doc(db, "users", sender.id);
+    const meRef = doc(db, "users", currentUser.uid);
+    const themRef = doc(db, "users", sender.id);
 
-    await updateDoc(userRef, {
+    await updateDoc(meRef, {
       friends: arrayUnion(sender.id),
       receivedRequests: arrayRemove(sender.id),
     });
-
-    await updateDoc(senderRef, {
+    await updateDoc(themRef, {
       friends: arrayUnion(currentUser.uid),
       sentRequests: arrayRemove(currentUser.uid),
     });
 
-    const updated = requests.filter((r) => r.id !== sender.id);
-    setRequests(updated);
-    if (updated.length === 0) onClose();
+    const next = requests.filter((r) => r.id !== sender.id);
+    setRequests(next);
+    if (next.length === 0) onClose();
   };
 
   const handleDecline = async (sender) => {
-    const userRef = doc(db, "users", currentUser.uid);
-    const senderRef = doc(db, "users", sender.id);
+    const meRef = doc(db, "users", currentUser.uid);
+    const themRef = doc(db, "users", sender.id);
 
-    await updateDoc(userRef, {
+    await updateDoc(meRef, {
       receivedRequests: arrayRemove(sender.id),
     });
-    await updateDoc(senderRef, {
+    await updateDoc(themRef, {
       sentRequests: arrayRemove(currentUser.uid),
     });
 
-    const updated = requests.filter((r) => r.id !== sender.id);
-    setRequests(updated);
-    if (updated.length === 0) onClose();
+    const next = requests.filter((r) => r.id !== sender.id);
+    setRequests(next);
+    if (next.length === 0) onClose();
   };
 
   return (
@@ -76,23 +76,45 @@ function IncomingRequestsModal({ onClose }) {
         {requests.length === 0 ? (
           <p className="no-requests">No new requests right now 😊</p>
         ) : (
-          requests.map((user) => (
-            <div className="request-card" key={user.id}>
-              <img
-                src={user.profileImage}
-                alt={user.fullName}
-                className="request-img"
-              />
-              <h3>{user.fullName}</h3>
-              <p>
-                <strong>Location:</strong> {user.location.city}, {user.location.state && `${user.location.state}, `}{user.location.country}
-              </p>
-              <div className="request-buttons">
-                <button className="accept-btn" onClick={() => handleAccept(user)}>Accept</button>
-                <button className="decline-btn" onClick={() => handleDecline(user)}>Decline</button>
+          <div className="request-list">
+            {requests.map((user) => (
+              <div className="request-card" key={user.id}>
+                <img
+                  src={user.profileImage}
+                  alt={user.fullName}
+                  className="request-img"
+                  onClick={() => {
+                    onClose();
+                    onOpenProfile(user);
+                  }}
+                  style={{ cursor: "pointer" }}
+                />
+                <h3
+                  onClick={() => {
+                    onClose();
+                    onOpenProfile(user);
+                  }}
+                  style={{ cursor: "pointer" }}
+                >
+                  {user.fullName}
+                </h3>
+                <div className="request-buttons">
+                  <button
+                    className="accept-btn"
+                    onClick={() => handleAccept(user)}
+                  >
+                    Accept
+                  </button>
+                  <button
+                    className="decline-btn"
+                    onClick={() => handleDecline(user)}
+                  >
+                    Decline
+                  </button>
+                </div>
               </div>
-            </div>
-          ))
+            ))}
+          </div>
         )}
       </div>
     </div>

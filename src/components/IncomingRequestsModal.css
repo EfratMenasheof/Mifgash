@@ -1,5 +1,6 @@
+/* Create overlay */
 .modal-overlay {
-  position: fixed;
+  position: center;
   top: 0;
   left: 0;
   width: 100vw;
@@ -11,18 +12,24 @@
   z-index: 1000;
 }
 
+/* Modal window */
 .incoming-modal {
-  background: white;
-  padding: 2rem;
+  position: fixed;           /* במקום centered */
+  top: 60px;                 /* מתחת ל–navbar/אייקון התראות */
+  right: 16px;
+  background: #fff;
+  padding: 1.5rem;
   border-radius: 12px;
-  width: 90%;
-  max-width: 400px;
-  margin-top: 0.5rem;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-  position: relative;
-  text-align: center;
+  width: 580px;              /* רוחב מלא כדי להכניס שורה שלמה */
+  max-height: 80vh;          /* יהיה גבוה יותר אם יש המון בקשות */
+  overflow-y: auto;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  text-align: left;
+  z-index: 2000;             /* מעל שאר התוכן */
 }
 
+
+/* Close button */
 .modal-close-button {
   position: absolute;
   top: 12px;
@@ -33,41 +40,68 @@
   cursor: pointer;
 }
 
-.request-card {
+/* Scrollable list container */
+.request-list {
+  max-height: 300px;      /* הגדירי כאן לפי הצורך או השתמשי ב־vh */
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0.5rem;
+  background-color: #ecf1ff;
+  border-radius: 8px;
   margin-top: 1rem;
-  padding: 1rem;
-  border: 1px solid #eee;
-  border-radius: 10px;
 }
 
+/* Each card as row */
+.request-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  background: #fff;
+  transition: background-color 0.2s;
+}
+.request-card:hover {
+  background-color: #ffe5cc;
+}
+
+/* Avatar */
 .request-img {
-  width: 60px;
-  height: 60px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   object-fit: cover;
+  flex-shrink: 0;
 }
 
+/* Name */
+.request-card h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1b1464;
+  flex-grow: 1;
+}
+
+/* Buttons */
 .request-buttons {
   display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 1rem;
+  gap: 8px;
 }
-
 .accept-btn,
 .decline-btn {
-  padding: 8px 14px;
+  padding: 6px 12px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
 }
-
 .accept-btn {
-  background-color: orange;
-  color: white;
+  background-color: #ffa239;
+  color: #fff;
 }
-
 .decline-btn {
-  background-color: lightgray;
-  color: black;
+  background-color: #ddd;
+  color: #333;
 }

@@ -1,177 +1,339 @@
-import './ProfileModal.css';
-import interestsData from '../data/Interests_Categories.json';
-import { useEffect, useState } from 'react';
-import { auth, db } from '../firebase';
-import { doc, getDoc } from 'firebase/firestore';
-import { signOut } from 'firebase/auth';
-import { useNavigate } from 'react-router-dom';
-import IsraelFlag from '../assets/israel.png';
-import UsaFlag from '../assets/usa.png';
+// src/components/ProfileModal.jsx
+import "./ProfileModal.css";
+import interestsData from "../data/Interests_Categories.json";
+import { useEffect, useState } from "react";
+import { auth, db } from "../firebase";
+import {
+  doc,
+  updateDoc,
+  arrayRemove,
+  arrayUnion,
+} from "firebase/firestore";
+import { signOut } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
+import { fetchUserProfile } from "../utils/fetchUserProfile";
+import IsraelFlag from "../assets/israel.png";
+import UsaFlag from "../assets/usa.png";
 
-// אימוג'ים לתחומי עניין
+// מיפוי אימוג'ים
 const interestEmojiMap = {};
-Object.values(interestsData).forEach(category => {
-  category.items.forEach(item => {
-    interestEmojiMap[item.name] = item.emoji;
-  });
-});
+Object.values(interestsData).forEach((cat) =>
+  cat.items.forEach((i) => (interestEmojiMap[i.name] = i.emoji))
+);
 
-function ProfileModal({ friend, onClose, isMatchSuggestion = false, onConnect, onSkip }) {
-  const [currentUserData, setCurrentUserData] = useState(null);
-  const [authUserData, setAuthUserData] = useState(null);
-  const isCurrentUser = friend?.id === 'user';
-  const isAlreadyFriend = friend?.isFriend === true;
+export default function ProfileModal({
+  friend,
+  onClose,
+  isMatchSuggestion = false,
+  onConnect,
+  onSkip,
+}) {
+  // אם אין friend – לא מציגים כלום
+  if (!friend) return null;
+
+  // 1) מצבים וסטייטים
+  const [meData, setMeData] = useState(undefined); // undefined=טעינה, null=אין
+  const [confirmingEnd, setConfirmingEnd] = useState(false);
+  const [ended, setEnded] = useState(false);
+  const [showInfo, setShowInfo] = useState(false);
+  const [infoText, setInfoText] = useState("");
   const navigate = useNavigate();
+  const isCurrentUser = friend.id === "user";
 
+  // 2) טוען פרופיל המשתמש המחובר
   useEffect(() => {
-    if (isCurrentUser && auth.currentUser) {
-      const fetchCurrentUser = async () => {
-        const docRef = doc(db, 'users', auth.currentUser.uid);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          const formatted = {
-            id: 'user',
-            fullName: data.fullName,
-            profileImage: data.profileImage || '/Profile-pics/default.jpg',
-            birthDate: data.birthDate,
-            about: data.about,
-            learningGoal: data.learningGoal,
-            interests: data.interests || [],
-            location: {
-              city: data.location?.city || '',
-              state: data.location?.state || '',
-              country: data.location?.country || '',
-            },
-          };
-          setCurrentUserData(formatted);
-        }
-      };
-      fetchCurrentUser();
-    }
-  }, [isCurrentUser]);
-
-  useEffect(() => {
-    const fetchAuthUserData = async () => {
-      if (auth.currentUser) {
-        const docRef = doc(db, 'users', auth.currentUser.uid);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          setAuthUserData(docSnap.data());
-        }
+    (async () => {
+      const u = auth.currentUser;
+      if (!u) {
+        setMeData(null);
+        return;
       }
-    };
-    fetchAuthUserData();
+      const profile = await fetchUserProfile(u.uid);
+      setMeData(profile);
+    })();
   }, []);
 
-  const displayUser = isCurrentUser ? currentUserData : friend;
-  if (!displayUser) return null;
+  // 3) guard כללי: אם עדיין בטעינת meData (ולא match-suggestion), לא מציגים
+  if (!isMatchSuggestion && meData === undefined) {
+    return null;
+  }
 
-  const fullName = displayUser.fullName || "Unknown";
-  const profileImage = displayUser.profileImage || "/Profile-pics/default.jpg";
-  const about = displayUser.about || "";
-  const interests = displayUser.interests || [];
+  // 4) דגלים
+  const isIncoming =
+    !isMatchSuggestion &&
+    (meData?.receivedRequests?.includes(friend.id) || false);
+  const isFriend =
+    !isMatchSuggestion && (meData?.friends?.includes(friend.id) || false);
+
+  // 5) מי להציג: אם זה פרופיל עצמי – meData, אחרת data של friend
+  const displayUser = isCurrentUser ? meData : friend;
+  if (!displayUser) {
+    return null;
+  }
+
+  // 6) חישובים להצגה
+  const birthDate = displayUser.birthDate
+    ? new Date(displayUser.birthDate)
+    : null;
+  let age = null;
+  if (birthDate) {
+    const diff = Date.now() - birthDate.getTime();
+    age = Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
+  }
   const language = displayUser.learningGoal;
   const location = displayUser.location || {};
-  const locationText = [location.city, location.state, location.country].filter(Boolean).join(", ");
+  const locationText = [location.city, location.state, location.country]
+    .filter(Boolean)
+    .join(", ");
 
-  const calculateAge = (birthDate) => {
-    if (!birthDate) return null;
-    const birth = new Date(birthDate);
-    const today = new Date();
-    let age = today.getFullYear() - birth.getFullYear();
-    const m = today.getMonth() - birth.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
-      age--;
-    }
-    return age;
+  // 7) פעולות Firebase
+  const handleAccept = async () => {
+    const meRef = doc(db, "users", auth.currentUser.uid);
+    const themRef = doc(db, "users", friend.id);
+    await updateDoc(meRef, {
+      friends: arrayUnion(friend.id),
+      receivedRequests: arrayRemove(friend.id),
+    });
+    await updateDoc(themRef, {
+      friends: arrayUnion(auth.currentUser.uid),
+      sentRequests: arrayRemove(auth.currentUser.uid),
+    });
+    onClose();
   };
 
-  const age = calculateAge(displayUser.birthDate);
+  const handleDecline = async () => {
+    const meRef = doc(db, "users", auth.currentUser.uid);
+    const themRef = doc(db, "users", friend.id);
+    await updateDoc(meRef, {
+      receivedRequests: arrayRemove(friend.id),
+    });
+    await updateDoc(themRef, {
+      sentRequests: arrayRemove(auth.currentUser.uid),
+    });
+    onClose();
+  };
 
-  const currentUserInterests = isCurrentUser
-    ? displayUser.interests || []
-    : authUserData?.interests || [];
+  const handleSendRequest = async () => {
+    const meRef = doc(db, "users", auth.currentUser.uid);
+    const themRef = doc(db, "users", friend.id);
+    await updateDoc(meRef, {
+      sentRequests: arrayUnion(friend.id),
+    });
+    await updateDoc(themRef, {
+      receivedRequests: arrayUnion(auth.currentUser.uid),
+    });
+    onClose();
+    setInfoText("✅ Friend request sent!");
+    setShowInfo(true);
+  };
+
+  const doEndConnection = async () => {
+    const meRef = doc(db, "users", auth.currentUser.uid);
+    const themRef = doc(db, "users", friend.id);
+    await updateDoc(meRef, {
+      friends: arrayRemove(friend.id),
+    });
+    await updateDoc(themRef, {
+      friends: arrayRemove(auth.currentUser.uid),
+    });
+  };
+
+  const handleConfirmEnd = async () => {
+    await doEndConnection();
+    setConfirmingEnd(false);
+    setEnded(true);
+    setInfoText(
+      `You and ${displayUser.fullName} are no longer connected!\nYou might find them while looking for your next match.`
+    );
+    setShowInfo(true);
+  };
+  const handleCancelEnd = () => setConfirmingEnd(false);
+  const handleInfoClose = () => setShowInfo(false);
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <button className="modal-close-button" onClick={onClose}>✕</button>
+    <>
+      {/* ======= חלון הפרופיל ======= */}
+      <div className="modal-overlay" onClick={onClose}>
+        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+          <button className="modal-close-button" onClick={onClose}>
+            ✕
+          </button>
 
-        <img
-          src={profileImage}
-          onError={(e) => (e.target.src = "/Profile-pics/default.jpg")}
-          alt={fullName}
-          className="profile-pic"
-        />
+          <img
+            src={displayUser.profileImage}
+            alt={displayUser.fullName}
+            className="profile-pic"
+            onError={(e) => (e.target.src = "/Profile-pics/default.jpg")}
+          />
 
-        <h2 className="Profile-title">{fullName.toUpperCase()}</h2>
-        {age && <p><strong>Age:</strong> {age}</p>}
+          <h2 className="Profile-title">
+            {displayUser.fullName?.toUpperCase()}
+          </h2>
 
-        {language && (
-          <p><strong>Speaks fluently:</strong> {language === 'English' ? 'Hebrew' : 'English'}</p>
-        )}
-
-        {locationText && (
-          <p>
-            <strong>Location:</strong> {locationText}{" "}
-            {language === "English" ? (
-              <img src={IsraelFlag} alt="IL" style={{ width: "20px", marginLeft: "6px" }} />
-            ) : language === "Hebrew" ? (
-              <img src={UsaFlag} alt="US" style={{ width: "20px", marginLeft: "6px" }} />
-            ) : null}
-          </p>
-        )}
-
-        {about && <p><strong>Bio:</strong> {about}</p>}
-
-        <p><strong>Interests:</strong></p>
-        <div className="interests-wrapper">
-          {interests.map((interest) => {
-            const isShared = currentUserInterests.includes(interest);
-            return (
-              <div key={interest} className={`interest-tag ${isShared ? 'shared-interest' : ''}`}>
-                <span className="interest-emoji">{interestEmojiMap[interest] || '✨'}</span>
-                {interest}
+          {age !== null && (
+            <p>
+              <strong>Age:</strong> {age}
+            </p>
+          )}
+          {language && (
+            <p>
+              <strong>Speaks fluently:</strong>{" "}
+              {language === "English" ? "Hebrew" : "English"}
+            </p>
+          )}
+          {locationText && (
+            <p>
+              <strong>Location:</strong> {locationText}{" "}
+              {language === "English" ? (
+                <img src={IsraelFlag} alt="IL" className="flag-icon" />
+              ) : (
+                language === "Hebrew" && (
+                  <img src={UsaFlag} alt="US" className="flag-icon" />
+                )
+              )}
+            </p>
+          )}
+          {displayUser.about && (
+            <p>
+              <strong>Bio:</strong> {displayUser.about}
+            </p>
+          )}
+          {displayUser.interests?.length > 0 && (
+            <>
+              <p>
+                <strong>Interests:</strong>
+              </p>
+              <div className="interests-wrapper">
+                {displayUser.interests.map((interest) => (
+                  <div key={interest} className="interest-tag">
+                    <span className="interest-emoji">
+                      {interestEmojiMap[interest] || "✨"}
+                    </span>
+                    {interest}
+                  </div>
+                ))}
               </div>
-            );
-          })}
-        </div>
-
-        <div className="modal-buttons">
-          {isMatchSuggestion ? (
-            <>
-              <button className="friends-button" onClick={() => onConnect?.(displayUser)}>
-                Connect!
-              </button>
-              <button className="logout-button" onClick={onSkip}>
-                Skip
-              </button>
-            </>
-          ) : isCurrentUser ? (
-            <>
-              <button className="friends-button">Edit Profile</button>
-              <div className="logout-wrapper">
-                <button className="logout-button" onClick={() => {
-                  signOut(auth);
-                  navigate("/login");
-                }}>
-                  Log Out
-                </button>
-              </div>
-            </>
-          ) : isAlreadyFriend ? (
-            <button className="friends-button">Send a Message</button>
-          ) : (
-            <>
-              <button className="send-request-button">Send Friend Request</button>
-              <button className="friends-button">Send a Message</button>
             </>
           )}
+
+          <div className="modal-buttons">
+            {/* match-suggestion */}
+            {isMatchSuggestion && (
+              <>
+                <button
+                  className="friends-button"
+                  onClick={() => onConnect(displayUser)}
+                >
+                  Connect!
+                </button>
+                <button className="skip-button" onClick={onSkip}>
+                  Skip
+                </button>
+              </>
+            )}
+
+            {/* בקשה נכנסת */}
+            {!isMatchSuggestion && isIncoming && (
+              <>
+                <button className="accept-btn" onClick={handleAccept}>
+                  Accept
+                </button>
+                <button className="decline-btn" onClick={handleDecline}>
+                  Decline
+                </button>
+              </>
+            )}
+
+            {/* משתמש חדש */}
+            {!isMatchSuggestion &&
+              !isIncoming &&
+              !isFriend &&
+              !isCurrentUser && (
+                <>
+                  <button
+                    className="send-request-button"
+                    onClick={handleSendRequest}
+                  >
+                    Send Request
+                  </button>
+                  <button className="skip-button" onClick={onClose}>
+                    Skip
+                  </button>
+                </>
+              )}
+
+            {/* חבר קיים */}
+            {!isMatchSuggestion && !confirmingEnd && isFriend && (
+              <button
+                className="end-connection-button"
+                onClick={() => setConfirmingEnd(true)}
+              >
+                End Connection
+              </button>
+            )}
+
+            {/* הפרופיל שלי */}
+            {isCurrentUser && (
+              <>
+                <button className="edit-btn">Edit Profile</button>
+                <button
+                  className="logout-btn"
+                  onClick={() => {
+                    signOut(auth);
+                    navigate("/login");
+                  }}
+                >
+                  Log Out
+                </button>
+              </>
+            )}
+
+            {/* אישור סיום */}
+            {!isMatchSuggestion && confirmingEnd && !ended && (
+              <div className="confirm-section">
+                <p className="confirm-text">
+                  Are you sure you want to end your connection with{" "}
+                  {displayUser.fullName}?
+                </p>
+                <div className="confirm-buttons">
+                  <button
+                    className="confirm-btn"
+                    onClick={handleConfirmEnd}
+                  >
+                    Yes, end connection
+                  </button>
+                  <button
+                    className="cancel-btn"
+                    onClick={handleCancelEnd}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+
+      {/* ======= חלון Info במרכז ======= */}
+      {showInfo && (
+        <div
+          className="modal-overlay info-overlay"
+          onClick={handleInfoClose}
+        >
+          <div className="info-modal" onClick={(e) => e.stopPropagation()}>
+            {infoText.split("\n").map((line, i) => (
+              <p key={i}>{line}</p>
+            ))}
+            <button
+              className="info-close-btn"
+              onClick={handleInfoClose}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
-
-export default ProfileModal;

@@ -182,85 +182,133 @@ Topic: ${topicDescription}
   };
 
   return (
-    <div className="modal-overlay">
-      <div className="match-modal">
-        <button className="modal-close-button" onClick={onClose}>✕</button>
-        <h2 style={{ fontSize: "1.6rem", color: "#1b1464" }}>Create a New Mifgash</h2>
-        <div className="step-indicator">
-          <div className={`step-dot ${step === 1 ? "active" : ""}`}></div>
-          <div className={`step-dot ${step === 2 ? "active" : ""}`}></div>
+  <div className="modal-overlay">
+    <div className="match-modal">
+      <button className="modal-close-button" onClick={onClose}>✕</button>
+      <h2 style={{ fontSize: "1.6rem", color: "#1b1464" }}>Create a New Mifgash</h2>
+
+      {step === 2 && (
+        <div style={{ textAlign: "left", marginBottom: "1rem" }}>
+          <button className="secondary" onClick={goBack}>← Back</button>
         </div>
+      )}
 
-        {step === 2 && (
-          <div style={{ textAlign: "left", marginBottom: "1rem" }}>
-            <button className="secondary" onClick={goBack}>← Back</button>
-          </div>
-        )}
+      <div className="modal-body-scroll">
+        {step === 1 && (
+          <>
+            <p className="lesson-helper-text">
+              Create a personalized language learning experience powered by AI,
+              you can create a Mifgash plan based on your connection's interests or any topic you choose!
+            </p>
 
-        <div className="modal-body-scroll">
-          {step === 1 && (
-            <>
-              <p className="form-label">You’ll be teaching: <strong>{teachingLanguage}</strong></p>
-              <label className="form-label">Choose lesson creation method:</label>
-              <div className="radio-wrapper">
-                <label>
-                  <input type="radio" name="mode" value="friend" checked={mode === "friend"} onChange={() => setMode("friend")} />
-                  Teach a friend
-                </label>
-                <label>
-                  <input type="radio" name="mode" value="custom" checked={mode === "custom"} onChange={() => setMode("custom")} />
-                  Custom topic
-                </label>
-              </div>
+            <p className="form-label">
+              You’ll be teaching: <strong>{teachingLanguage}</strong>
+            </p>
+            <label className="form-label">Choose lesson creation method:</label>
+            <div className="radio-wrapper">
+              <label>
+                <input
+                  type="radio"
+                  name="mode"
+                  value="friend"
+                  checked={mode === "friend"}
+                  onChange={() => setMode("friend")}
+                />
+                Teach a friend
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="mode"
+                  value="custom"
+                  checked={mode === "custom"}
+                  onChange={() => setMode("custom")}
+                />
+                Custom topic
+              </label>
+            </div>
 
-              {mode === "friend" && (
-                <>
-                  <label className="form-label">Choose a friend to teach:</label>
-                  <div className="friend-scroll-box">
-                    {realFriends.map((f) => (
-                      <div key={f.id} className={`friend-option ${selectedFriendId === f.id ? "selected" : ""}`} onClick={() => {
+            {mode === "friend" && (
+              <>
+                <label className="form-label">Choose a friend to teach:</label>
+                <div className="friend-scroll-box">
+                  {realFriends.map(f => (
+                    <div
+                      key={f.id}
+                      className={`friend-option ${selectedFriendId === f.id ? "selected" : ""}`}
+                      onClick={() => {
                         setSelectedFriendId(f.id);
                         setInterestIndex(0);
-                      }}>
-                        <img src={f.profileImage} alt={f.fullName} className="mini-profile" />
-                        <div className="friend-name">{f.fullName}</div>
-                      </div>
-                    ))}
-                  </div>
-                </>
-              )}
-
-              {mode === "custom" && (
-                <>
-                  <label className="form-label">Enter your topic (up to 5 words):</label>
-                  <input type="text" maxLength={40} value={customTopic} onChange={(e) => setCustomTopic(e.target.value)} placeholder="e.g. Israeli holidays or Hebrew slang" className="search-input" />
-                </>
-              )}
-
-              <button className="generate-button" onClick={generateLesson} disabled={loading || (!mode || (mode === "friend" && !selectedFriendId) || (mode === "custom" && !customTopic.trim()))}>
-                {loading ? "Generating..." : "Generate Mifgash Plan"}
-              </button>
-            </>
-          )}
-
-          {step === 2 && generatedLesson && (
-            <div className="lesson-box" dir={generatedLesson.language === "Hebrew" ? "rtl" : "ltr"}>
-              <h4>{generatedLesson.topic}</h4>
-              <pre>{generatedLesson.fullContent}</pre>
-              {!saved ? (
-                <div className="approve-actions vertical">
-                  <button className="generate-button" onClick={generateLesson}>Regenerate</button>
-                  <button className="save-button" onClick={saveLesson}>Save</button>
+                      }}
+                    >
+                      <img src={f.profileImage} alt={f.fullName} className="mini-profile" />
+                      <div className="friend-name">{f.fullName}</div>
+                    </div>
+                  ))}
                 </div>
-              ) : (
-                <div className="saved-message">✅ Mifgash plan saved successfully</div>
-              )}
-            </div>
-          )}
-        </div>
+              </>
+            )}
+
+            {mode === "custom" && (
+              <>
+                <label className="form-label">
+                  Enter your topic (up to 5 words):
+                </label>
+                <input
+                  type="text"
+                  maxLength={40}
+                  value={customTopic}
+                  onChange={e => setCustomTopic(e.target.value)}
+                  placeholder="e.g. Israeli holidays or Hebrew slang"
+                  className="search-input"
+                />
+              </>
+            )}
+
+            <button
+              className="generate-button"
+              onClick={generateLesson}
+              disabled={
+                loading ||
+                (!mode || (mode === "friend" && !selectedFriendId) ||
+                (mode === "custom" && !customTopic.trim()))
+              }
+            >
+              {loading ? "Generating..." : "Generate Mifgash Plan"}
+            </button>
+          </>
+        )}
+
+        {step === 2 && generatedLesson && (
+          <div
+            className="lesson-box"
+            dir={generatedLesson.language === "Hebrew" ? "rtl" : "ltr"}
+          >
+            <h4>{generatedLesson.topic}</h4>
+            <pre>{generatedLesson.fullContent}</pre>
+            {!saved ? (
+              <div className="approve-actions vertical">
+                <button className="generate-button" onClick={generateLesson}>Regenerate</button>
+                <button className="save-button" onClick={saveLesson}>Save</button>
+              </div>
+            ) : (
+              <div className="saved-message">
+                ✅ Mifgash plan saved successfully ‐ check Mifgashim for all your other plans!
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* step-indicator moved to bottom */}
+      <div className="step-indicator">
+        <div className={`step-dot ${step === 1 ? "active" : ""}`}></div>
+        <div className={`step-dot ${step === 2 ? "active" : ""}`}></div>
       </div>
     </div>
-  );
+  </div>
+);
+
 }
 
 export default CreateLessonModal;

@@ -1,37 +1,14 @@
-import { useEffect, useState } from 'react';
+// src/components/FriendsMap.jsx
+import { useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import { collection, getDocs } from 'firebase/firestore';
-import { getAuth } from 'firebase/auth';
-import { db } from '../firebase';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import '../AppStyles.css';
 import ProfileModal from './ProfileModal';
 
-function FriendsMap() {
-  const [user, setUser] = useState(null);
-  const [friends, setFriends] = useState([]);
+export default function FriendsMap({ user, friends }) {
   const [selectedFriend, setSelectedFriend] = useState(null);
   const [showProfileModal, setShowProfileModal] = useState(false);
-
-  useEffect(() => {
-    const fetchUserAndFriends = async () => {
-      const auth = getAuth();
-      const uid = auth.currentUser?.uid;
-      if (!uid) return;
-
-      const usersSnapshot = await getDocs(collection(db, 'users'));
-      const allUsers = usersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-
-      const currentUser = allUsers.find(u => u.id === uid);
-      setUser(currentUser);
-
-      const myFriends = allUsers.filter(u => currentUser?.friends?.includes(u.id));
-      setFriends(myFriends);
-    };
-
-    fetchUserAndFriends();
-  }, []);
 
   if (!user) return <div>Loading map...</div>;
 
@@ -53,7 +30,7 @@ function FriendsMap() {
             attribution='&copy; <a href="https://www.thunderforest.com/">Thunderforest</a>, Data &copy; OpenStreetMap contributors'
           />
 
-          {/* User marker 🏠 */}
+          {/* Marker למיקום המשתמש */}
           <Marker
             position={[userLocation.lat, userLocation.lng]}
             icon={L.divIcon({
@@ -66,7 +43,7 @@ function FriendsMap() {
             <Popup>You are here!</Popup>
           </Marker>
 
-          {/* Friends markers 📍 */}
+          {/* Marker לכל חבר */}
           {friends.map(friend => {
             const coords = friend.location?.coordinates;
             if (!coords || typeof coords.lat !== 'number' || typeof coords.lng !== 'number') return null;
@@ -104,7 +81,7 @@ function FriendsMap() {
                         }}
                       />
                     )}
-                    <div><strong>{friend.fullName || friend.name}</strong></div>
+                    <div><strong>{friend.fullName}</strong></div>
                     <div>
                       {friend.location.city}
                       {friend.location.state ? `, ${friend.location.state}` : ''}, {friend.location.country}
@@ -126,5 +103,3 @@ function FriendsMap() {
     </div>
   );
 }
-
-export default FriendsMap;
