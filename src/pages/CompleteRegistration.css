@@ -1,27 +1,67 @@
-.registration-container {
+/* CompleteRegistration.css */
+
+/* Overlay + container */
+.complete-registration .modal-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  overflow-y: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.complete-registration .registration-container {
   max-width: 700px;
   margin: auto;
   padding: 2rem;
-  background-color: #f9f9f9;
+  background-color: #B3CFFF;
   border-radius: 16px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
-.registration-container h2 {
+/* Header */
+.complete-registration .modal-title {
+  display: flex !important;
+  align-items: center;
+  justify-content: center !important;
+  width: 100% !important;
+  gap: 2rem;
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 0 auto 1rem;
+  color: #031146 !important;
   text-align: center;
+}
+.complete-registration .logo-inline {
+  height: 5rem;
+  object-fit: contain;
+}
+.complete-registration .modal-subtitle {
+  margin: 0 auto;
+  text-align: center;
+  font-size: 0.95rem;
+  color: #555;
+  margin-bottom: 1rem;
+}
+.complete-registration .modal-subtext {
+  margin: 0 auto;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 500;
   margin-bottom: 1.5rem;
-  color: #333;
 }
 
-.registration-form label {
+/* Form fields */
+.complete-registration .registration-form label {
   display: block;
   margin-bottom: 0.25rem;
   font-weight: 600;
   color: #444;
 }
-
-.registration-form input,
-.registration-form select {
+.complete-registration .registration-form input:not([type="checkbox"]),
+.complete-registration .registration-form select {
   width: 100%;
   padding: 0.5rem;
   border-radius: 8px;
@@ -30,18 +70,14 @@
   font-size: 1rem;
   box-sizing: border-box;
 }
-
-/* עוטף את כל אזור הטקסט + הספירה */
-.textarea-wrapper {
+.complete-registration .textarea-wrapper {
   position: relative;
   margin-bottom: 1rem;
 }
-
-/* תיבת הטקסט עצמה */
-.textarea-wrapper textarea {
+.complete-registration .textarea-wrapper textarea {
   width: 100%;
   padding: 12px;
-  padding-bottom: 2.2rem; /* מספיק מקום למספר */
+  padding-bottom: 2.2rem;
   border-radius: 8px;
   border: 1px solid #ccc;
   font-size: 1rem;
@@ -49,20 +85,111 @@
   min-height: 100px;
   box-sizing: border-box;
 }
-
-/* ספירת התווים בתוך התיבה */
-.char-counter {
+.complete-registration .char-counter {
   position: absolute;
-  bottom: 8px;
-  right: 12px;
-  font-size: 0.75rem;
-  color: #999;
-  pointer-events: none;
-  background-color: white;
-  padding-left: 4px;
+  bottom: 8px; right: 12px;
+  font-size: 0.75rem; color: #999;
+  pointer-events: none; background: white; padding-left: 4px;
+}
+.complete-registration .registration-form .error-text {
+  color: #dc3545;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  margin-bottom: 0.75rem;
+}
+.complete-registration .required-asterisk {
+  color: #dc3545;
+  margin-left: 0.25rem;
 }
 
-.submit-btn {
+/* Learning goal toggle */
+.complete-registration .registration-form .learning-goal-toggle {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 1rem;
+}
+.complete-registration .registration-form .learning-goal-toggle button {
+  flex: 1;
+  padding: 0.5rem 0;
+  background-color: #B3CFFF;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  color: #031146;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.complete-registration .registration-form .learning-goal-toggle button.active {
+  background-color: #4065bd;
+}
+.complete-registration .registration-form .learning-goal-toggle button:hover {
+  background-color: #4065bd;
+}
+
+/* Interests scroll override */
+.complete-registration .interests-scroll {
+  max-height: none !important;
+  height: auto !important;
+  overflow: visible !important;
+}
+
+/* Section titles */
+.complete-registration .section-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: #031146;
+}
+.complete-registration .section-description {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 1.2rem;
+  text-align: left;
+}
+
+/* Contact Info */
+.complete-registration .contact-title {
+  text-align: center;
+  margin-top: 1.5rem;
+  margin-bottom: 0.25rem;
+}
+.complete-registration .contact-toggles {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+.complete-registration .checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+}
+.complete-registration .phone-input-group {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+.complete-registration .phone-input-group select,
+.complete-registration .phone-input-group input[type="tel"] {
+  padding: 0.5rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+.complete-registration .phone-input-group select {
+  width: 100px;
+}
+.complete-registration .phone-input-group input[type="tel"] {
+  min-width: 180px;
+  flex: 1;
+}
+
+/* Submit button */
+.complete-registration .submit-btn {
   background-color: #ff914d;
   color: white;
   padding: 0.75rem 2rem;
@@ -74,55 +201,65 @@
   margin: 1rem auto 0;
   transition: background-color 0.3s ease;
 }
-
-.submit-btn:hover {
+.complete-registration .submit-btn:hover {
   background-color: #e6772e;
 }
 
-.login-link {
-  text-align: center;
-  margin-top: 1rem;
-  font-size: 0.95rem;
-  color: #333;
+/* הכיתוב העזר מעל שדה הטלפון */
+.complete-registration .input-note {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 0.25rem;
 }
-
-.small-note {
-  font-size: 0.8rem;
-  color: #777;
-  margin-top: -0.5rem;
-  margin-bottom: 1rem;
-}
-.section-title {
-  font-size: 1.2rem;
-  font-weight: 600;
-  margin-top: 1.5rem;
-  margin-bottom: 0.5rem;
-  color: #031146;
-}
-
-.section-description {
-  font-size: 0.9rem;
-  color: #555;
-  margin-bottom: 1.2rem;
-  text-align: left;
-}
-
-.inline-phone-input {
+.complete-registration .phone-input-group {
   display: flex;
-  gap: 8px;
+  flex-wrap: wrap;      /* מאפשר מעבר שורה */
+  gap: 0.5rem;
+}
+
+.complete-registration .phone-input-group select,
+.complete-registration .phone-input-group input[type="tel"] {
+  order: 1;
+}
+
+.complete-registration .phone-input-group .input-note {
+  order: 2;            /* הופך לשורה הבאה */
+  flex-basis: 100%;    /* תופס רוחב מלא */
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.complete-registration .phone-input-group .error-text {
+  order: 3;
+  flex-basis: 100%;
+}
+/* 1. כפתור Finish Registration כשהוא disabled */
+.complete-registration .submit-btn:disabled {
+  background-color: #ccc;      /* אפור */
+  color: #666;                 /* טקסט כהה יותר */
+  cursor: not-allowed;
+}
+
+/* 2. layout אנכי ל‑contact toggles */
+.complete-registration .contact-toggles {
+  display: flex;
+  flex-direction: column;      /* עמודה */
+  gap: 0.75rem;
+  align-items: flex-start;     /* יישור לשמאל */
+}
+
+/* 3. label עם checkbox בצד שמאל, טקסט מימין */
+.complete-registration .checkbox-label {
+  display: inline-flex;
   align-items: center;
+  gap: 0.5rem;
 }
 
-.inline-phone-input select {
-  width: 90px;
-  padding: 8px;
-  font-size: 0.9rem;
-  border-radius: 8px;
-}
-
-.inline-phone-input input {
-  flex: 1;
-  padding: 8px;
-  font-size: 0.9rem;
-  border-radius: 8px;
+/* 4. הסתרת כל הודעות שגיאה */
+/* .complete-registration .error-text {
+  display: none !important;
+} */
+.complete-registration .checkbox-label input[type="checkbox"] {
+  width: auto;
+  margin: 0;
 }
