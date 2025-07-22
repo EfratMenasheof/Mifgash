@@ -1,0 +1,64 @@
+.loginPage {
+  max-width: 500px;
+  margin: 80px auto;
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.welcomeTitle {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #110976;
+  letter-spacing: 1.5px;
+}
+
+.homepageSubtitle {
+  font-family: 'Shadows Into Light Two', cursive;
+  font-size: 1.4rem;
+  color: #333;
+  text-shadow: 0.3px 0.3px 0 #333;
+}
+
+.loginButton {
+  font-weight: 600;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  border: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+.signInButton {
+  background-color: #e0ecff;
+  color: #0033a0;
+  border: 2px solid rgb(1, 75, 235);
+}
+
+.signInButton:hover {
+  background-color: #d0e4ff;
+  color: #001f70;
+    border: 2px solid #fbb76a;
+}
+
+.signUpButton {
+  background-color: #0033a0;
+  color: white;
+  border: 2px solid #0033a0;
+}
+
+.signUpButton:hover {
+  background-color: #001f70;
+  border: 2px solid #fbb76a;
+
+}
+
+.fullPage {
+  background-color: #e6f0ff;
+  min-height: 100vh;
+}
+
+

@@ -14,6 +14,7 @@
 
 .friend-card:hover {
   transform: scale(1.03);
+  color: #ffe0b2;
 }
 
 .friend-avatar {

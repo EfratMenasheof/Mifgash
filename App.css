@@ -47,3 +47,6 @@ body {
 .leaflet-bottom {
   z-index: 500 !important;
 }
+h1 {
+  font-family: 'Bebas Neue', sans-serif;
+}

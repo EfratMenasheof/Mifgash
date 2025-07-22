@@ -12,7 +12,7 @@
 
 .mini-card:hover {
   transform: scale(1.03);
-  background-color: rgb(255, 233, 184);
+  background-color: #ffe0b2;
 }
 
 .mini-profile-pic {

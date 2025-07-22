@@ -4,7 +4,8 @@ import { signInWithPopup } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
-import "./Login.css";
+import mifgashLogo from "../assets/MIFGASH.png";
+import styles from "./Login.module.css";
 
 function Login({ setUser }) {
   const navigate = useNavigate();
@@ -57,18 +58,42 @@ function Login({ setUser }) {
   };
 
   return (
-    <div className="login-page container text-center mt-5">
-      <h2 className="welcome-title mb-4">Welcome to Mifgash</h2>
-      <p className="homepage-subtitle mb-4">Please choose how you'd like to continue</p>
+      <div className="container text-center mt-5">
+        <img
+  src={mifgashLogo}
+  alt="Mifgash Logo"
+  style={{ width: "260px", marginBottom: "30px" }} // תמונה גדולה יותר
+/>
+
+<h2
+  className={`${styles.welcomeTitle} mb-4`}
+  style={{ fontSize: "3rem" }} // כותרת גדולה יותר
+>
+  Welcome to Mifgash
+</h2>
+
+<p
+  className={`${styles.homepageSubtitle} mb-4`}
+  style={{ fontSize: "1.8rem" }} // פסקה גדולה יותר
+>
+  Bringing our people closer, one word at a time.
+</p>
 
       <div className="d-flex justify-content-center gap-4">
-        <button className="btn btn-outline-primary btn-lg" onClick={handleSignIn}>
-          Sign In with Google
-        </button>
+        <button
+  className={`${styles.loginButton} ${styles.signInButton}`}
+  onClick={handleSignIn}
+>
+  Sign In with Google
+</button>
 
-        <button className="btn btn-primary btn-lg" onClick={handleSignUp}>
-          Sign Up with Google
-        </button>
+<button
+  className={`${styles.loginButton} ${styles.signUpButton}`}
+  onClick={handleSignUp}
+>
+  Sign Up with Google
+</button>
+
       </div>
     </div>
   );

@@ -229,17 +229,23 @@ export default function CompleteRegistration({ onClose }) {
     imageFile &&
     (!formData.showPhone ||
       (formData.whatsappNumber.trim() && !fieldErrors.whatsappNumber));
+      
   const handleSubmit = async e => {
     e.preventDefault();
     const errors = validateForm();
     if (errors.length) return alert(errors.join("\n"));
     setUploading(true);
-    try {
-      const auth = getAuth(),
-        uid = auth.currentUser?.uid;
-      const imageUrl = await uploadImageToCloudinary(imageFile);
-      const email = auth.currentUser?.email || "";
 
+    try {
+      // 1. קבלת UID ומייל מה־Auth
+      const auth = getAuth(),
+        uid = auth.currentUser?.uid,
+        email = auth.currentUser?.email || "";
+
+      // 2. העלאת תמונה
+      const imageUrl = await uploadImageToCloudinary(imageFile);
+
+      // 3. הכנת מיקום
       const locStr =
         formData.country === "IL"
           ? `${formData.city}, Israel`
@@ -254,36 +260,43 @@ export default function CompleteRegistration({ onClose }) {
               city: formData.city,
               coordinates: coords,
             };
-            const fullName = [
+
+      // 4. בניית השם המלא
+      const fullName = [
         formData.firstName,
         formData.middleName,
         formData.lastName,
       ]
-        .filter(Boolean)  
+        .filter(Boolean)
         .join(" ");
 
+      // 5. שמירת הנתונים בפיירסטור, כולל תמיד את ה־email
       await setDoc(
         doc(db, "users", uid),
         {
-          email,
+          email,                 // ← כאן נשמר המייל מ־Auth
           fullName,
           ...formData,
-         phone: formData.showPhone
-           ? `${formData.whatsappCountryCode}${formData.whatsappNumber}`
-           : "",
+          phone: formData.showPhone
+            ? `${formData.whatsappCountryCode}${formData.whatsappNumber}`
+            : "",
           profileImage: imageUrl,
           location: locationData,
         },
         { merge: true }
       );
+
+      // 6. סיום התהליך
       alert("Registration complete!");
       navigate("/login");
     } catch (err) {
       console.error(err);
       alert("Something went wrong.");
     }
+
     setUploading(false);
   };
+
 
   return (
     <div className="complete-registration">

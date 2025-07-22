@@ -155,9 +155,10 @@ export default function ProfileModal({
           />
 
           {/* שם */}
-          <h2 className="Profile-title">
-            {displayUser.fullName?.toUpperCase()}
-          </h2>
+<h1 className="Profile-title bigger-title">
+  {displayUser.fullName?.toUpperCase()}
+</h1>
+
 
           {/* גיל */}
           {age !== null && (
@@ -200,14 +201,21 @@ export default function ProfileModal({
                 <strong>Interests:</strong>
               </p>
               <div className="interests-wrapper">
-                {displayUser.interests.map((interest) => (
-                  <div key={interest} className="interest-tag">
-                    <span className="interest-emoji">
-                      {interestEmojiMap[interest] || "✨"}
-                    </span>
-                    {interest}
-                  </div>
-                ))}
+                {displayUser.interests.map((interest) => {
+                  const isShared =
+                    Array.isArray(meData?.interests) && meData.interests.includes(interest);
+                  return (
+                    <div
+                      key={interest}
+                      className={`interest-tag${isShared ? " shared-interest" : ""}`}
+                    >
+                      <span className="interest-emoji">
+                        {interestEmojiMap[interest] || "✨"}
+                      </span>
+                      {interest}
+                    </div>
+                  );
+                })}
               </div>
             </>
           )}

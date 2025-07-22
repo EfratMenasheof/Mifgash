@@ -58,7 +58,7 @@
 .interest-tag {
   display: inline-flex;
   align-items: center;
-  background: #f1f3f8;
+  background: #f5f4f4;
   padding: 6px 10px;
   border-radius: 20px;
   font-size: 0.9rem;
@@ -189,4 +189,15 @@
   margin: 0 auto 1rem !important;
   border: 3px solid #ddd !important;
   display: block !important;
+}
+.bigger-title {
+  font-size: 2.5rem; /* או גודל אחר שתרצי */
+}
+.interest-tag:hover {
+  background-color: #ffe0b2;
+  cursor: default;
+}
+
+.shared-interest {
+  outline: 2px solid #ffa239;
 }
