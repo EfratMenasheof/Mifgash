@@ -35,14 +35,6 @@
   cursor: pointer;
 }
 
-.profile-pic {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin: 0 auto 1rem;
-}
-
 .Profile-title {
   font-size: 1.6rem;
   color: #1b1464;
@@ -159,7 +151,6 @@
   cursor: pointer;
 }
 
-/* חלון Info קטן */
 .info-overlay {
   background: transparent;
 }
@@ -185,4 +176,17 @@
   border: none;
   border-radius: 6px;
   cursor: pointer;
+}
+
+/* ======= NEW PROFILE-PIC BACKGROUND ======= */
+.profile-pic-background {
+  min-width: 140px !important;
+  max-width: 140px !important;
+  max-height: 140px !important;
+  min-height: 140px !important;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+  margin: 0 auto 1rem !important;
+  border: 3px solid #ddd !important;
+  display: block !important;
 }
