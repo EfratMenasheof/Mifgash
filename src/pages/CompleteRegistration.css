@@ -92,3 +92,37 @@
   margin-top: -0.5rem;
   margin-bottom: 1rem;
 }
+.section-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: #031146;
+}
+
+.section-description {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 1.2rem;
+  text-align: left;
+}
+
+.inline-phone-input {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.inline-phone-input select {
+  width: 90px;
+  padding: 8px;
+  font-size: 0.9rem;
+  border-radius: 8px;
+}
+
+.inline-phone-input input {
+  flex: 1;
+  padding: 8px;
+  font-size: 0.9rem;
+  border-radius: 8px;
+}

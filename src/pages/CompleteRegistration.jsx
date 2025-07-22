@@ -8,7 +8,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { uploadImageToCloudinary } from '../utils/uploadToCloudinary';
 import { Country, State, City } from 'country-state-city';
 import Select from 'react-select';
-import { israelCities } from '../data/israel_full_cities'; // ✅ הוספה
+import { israelCities } from '../data/israel_full_cities';
 
 function CompleteRegistration() {
   const [formData, setFormData] = useState({
@@ -28,6 +28,10 @@ function CompleteRegistration() {
   const [uploading, setUploading] = useState(false);
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
+
+  const [whatsappCountryCode, setWhatsappCountryCode] = useState('+972');
+  const [whatsappNumber, setWhatsappNumber] = useState('');
+  const [showEmail, setShowEmail] = useState(false);
   const navigate = useNavigate();
 
   const validateForm = () => {
@@ -74,7 +78,7 @@ function CompleteRegistration() {
       setCities([]);
     } else if (value === 'IL') {
       setStates([]);
-      setCities(israelCities.map(name => ({ name }))); // ✅ שימוש ברשימה מ־JS
+      setCities(israelCities.map(name => ({ name })));
     }
   };
 
@@ -137,19 +141,23 @@ function CompleteRegistration() {
             };
 
       await setDoc(doc(db, 'users', uid), {
-  uid,
-  email: auth.currentUser.email,
-  fullName: `${formData.firstName} ${formData.middleName} ${formData.lastName}`.trim(),
-  birthDate: formData.birthDate,
-  location: locationData,
-  about: formData.about,
-  interests: formData.interests,
-  profileImage: imageUrl,
-  learningGoal: formData.learningGoal,
-  sentRequests: [],
-  receivedRequests: [],
-  friends: []
-}, { merge: true });
+        ...(whatsappNumber && {
+          whatsapp: `https://wa.me/${whatsappCountryCode.replace('+', '')}${whatsappNumber.replace(/\D/g, '')}`
+        }),
+        showEmail,
+        uid,
+        email: auth.currentUser.email,
+        fullName: `${formData.firstName} ${formData.middleName} ${formData.lastName}`.trim(),
+        birthDate: formData.birthDate,
+        location: locationData,
+        about: formData.about,
+        interests: formData.interests,
+        profileImage: imageUrl,
+        learningGoal: formData.learningGoal,
+        sentRequests: [],
+        receivedRequests: [],
+        friends: []
+      }, { merge: true });
 
       alert('Registration complete!');
       navigate('/login');
@@ -234,7 +242,49 @@ function CompleteRegistration() {
         <label>Upload a profile picture:</label>
         <input type="file" accept="image/*" onChange={handleImageChange} required />
 
-        <button type="submit" className="submit-btn" disabled={uploading}>
+        {/* Contact Info Section */}
+        <h3 className="text-lg font-semibold mt-6 mb-2">Contact Info</h3>
+        <p className="text-sm text-gray-600 mb-4">
+          You may choose to share your phone number, your email, or both — it's your choice. This info will only be shown to your connections.
+        </p>
+
+        <div className="flex flex-col gap-4">
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-1">Phone number</label>
+            <div className="flex">
+              <select
+                value={whatsappCountryCode}
+                onChange={(e) => setWhatsappCountryCode(e.target.value)}
+                className="w-28 border border-gray-300 rounded-l-md p-2 bg-white text-sm"
+              >
+                <option value="+972">🇮🇱 +972</option>
+                <option value="+1">🇺🇸 +1</option>
+              </select>
+              <input
+                type="text"
+                placeholder="Phone number"
+                value={whatsappNumber}
+                onChange={(e) => setWhatsappNumber(e.target.value)}
+                className="flex-1 border-t border-b border-r border-gray-300 rounded-r-md p-2 text-sm"
+              />
+            </div>
+          </div>
+
+          <div className="flex items-center">
+            <input
+              id="showEmail"
+              type="checkbox"
+              checked={showEmail}
+              onChange={(e) => setShowEmail(e.target.checked)}
+              className="mr-2"
+            />
+            <label htmlFor="showEmail" className="text-sm text-gray-800">
+              Show my email to my matches
+            </label>
+          </div>
+        </div>
+
+        <button type="submit" className="submit-btn mt-6" disabled={uploading}>
           {uploading ? 'Submitting...' : 'Finish Registration'}
         </button>
 

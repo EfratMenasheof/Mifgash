@@ -1,6 +1,7 @@
 // src/components/ScheduleMeetingModal.jsx
 import React, { useState, useEffect } from "react";
 import Select from "react-select";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import "./ScheduleMeetingModal.css";
 import { fetchUserFriends } from "../utils/fetchFriends";
 import { DateTime } from "luxon";
@@ -126,9 +127,43 @@ function ScheduleMeetingModal({ onClose, currentUser }) {
     }
   };
 
-  const handleSendRequest = () => {
+  const handleSendRequest = async () => {
     if (!selectedDate || !selectedTime || !!dateError) return;
-    alert(`Meeting scheduled with ${selectedFriend.label} on ${selectedDate} at ${selectedTime}`);
+
+      alert(`Meeting request sent to ${selectedFriend.label}. Waiting for confirmation.`);
+    const friendId = selectedFriend.value;
+    const friendName = selectedFriend.label;
+    const userName = currentUser.displayName;
+    const userPhoto = currentUser.photoURL || "";
+    const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+    const userData = userDoc.exists() ? userDoc.data() : {};
+    const senderName = userData.fullName || currentUser.displayName || "Unknown User";
+    const senderPhotoURL = userData.profileImage || currentUser.photoURL || "https://via.placeholder.com/100";
+    const direction = selectedDirection;
+
+    const localZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const meetingDateTime = DateTime.fromISO(`${selectedDate}T${selectedTime}`, { zone: localZone });
+
+    try {
+      const requestRef = collection(db, "incomingRequests", friendId, "requests");
+
+      addDoc(requestRef, {
+        senderId: currentUser.uid,
+        senderName: senderName,
+        senderPhotoURL: senderPhotoURL,
+        direction: direction,
+        proposedDate: selectedDate,
+        proposedTime: selectedTime,
+        timestampUTC: meetingDateTime.toUTC().toISO(),
+        createdAt: serverTimestamp(),
+        status: "pending",
+      });
+
+      console.log("✅ Meeting request sent to:", friendId);
+    } catch (err) {
+      console.error("❌ Failed to send meeting request:", err);
+    }
+
     onClose();
   };
 
