@@ -101,3 +101,20 @@
   text-align: center;
   letter-spacing: 1.5px;
 }
+.empty-state {
+  display: flex;
+  justify-content: center;   /* horizontally center */
+  align-items: center;       /* vertically center */
+  text-align: center;        /* center the text lines */
+  padding: 0.5rem;             /* give it some breathing room */
+  /* optionally constrain width so it doesn’t stretch too far: */
+  max-width: 400px;
+  margin: 0 auto;            /* center the box itself */
+  height: 200px;             /* adjust to taste: how tall that box should be */
+  box-sizing: border-box;
+}
+
+.empty-state p {
+  margin: 0;
+  line-height: 1.4;
+}

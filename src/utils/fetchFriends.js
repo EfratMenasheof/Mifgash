@@ -6,7 +6,7 @@ export const fetchUserFriends = async (userId) => {
     const snapshot = await getDocs(collection(db, "users"));
     const allUsers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-    const currentUser = allUsers.find(u => u.uid === userId);
+    const currentUser = allUsers.find(u => u.id === userId);
 
     if (!currentUser) {
       console.warn("Current user not found in Firestore");

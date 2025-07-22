@@ -7,10 +7,12 @@
   text-align: center;
   cursor: pointer;
   transition: transform 0.2s ease;
+  height: 230px;
 }
 
 .mini-card:hover {
   transform: scale(1.03);
+  background-color: rgb(255, 233, 184);
 }
 
 .mini-profile-pic {

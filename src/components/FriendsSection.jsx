@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { db, auth } from '../firebase';
 import { doc, updateDoc, arrayUnion } from 'firebase/firestore';
 import '../AppStyles.css';
+import '../components/FriendsSection.css';
 
 function FriendsSection({ friends }) {
   const [selectedFriend, setSelectedFriend] = useState(null);
@@ -49,7 +50,7 @@ function FriendsSection({ friends }) {
       <h2 className="section-title">YOUR CONNECTIONS</h2>
 
       <div className="friends-list">
-        {Array.isArray(friends) && friends.length > 0 ? (
+        {friends && friends.length > 0 ? (
           friends
             .sort((a, b) => a.fullName.localeCompare(b.fullName))
             .slice(0, 9)
@@ -61,9 +62,10 @@ function FriendsSection({ friends }) {
               />
             ))
         ) : (
-          <p className="empty-state">
-            You don’t have any connections yet. It’s the perfect time to connect!
-          </p>
+          <div className="empty-state">
+            <p> You don’t have any connections yet.</p>
+            <p> It’s the perfect time to connect!</p>
+          </div>
         )}
       </div>
 

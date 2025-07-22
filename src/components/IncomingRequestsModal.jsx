@@ -8,16 +8,18 @@ import {
   updateDoc,
   arrayRemove,
   arrayUnion,
+  onSnapshot,
 } from "firebase/firestore";
 
 function IncomingRequestsModal({ onClose, onOpenProfile }) {
   const [requests, setRequests] = useState([]);
   const currentUser = auth.currentUser;
 
+  // ✅ fetch requests live
   useEffect(() => {
-    const fetchRequests = async () => {
-      if (!currentUser) return;
-      const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+    if (!currentUser) return;
+
+    const unsubscribe = onSnapshot(doc(db, "users", currentUser.uid), async (userDoc) => {
       const userData = userDoc.data();
       const receivedIds = userData?.receivedRequests || [];
 
@@ -27,10 +29,11 @@ function IncomingRequestsModal({ onClose, onOpenProfile }) {
           return { id: uid, ...docSnap.data() };
         })
       );
-      setRequests(users);
-    };
 
-    fetchRequests();
+      setRequests(users);
+    });
+
+    return () => unsubscribe();
   }, [currentUser]);
 
   const handleAccept = async (sender) => {

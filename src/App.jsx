@@ -4,9 +4,8 @@ import Navbar from './components/Navbar';
 import logo from './assets/MIFGASH_LOGO.png';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { onSnapshot, doc } from 'firebase/firestore';               // ← חדש
+import { onSnapshot, doc } from 'firebase/firestore';
 import { auth, db } from './firebase';
-import { getDoc } from 'firebase/firestore';
 
 // Pages
 import HomePage from './pages/HomePage';
@@ -23,45 +22,32 @@ import ChatModal from './components/ChatModal';
 import IncomingRequestsModal from './components/IncomingRequestsModal';
 
 function AppContent({ user, setUser }) {
-  const [userDoc, setUserDoc] = useState(null);                   // ← חדש
+  const [userDoc, setUserDoc] = useState(null);
   const [selectedFriend, setSelectedFriend] = useState(null);
   const [hasNewMessage, setHasNewMessage] = useState(true);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [showRequestsModal, setShowRequestsModal] = useState(false);
   const [pendingCount, setPendingCount] = useState(0);
-  const [incomingRequests, setIncomingRequests] = useState([]);
 
   const location = useLocation();
   const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
 
-  // 1️⃣ live‐listener על מסמך המשתמש
+  // ✅ Live update of user doc and request count
   useEffect(() => {
     if (!user?.uid) return;
     const unsubscribe = onSnapshot(
       doc(db, 'users', user.uid),
       snap => {
         if (snap.exists()) {
-          setUserDoc({ uid: snap.id, ...snap.data() });
+          const data = snap.data();
+          setUserDoc({ uid: snap.id, ...data });
+          setPendingCount(data.receivedRequests?.length || 0);  // ✅ count updates here
         }
       },
       err => console.error(err)
     );
     return () => unsubscribe();
   }, [user?.uid]);
-
-  useEffect(() => {
-    const fetchRequests = async () => {
-      if (!user?.uid) return;
-      const userSnap = await getDoc(doc(db, 'users', user.uid));
-      const data = userSnap.data() || {};
-      const receivedIds = data.receivedRequests || [];
-      setPendingCount(receivedIds.length);
-      const requestDocs = await Promise.all(receivedIds.map(id => getDoc(doc(db, 'users', id))));
-      const requestUsers = requestDocs.filter(d => d.exists()).map(d => ({ id: d.id, ...d.data() }));
-      setIncomingRequests(requestUsers);
-    };
-    fetchRequests();
-  }, [showRequestsModal, user]);
 
   return (
     <>
@@ -89,9 +75,9 @@ function AppContent({ user, setUser }) {
           ) : (
             <>
               <Route path="/" element={<Navigate to="/home" />} />
-              <Route path="/home" element={<HomePage user={userDoc} />} />           {/* ← pass userDoc */}
-              <Route path="/friends" element={<FriendsPage user={userDoc} />} />      {/* ← pass userDoc */}
-              <Route path="/lessons" element={<LessonsPage user={userDoc} />} />      {/* ← pass userDoc */}
+              <Route path="/home" element={<HomePage user={userDoc} />} />
+              <Route path="/friends" element={<FriendsPage user={userDoc} />} />
+              <Route path="/lessons" element={<LessonsPage user={userDoc} />} />
               <Route path="/about" element={<AboutPage />} />
             </>
           )}
@@ -119,7 +105,7 @@ function AppContent({ user, setUser }) {
           {showRequestsModal && (
             <IncomingRequestsModal
               onClose={() => setShowRequestsModal(false)}
-              onOpenProfile={user => {
+              onOpenProfile={(user) => {
                 setSelectedFriend(user);
                 setShowRequestsModal(false);
               }}

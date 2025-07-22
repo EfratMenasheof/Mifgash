@@ -19,11 +19,11 @@ function CreateLessonModal({ show, onClose, user, onSave }) {
   useEffect(() => {
     const fetchFriends = async () => {
       const auth = getAuth();
-      const uid = auth.currentUser?.uid;
-      if (uid) {
-        const friends = await fetchUserFriends(uid);
-        setRealFriends(friends);
-      }
+      if (user?.id) {
+  const friends = await fetchUserFriends(user.id);
+  setRealFriends(friends);
+}
+
     };
     if (show) fetchFriends();
   }, [show]);
@@ -145,7 +145,7 @@ Topic: ${topicDescription}
 
       recipients: mode === "friend" ? [selectedFriendId] : [],
       language: teachingLanguage,
-      createdBy: user.uid,
+      createdBy: user.id,
       createdAt: new Date().toISOString(),
     });
 

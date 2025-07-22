@@ -14,19 +14,18 @@
 
 /* Modal window */
 .incoming-modal {
-  position: fixed;           /* במקום centered */
-  top: 60px;                 /* מתחת ל–navbar/אייקון התראות */
-  right: 16px;
+  position: relative;      /* במקום fixed */
   background: #fff;
   padding: 1.5rem;
   border-radius: 12px;
-  width: 580px;              /* רוחב מלא כדי להכניס שורה שלמה */
-  max-height: 80vh;          /* יהיה גבוה יותר אם יש המון בקשות */
+  width: 580px;
+  max-height: 80vh;
   overflow-y: auto;
   box-shadow: 0 4px 16px rgba(0,0,0,0.2);
   text-align: left;
-  z-index: 2000;             /* מעל שאר התוכן */
+  z-index: 2000;
 }
+
 
 
 /* Close button */

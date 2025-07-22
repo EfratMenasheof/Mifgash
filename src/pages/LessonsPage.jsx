@@ -1,3 +1,4 @@
+// LessonsPage.jsx
 import React, { useEffect, useState } from "react";
 import "./LessonsPage.css";
 import LessonModal from "../components/LessonModal";
@@ -5,59 +6,75 @@ import CreateLessonModal from "../components/CreateLessonModal";
 import LessonCard from "../components/LessonCard";
 import { getAuth } from "firebase/auth";
 import { db } from "../firebase";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, doc, onSnapshot } from "firebase/firestore";
+import { fetchUserFriends } from "../utils/fetchFriends";
 
 function LessonsPage() {
   const [user, setUser] = useState(null);
   const [lessons, setLessons] = useState([]);
+  const [friends, setFriends] = useState([]);              // ← new state
   const [selectedLesson, setSelectedLesson] = useState(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
-  // 🟦 Load full user data from Firestore
+  // 🟦 Load full user data from Firestore in real time
   useEffect(() => {
-    const fetchCurrentUser = async () => {
-      const auth = getAuth();
-      const currentUser = auth.currentUser;
+    const auth = getAuth();
+    const currentUser = auth.currentUser;
+    if (!currentUser) return;
 
-      if (!currentUser) return;
+    const userRef = doc(db, "users", currentUser.uid);
+    const unsubscribe = onSnapshot(userRef, (snap) => {
+      if (snap.exists()) {
+        const u = { id: snap.id, ...snap.data() };
+        setUser(u);
+      } else {
+        console.warn("User not found in Firestore:", currentUser.uid);
+      }
+    });
 
+    return () => unsubscribe();
+  }, []);
+
+  // 🆕 As soon as we have `user`, fetch their friends
+  useEffect(() => {
+    if (!user?.id) return;
+
+    const loadFriends = async () => {
       try {
-        const snapshot = await getDocs(collection(db, "users"));
-        const allUsers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        const fullUser = allUsers.find(u => u.uid === currentUser.uid);
-        setUser(fullUser);
-      } catch (error) {
-        console.error("Failed to fetch full user from Firestore", error);
+        const list = await fetchUserFriends(user.id);
+        setFriends(list);
+        console.log("✅ Friends loaded in LessonsPage:", list);
+      } catch (err) {
+        console.error("Failed to fetch friends:", err);
       }
     };
 
-    fetchCurrentUser();
-  }, []);
+    loadFriends();
+  }, [user]);
 
-  // 🟧 Fetch lessons from Firestore
+  // 🟧 Fetch lessons for this user
   useEffect(() => {
+    if (!user?.id) return;
+
     const fetchLessons = async () => {
       const snapshot = await getDocs(collection(db, "lessons"));
-      const allLessons = snapshot.docs.map(doc => ({
+      const allLessons = snapshot.docs.map((doc) => ({
         id: doc.id,
-        ...doc.data()
+        ...doc.data(),
       }));
-      // 🟨 Filter only lessons created by current user
       const userLessons = allLessons.filter(
-        lesson => lesson.createdBy === user?.uid
+        (lesson) => lesson.createdBy === user.id
       );
       setLessons(userLessons);
     };
 
-    if (user?.uid) {
-      fetchLessons();
-    }
+    fetchLessons();
   }, [user]);
 
-  // 🟩 When a lesson is saved, update state immediately
+  // 🟩 Add new lesson immediately when saved
   const handleSaveLesson = (newLesson) => {
-    setLessons(prev => [...prev, newLesson]);
+    setLessons((prev) => [...prev, newLesson]);
   };
 
   const filteredLessons = lessons
@@ -75,8 +92,12 @@ function LessonsPage() {
 
       <div className="lesson-wrapper smaller">
         <div className="d-flex justify-content-between align-items-center mb-0">
-          <div className="fw-bold">You have {filteredLessons.length} lessons</div>
+          <div className="fw-bold">
+            You have {filteredLessons.length} lessons
+          </div>
           <input
+            id="searchTerm"
+            name="searchTerm"
             type="text"
             className="form-control search-input"
             placeholder="Search by title..."
@@ -88,7 +109,7 @@ function LessonsPage() {
         <div className="scrollable-card-grid">
           {filteredLessons.map((lesson) => (
             <LessonCard
-              key={lesson.id || lesson.topic}
+              key={lesson.id}
               lesson={lesson}
               onClick={() => setSelectedLesson(lesson)}
             />
@@ -114,6 +135,10 @@ function LessonsPage() {
         onClose={() => setShowCreateModal(false)}
         user={user}
         onSave={handleSaveLesson}
+        /* now you also have `friends` in this component,
+           so if you ever want to pass them down:
+           friends={friends}
+        */
       />
     </div>
   );
